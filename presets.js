@@ -6,10 +6,11 @@
 // #### Define Presets ####
 // ########################
 
-instance.prototype.initPresets = function () {
+exports.initPresets = function () {
     var self = this;
     var presets = [];
   
 
-  self.setPresetDefinitions(presets);
+  //self.setPresetDefinitions(presets);
+
   }

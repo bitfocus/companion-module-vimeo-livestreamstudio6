@@ -6,7 +6,7 @@
 // #### Define Variables ####
 // ##########################
 
-instance.prototype.initVariables = function() {
+exports.initVariables = function() {
     var self = this;
     var variables = []
 

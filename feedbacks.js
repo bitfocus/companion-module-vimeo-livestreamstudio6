@@ -6,7 +6,7 @@
 // #### Define Feedbacks ####
 // ##########################
 
-instance.prototype.initFeedbacks = function() {
+exports.initFeedbacks = function() {
     var self = this;
     var feedbacks = {};
 
