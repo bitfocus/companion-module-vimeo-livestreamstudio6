@@ -6,7 +6,7 @@
 // ########################
 
 // Define actions
-exports.initActions = function () {
+exports.getActions = function () {
     var self = this;
     var actions = {};
 
@@ -31,4 +31,9 @@ exports.initActions = function () {
 
     return actions; 
   
+}
+
+exports.executeAction = function (action) {
+
+
 }

@@ -7,10 +7,11 @@
 // ########################
 
 exports.initPresets = function () {
-    var self = this;
+
     var presets = [];
   
 
-  //self.setPresetDefinitions(presets);
+  
+  return presets;
 
   }

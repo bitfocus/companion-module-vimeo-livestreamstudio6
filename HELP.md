@@ -32,7 +32,7 @@ Action                   | Description
 **Auto Transition**      | Execute an AUTO transition 
 **Fade to Black**        | Fade to Black on Program Bus [Action: `Fade In`, `Fade Out`]
 **Set Input Audio Volume**| Set audio Volume [Input: `Available Inputs`, Level: `-60000 to 10000`]
-**Set Inpput Audio Gain**| Set audio Gain [Input: `Available Inputs`, Level: `xx to xx`]
+**Set Input Audio Gain**| Set audio Gain [Input: `Available Inputs`, Level: `xx to xx`]
 **Input Audio Mute**     | Set audio Mute [Input: `Available Inputs`, Mute: `On`, `Off`]
 **Audio On Program**     | Assign audio to program [Input: `Available Inputs`, Audio: `Off`, `Always On`, `When Source is in Program` ]
 **Audio Headphones**     | Set audio to headphones [Input: `Available Inputs`, Headphones: `On`, `Off`]
@@ -55,7 +55,7 @@ The following variables are available to Companion.
 
 Variable                       | Description 
 ------------------------------ | ----------------------------------- 
-**$(livestreamstudio:status)** | The current status of the connection to livestream Studio
+**$(livestreamstudio:status)** | The current status of the connection to Livestream Studio
 **$(livestreamstudio:input_`x`_name)** | Name of a given input `x`
 
 

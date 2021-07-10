@@ -2,13 +2,17 @@
 // companion-module-livesteam-studio v1.0.0
 // GitHub: https://github.com/ChgoChad/companion-module-livestream-studio
 
-const tcp           = require('../../tcp');
-const instance_skel = require('../../instance_skel');
-const { initActions }  = require('./actions');
-const variables     = require('./variables');
-const feedbacks     = require('./feedbacks');
-const presets       = require('./presets');
+const tcp                           = require('../../tcp');
+const instance_skel                 = require('../../instance_skel');
+const { executeAction, getActions } = require('./actions')
+//const { initAPI }                        = require('./api')
+//const { getConfigFields }                = require('./config')
+const { executeFeedback, initFeedbacks } = require('./feedback')
+const { initVariables }                  = require('./variables')
+const { initPresets }                    = require('./presets')
 
+var debug;
+var log;
 
 // ########################
 // #### Instance setup ####
@@ -16,8 +20,7 @@ const presets       = require('./presets');
 
 function instance(system, id, config) {
     var self = this;
-    var debug;
-    var log;
+
     
     // super-constructor
     instance_skel.apply(this, arguments);
@@ -27,17 +30,14 @@ function instance(system, id, config) {
         connected     : false,
         numberOfInpute: 0,
         inputs        : [
-            { id: 0, name: '', audioVolume: 0, audioMute: 0, audioHeadphones: 0, type: 0 }
+            { id: 0, name: '', audioVolume: 0, audioGain: 0, audioMute: 0, audioHeadphones: 0, audioToPgm: 0, type: 0, media: null }
         ],
         program       : null,
         preview       : null,
         gfx           : [
+            { id: 0, preview: false, push: false, pull: false },
             { id: 1, preview: false, push: false, pull: false },
             { id: 2, preview: false, push: false, pull: false },
-            { id: 3, preview: false, push: false, pull: false },
-        ],
-        media         : [
-            { id: 0, play: false, pause: false }
         ],
         streamMaster: [
             { level: 0, mute: false, headphones: false },
@@ -59,7 +59,7 @@ function instance(system, id, config) {
     self.ICON_HEADPHONES_ON  = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAAEdklEQVR4nO1b107kSBQ9i5ochchJZBAg2BUgJHhglx+YmT9YfsD/sF+wUv/AzB8s88ADT7sSIBASIufUILIIQxJRsDo1Lo/bWI1n2nYz2Eey2uWuur51fCpdu+DDhw8fPn4u/GLmbTAY/BPAOwC/A8jywDP9D8BnAJ8URfli/DOMpGAwSEL+BfCrqy6+HoQAfFAUZVLvkUaSkaCHhwecnJzg8vLyTbOSlJSEvLw8BAIBeYlK+kNPVECX/29J0OHhIebm5gRRXgDrWldXh7KyMqjdyz8AKmTV4/BVReUA2A/h4uICU1NTniFIYmlpCbu7uzJZrvbLAnHq73t9Zq+CddeJ452RpBZ54fT01LMkkSC2JBXaqC5JYnPzNEGREPfjRb0DnyQLCBizPD09vUY/Y4owkkiQ10kyq/8zJT0+PrrlTxgyMjIQHx+vXTo+Po6JH2aIqZJKSkqQn58vDjOcn59je3tbHG5Nbl+NkgoKCtDY2Ijk5OSI+aiuhoYG1NTUYGNjA8vLy477ZgZXO24uIpuamlBaWqpdY7Pa2toSquFBkLzMzExBJvOyGdbW1or02NgYrq+vHfPR1G99ggQ5pSRWtLOzU1SeODs7w+zsLI6Ojp7lvbq6EgfXUouLi4LYwsJCoazu7m4MDw+L8k4gps2tq6tLI4jKGR8ft1SOoZrR0VGxQm9tbRVk09bAwADu7+8d8dUIVzru5uZmjaDp6Wmsrq5+t43NzU3hW1tbmyCqo6MDg4ODtvsaEyXl5uaiurpanIdCoag6X5YnQS0tLcJuVVUVVlZWbPTWHM+WJVJNdh0cnaD2M5OTk1HbJck7OzvCJm1zMLDTXzM42nEzLMonTrCTvr29tcXuxMQEiouLhaqoUkYW7YLrza28XERghIrW19dts8uYD+dNFRUV4piZmbHNthkc7bj5tAkO43YPCAsLC4Kg1NRUZGVl2RYLc1VJXGokJCSIcw750i47W1YMqsLW1tYi2klLS0NlZaWWpiI5LeCbnLu7O3EPNmkn13qOkcT+COo8RxcSFRWWa7WDg4MXR6eUlBQxhZDY39/XZuYszxk57c3Pz9vitxkca25yRU+S9DaN5y/dz/jQmJZlqB65bLHLb1ebW3Z2tvjlk49k86X7GZ3Wj8BSobyXkwtzx5TEp0xbbBrRKMmMJL2S9vb2TPP9KFxV0sjIiKV80SiJi+P+/v4ovLSGmEcmoyHJLbgembSz43baPwnXlaSPH/H8pfvd3Nzo39GLdEyVBBdeKQ0NDX1XfhLZ19fnmD9W4L+ctACfJAvwSbIAnyQL8EmyAEmS+Cw3PT39NfsaM0iSpqCSlJiY6D0WdDATiiRJ+xxXH7vxGhjp1JH0OYwkRVH61A+90d7ejvr6es8RlJOTg56eHv0lbQarn3H3qh+7i8xFRUUi2M4Q6VsHFWRoQX8pihKSCeO2CX67/PHNsxIZ3F/Sq88RNgVQFOUTgN/UDSleg9xX0must+kuJXzbJfD1xdnbxxfjphsfPnz48PGzAsD/DyYR6FZfHkkAAAAASUVORK5CYII=';
     self.ICON_HEADPHONES_OFF = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAAD90lEQVR4nO1b2U7cMBQ9s7BvI7EvQhQheGVeeYFPaL+g/ZV+SfsHbb+g7QuvVDwiQBUgdjHsO0x13NxRCGGSIY4zTHykKJvt2CfnXl87DiwsLCws3hYyAbWdBVBIwTv9VWsGkvIFQAlAOUUb2zwRhqDZFJLj3T55SXGbG1lcEvOamZnB0NAQuru7a1Xim8Ll5SV2d3exsrKCu7s7qfoHAN/9SPoJYKGpqQlzc3MNT44XJGhxcRGnp6e88xfAO0mSdfZU0QIPpqenU0cQQXEUi0U5nXCbnZD0XhJOTk4mUce6AMXhEsi8HAhJyg+lUUFeDA8Py5VKT5cNkzHtsCSFgCUpBPLeJOVyuR7raQx+7X9G0uPjYyO1uWYEksQEppWUy+XQ2tqKfD6PTCaj9gzs7u/vcX19jYeHB6P1qSslkZienh6196Ktra1y5fb2FmdnZzg/PzdSLz8YV1I2m8XAwMAzcqgaOC+JaeR+c3Mzent70dXVhcPDQ0VanEhcSWzwyMiIIoGgSZVKJVxcXPg+t729XamNypK8BwcHSllxIVGSWlpanhBEVRwfH1fNQxPj1tHRgcHBQZW3v79fNcQZiGpHYo6bznh0dFQ1ki9hc3OzJrMhUZzSGBsbU2TTXKlCKlA3ElOSKIhlb2xs4ObmpuYyJO/4+LgiinNd6+vrRnq/JxG3KEnnVigUVKOIvb095aBfWz4J2d7e/l9xl+np3ryIVUlsSF9fnzqms6WTjoqrqyvlvEkQnfr+/r57RjEyjJPERjBYJHZ2drSVTUVSoZz/IllbW1taykUSjpvxDcGe6DV+qBqOjo5Uj8f4SWedjSpJhhtwGqS7QxCS+BwSdXJyorV8N2JTEmMbgTsempqaQmdnpzpm1766ulq1HKZlHgHTMx+VSf/EQJMvIyjmCgujShIVsSHuMt2V4HHQ87z3eS7X2BmQJL4QXfU2ShKHEQTfeLUyg57nrbSbWAaUcEzbGEk6zU1IYlRcrcyg5/mRJNfYITBQ5RhPV72NKonxC50pTSKKuVVTEgNT6f6NKkknSWEQxSfR33EcGDeMz3F7lRTF3OKunyA2JYVFFHOLA3Uxfbu2tqamTuD0TkHPo09bXl6unDNGSpykuFHrXDWJ1BUovhb242QIWJJCwJIUApakELAkhcATktK+DgAvcCAk/YEzFtI5X/wW4frw+dtLElfEq2Ak7JirEcEPFS6RVP4SyDl7fojnKoUFfjRkQk6JpgmcseB6bhdBn+XE+2/JkvNXgPoSwa8d3HNrRND/0MVwFCALNhyLKjpruX3BVbjfUvzLxJLf/yUv/aXEhe8fnQyN/qeS+OMfAL7WQX0sLCwsLCIBwD/fItnwIMk6LgAAAABJRU5ErkJggg==';
 
-    self.setActions(initActions()); // export action
+  self.setActions(getActions()); // export action
 
     return self;
 }
@@ -177,9 +177,9 @@ instance.prototype.init = function () {
     log = self.log;
     
     self.status(self.STATUS_UNKNOWN);
-    variables.initVariables();
-    feedbacks.initFeedbacks();
-    presets.initPresets();
+    self.setVariableDefinitions(initVariables());
+    self.setFeedbackDefinitions(initFeedbacks());
+    self.setPresetDefinitions(initPresets());
     self.initTCP();
 }
 
@@ -225,7 +225,7 @@ instance.prototype.initTCP = function () {
 				offset = 0
 			receiveBuffer += chunk
 
-			while ((i = receiveBuffer.indexOf('\r\n', offset)) !== -1) {
+			while ((i = receiveBuffer.indexOf('\r', offset)) !== -1) {
 				line = receiveBuffer.substr(offset, i - offset)
 				offset = i + 1
 				self.socket.emit('receiveline', line.toString())
@@ -301,11 +301,10 @@ instance.prototype.updateConfig = function (config) {
         self.initTCP();
     }
 
-    actions.initActions();
-    vaariables.initVariables();
-    presets.initPresets();
-    feedbacks.initFeedbacks();
-    self.updateStatus();
+    self.setActions(getActions());
+    self.setVariableDefinitions(initVariables());
+    self.setFeedbackDefinitions(initFeedbacks());
+    self.setPresetDefinitions(initPresets());
    
 }
 

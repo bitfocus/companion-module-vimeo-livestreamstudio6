@@ -7,9 +7,16 @@
 // ##########################
 
 exports.initFeedbacks = function() {
-    var self = this;
+
     var feedbacks = {};
 
 
-    self.setFeedbackDefinitions(feedbacks);
+    
+    return feedbacks;
+   
+}
+
+exports.executeFeedback = function (feedback) {
+
+
 }

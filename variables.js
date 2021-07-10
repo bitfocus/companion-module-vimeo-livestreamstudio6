@@ -7,9 +7,12 @@
 // ##########################
 
 exports.initVariables = function() {
-    var self = this;
-    var variables = []
 
-    self.setVariableDefinitions(variables);
+    var variables = [ 
+        { label: 'Connection status of this Recorder instance', name: 'status'}
+
+    ];
+
+    return variables;
     
 }
