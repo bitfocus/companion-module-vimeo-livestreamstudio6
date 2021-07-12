@@ -12,6 +12,7 @@ exports.initPresets = function () {
   
 
   
-  return presets;
+  //return presets;
+  this.setPresetDefinitions(presets)
 
   }

@@ -14,13 +14,12 @@ exports.getActions = function () {
         label: 'Set Preview Source',
         options: [
             {
-                type        : 'multiselect',
-                label       : 'Select Slot [1-16, or All]',
-                id          : 'slot',
-                tooltip     : 'Select the slot to start recording, or select All Coonected Slots. \r\n(Minimum selection is 1 item, add one item to remove the first item.)',
+                type        : 'dropdown',
+                label       : 'Input',
+                id          : 'input',
+                tooltip     : 'Select the input to send to the Preview bus.',
                 default     : [ 0 ],
-                choices     : self.CHOICES_SLOT,
-                minSelection: 1
+                choices     : self.data.inputs
             }
         ]
         // callback: function (action, bank) {
@@ -34,6 +33,33 @@ exports.getActions = function () {
 }
 
 exports.executeAction = function (action) {
+    var self = this;
+    var cmd;
+    var options = action.options;
+
+    // Parse Command 
+    if (options !== undefined || options !== '') {
+
+        switch (action.action) {
+
+            case 'setPreviewSrc':
+                cmd = 'SPrI:' + options.input + '\n'
+                break;
+        }
+
+        console.log(self.data);
+    } else {
+        self.log('error', '[Livestream Studio] Options not defined in command options')
+    }
+
+    // Send the command 
+    if (cmd !== undefined) {
+        self.sendCommand(cmd);
+        cmd = ''
+    }
+    else {
+        self.log('error', '[Livestream Studio] Invalid command: ' + cmd);
+    }
 
 
 }
