@@ -80,7 +80,8 @@ instance.prototype.init = function () {
     log = self.log;
     
     self.status(self.STATUS_UNKNOWN);
-    self.setVariableDefinitions(initVariables());
+    //self.setVariableDefinitions(initVariables());
+    self.setVariableDefinitions(initVariables.bind(self)());
     self.setFeedbackDefinitions(initFeedbacks());
     //self.setPresetDefinitions(initPresets());
     initPresets.bind(self)();
@@ -193,7 +194,8 @@ instance.prototype.updateConfig = function (config) {
 
     //self.setActions(getActions());
     self.setActions(getActions.bind(self)());
-    self.setVariableDefinitions(initVariables());
+    //self.setVariableDefinitions(initVariables());
+    self.setVariableDefinitions(initVariables.bind(self)());
     self.setFeedbackDefinitions(initFeedbacks());
     //self.setPresetDefinitions(initPresets());
     initPresets.bind(self)();
@@ -246,7 +248,7 @@ instance.prototype.incomingData = function (apiData) {
             case 'ILC':
                 self.data.inputs[apiDataArr[1]] = { 
                     id             : parseInt(apiDataArr[1]),
-                    label          : apiDataArr[2].slice(1,-1),
+                    label          : apiDataArr[1] + ': ' + apiDataArr[2].slice(1,-1),
                     audioVolume    : parseInt(apiDataArr[3]),
                     audioGain      : parseInt(apiDataArr[4]),
                     audioMute      : parseInt(apiDataArr[5]),
@@ -311,6 +313,10 @@ instance.prototype.incomingData = function (apiData) {
                 self.data.status.streaming = false;
                 break;
 
+            case 'StrSEr':
+
+                break;
+
             // GFX is in Pushed State (Visible on PGM)
             case 'GMOS':
                 self.data.gfx[parseInt(apiDataArr[1])].push = true;
@@ -328,6 +334,38 @@ instance.prototype.incomingData = function (apiData) {
             //         self.data.gfx[parseInt(apiDataArr[1])].pull = true;
             //     }
             //     break;
+
+            // Media Player Pause
+            case 'MPause':
+                self.data.inputs[parseInt(apiDataArr[1])].media = 'pause';
+                break;
+
+            // Audio to Program 0=off, 1=red, 2=yellow
+            case 'AOC':
+                self.data.inputs[parseInt(apiDataArr[1])].audioToPgm = parseInt(apiDataArr[2]);
+                break;
+
+            // Audio Mute
+            case 'ASM':
+                self.data.inputs[parseInt(apiDataArr[1])].audioMute = parseInt(apiDataArr[2]);
+                break;
+
+            // Audio Headphones
+            case 'ASC':
+                self.data.inputs[parseInt(apiDataArr[1])].audioHeadphones = parseInt(apiDataArr[2]);
+                break;
+
+            // Audio Fader Volume
+            case 'AVC':
+                self.data.inputs[parseInt(apiDataArr[1])].audioVolume = parseInt(apiDataArr[2]);
+                break;
+
+            // Audio Gain
+            case 'AGC':
+                self.data.inputs[parseInt(apiDataArr[1])].audioGain = parseInt(apiDataArr[2]);
+                break;
+
+            
 
         }
 
