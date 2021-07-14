@@ -1,6 +1,8 @@
 // actions.js
 // Companion module for Livestream Studio 6
 
+const { Braket } = require("aws-sdk");
+
 // ########################
 // #### Define Actions ####
 // ########################
@@ -216,7 +218,7 @@ exports.getActions = function () {
             {
                 type   : 'dropdown',
                 label  : 'Action',
-                id     : 'audioOnPgnmAction',
+                id     : 'audioOnPgmAction',
                 tooltip: 'Select the action to perform.',
                 choices: [
                     { id: 'always', label: 'Always On (Audio button RED)' },
@@ -257,7 +259,7 @@ exports.getActions = function () {
             {
                 type   : 'dropdown',
                 label  : 'Action',
-                id     : 'recordingAction',
+                id     : 'recordAction',
                 tooltip: 'Select the action to perform.',
                 choices: [
                     { id: 'startRecording', label: 'Start Recording' },
@@ -273,7 +275,7 @@ exports.getActions = function () {
             {
                 type   : 'dropdown',
                 label  : 'Action',
-                id     : 'streamingAction',
+                id     : 'streamAction',
                 tooltip: 'Select the action to perform.',
                 choices: [
                     { id: 'startStream', label: 'Start Streaming' },
@@ -286,6 +288,7 @@ exports.getActions = function () {
     return actions; 
   
 }
+
 
 exports.executeAction = function (action) {
     var self = this;
@@ -303,10 +306,95 @@ exports.executeAction = function (action) {
                 break;
             
             // Set Program Source                
-            case 'setPreviewSrc':
+            case 'setProgramSrc':
                 cmd = 'SPmI:' + options.input + '\n'
                 break;
 
+            //Control GFX stacks
+            case 'controlGFX':
+
+                break;
+            
+            //Control Media
+            case 'controlMedia':
+
+                break;
+
+            //Cut Transition
+            case 'transitionCut':
+                cmd = 'RCut'
+                break;
+            
+            //Auto Transition
+            case 'transitionAuto':
+                cmd = 'RAuto'
+                break;
+
+            //Fade to Black
+            case 'fadeToBlack':
+                if (options.action === 'fadeIn') {
+                    cmd = 'RFIn';
+                } else if (options.action === 'fadeOut') {
+                    cmd = 'RFOut';
+                }
+                break;
+
+            //Audio Volume Level
+            case 'setAudioVolume':
+                cmd = 'SIVL:' + parseInt(options.input) + ':' + parseInt(options.volume) + '\n'
+                break;
+
+            //Audio Gain
+            case 'setAudioGain':
+                cmd = 'SIGL:' + parseInt(options.input) + ':' + parseInt(options.gain) + '\n'
+                break; 
+
+            //Audio Mute
+            case 'inputAudioMute':
+                if (options.muteAction === 'on') {
+                    cmd = 'IAM:' + parseInt(options.input) + ':1'
+                } else if (options.muteAction === 'off') {
+                    cmd = 'IAM:' + parseInt(options.input) + ':0'
+                }
+                break;
+
+            //Audio on Program
+            case 'inputAudioOnPgm':
+                if (options.audioOnPgmAction === 'always') {
+                    cmd = 'IAP:' + parseInt(options.input) + ':1'
+                } else if (options.audioOnPgmAction === 'sourceInPgm') {
+                    cmd = 'IAP:' + parseInt(options.input) + ':2'
+                } else if (options.audioOnPgmAction === 'off') {
+                    cmd = 'IAP:' + parseInt(options.input) + ':0'
+                }
+                break;
+
+            //Audio headphones
+            case 'inputAudioHeadphones':
+                if (options.audioHeadphoneAction === 'on') {
+                    cmd = 'IAH:' + parseInt(options.input) + ':1'
+                } else if (options.audioHeadphoneAction === 'off') {
+                    cmd = 'IAH:' + parseInt(options.input) + ':0'
+                }
+                break;
+
+            //Recoding
+            case 'controlRecord':
+                if (options.recordAction === 'startRecording') {
+                    cmd = 'RecStart'
+                } else if (options.recordAction === 'stopRecording') {
+                    cmd = 'RecStop'
+                }
+                break;
+
+            //Streaming
+            case 'controlStream':
+                if (options.streamAction === 'startStream') {
+                    cmd = 'StrStart'
+                } else if (options.recordAction === 'stopStream') {
+                    cmd = 'StrStop'
+                }
+                break;
 
         }
 

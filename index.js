@@ -244,7 +244,7 @@ instance.prototype.incomingData = function (apiData) {
                 self.data.numberOfInputs = apiDataArr[1]
                 break;
 
-            // Inputs
+            // Inputs  ILC:%1:%2:%3:%4:%5:%6:%7:%8
             case 'ILC':
                 self.data.inputs[apiDataArr[1]] = { 
                     id             : parseInt(apiDataArr[1]),
@@ -257,18 +257,23 @@ instance.prototype.incomingData = function (apiData) {
                     type           : parseInt(apiDataArr[8])
                 }
                 break;
+            
+            // Input Name Change INC:%1:%2
+            case 'INC':
+                self.data.inputs[parseInt(apiDataArr[1])].label = apiDataArr[1] + ': ' + apiDataArr[2].slice(1,-1)
+                break;
 
-            // Program Source
+            // Program Source PmIS:%1
             case 'PmIS':
                 self.data.program = parseInt(apiDataArr[1]);
                 break;
 
-            // Preview Source
+            // Preview Source PwIS:%1
             case 'PwIS':
                 self.data.preview = parseInt(apiDataArr[1]);
                 break;
 
-            // Stream Volume
+            // Stream Volume SVC:%!
             case 'SVC':
                 self.data.streamMaster.level = parseInt(apiDataArr[1]);
                 break;
@@ -346,7 +351,7 @@ instance.prototype.incomingData = function (apiData) {
                 break;
 
             // Audio Mute
-            case 'ASM':
+            case 'AMC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioMute = parseInt(apiDataArr[2]);
                 break;
 

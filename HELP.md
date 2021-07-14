@@ -46,7 +46,7 @@ The following feedback has been implemented allowing Companion to indicate the s
 
 Feedback          | Description                        
 ----------------- | ---------------------------------- 
- **Slot Recording**| Set the button color if a slot `[1-16 or All]` 
+ **Preview Source**| Indicate which input is in preview 
 
  ---
 ## Variables
