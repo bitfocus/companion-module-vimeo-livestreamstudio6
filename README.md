@@ -1,4 +1,4 @@
-# companion-module-livestream-studio
+# companion-module-vimeo-livestreamstudio6
 See [HELP.md](./HELP.md) and [LICENSE](./LICENSE)
 
 ## A Companion module to control [Livestream Studio 6](https://livestream.com/studio/)
