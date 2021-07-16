@@ -1,9 +1,9 @@
 // Index.js
 // companion-module-livesteam-studio v1.0.0
-// GitHub: https://github.com/ChgoChad/companion-module-livestream-studio
+// GitHub: https://github.com/bitfocus/companion-module-vimeo-livestreamstudio6
 
-const tcp                           = require('../../tcp');
-const instance_skel                 = require('../../instance_skel');
+const tcp                           = require('../../../tcp');
+const instance_skel                 = require('../../../instance_skel');
 const { executeAction, getActions } = require('./actions')
 //const { initAPI }                        = require('./api')
 const { getConfigFields }                = require('./config')

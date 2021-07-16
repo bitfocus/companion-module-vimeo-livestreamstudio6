@@ -1,4 +1,4 @@
-## A Companion module to control [Livestream Studio 6](https://livestream.com/studio/)
+## A Companion module to control [Vimeo Livestream Studio 6](https://livestream.com/studio/)
 
 Livestream Studio 6 will transform your computer into a professional live production control room that can Input multiple feeds, add graphics, master audio, and stream in one robust, easy-to-use package. This module provides control of Studio 6 with Companion. 
 
@@ -74,4 +74,4 @@ Preset          | Description
 
 ---
 
-That's it. Have fun and if you have any questions please submit an issue in this module's [GitHub Repository](https://) or leave a message on the official [Bitfocus Slack Channel](https://bitfocusio.slack.com/archives/CFG7HAN5N)
+That's it. Have fun and if you have any questions please submit an issue in this module's [GitHub Repository](https://github.com/bitfocus/companion-module-vimeo-livestreamstudio6) or leave a message on the official [Bitfocus Slack Channel](https://bitfocusio.slack.com/archives/CFG7HAN5N)
