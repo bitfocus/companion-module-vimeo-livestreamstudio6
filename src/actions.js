@@ -12,9 +12,15 @@ exports.getActions = function () {
     var self = this;
     var actions = {};
 
+    const masterAudioChoices = [
+        { id: 'str', label: 'Stream' },
+        { id: 'rec', label: 'Record' }
+    ]
+
     actions['setPreviewSrc'] = {
-        label: 'Set Preview Bus Source',
-        options: [
+        label      : 'Set Preview Bus Source',
+        description: 'Set the source input on the Preview bus',
+        options    : [
             {
                 type        : 'dropdown',
                 label       : 'Input',
@@ -27,8 +33,9 @@ exports.getActions = function () {
     }
 
     actions['setProgramSrc'] = {
-        label: 'Set Program Bus Source',
-        options: [
+        label      : 'Set Program Bus Source',
+        description: 'Set the source input on the Program bus',
+        options    : [
             {
                 type        : 'dropdown',
                 label       : 'Input',
@@ -41,14 +48,15 @@ exports.getActions = function () {
     }
 
     actions['controlGFX'] = {
-        label: 'Control GFX Sources',
-        options: [
+        label      : 'Control GFX Sources',
+        description: 'Set and control various functions on the GFX stacks (Push, Pull, etc)',
+        options    : [
             {
                 type        : 'dropdown',
                 label       : 'GFX Source',
                 id          : 'gfx',
                 tooltip     : 'Select the GFX stack to control.',
-                default     : [ 0 ],
+                default     :[ 0 ],
                 choices     : [
                     { id: 0, label: 'GFX-1' },
                     { id: 1, label: 'GFX-2' },
@@ -70,14 +78,18 @@ exports.getActions = function () {
     }
 
     actions['controlMedia'] = {
-        label: 'Control Media Sources',
-        options: [
+        label      : 'Control Media Sources',
+        description: 'Control Play/Pause state on Media Inputs',
+        options    : [
             {
                 type        : 'dropdown',
                 label       : 'Media Player Source',
                 id          : 'media',
                 tooltip     : 'Select the Media Player to control.',
-                choices     : []
+                choices     : [
+
+
+                ]
             },
             {
                 type   : 'dropdown',
@@ -93,8 +105,9 @@ exports.getActions = function () {
     }
 
     actions['transitionCut'] = {
-        label: 'Cut Transition',
-        options: [
+        label      : 'Transition: Cut',
+        description: 'Execute a CUT transition',
+        options    : [
             {
                 type        : 'text',
                 label       : 'No options for this action.',
@@ -104,8 +117,9 @@ exports.getActions = function () {
     }
 
     actions['transitionAuto'] = {
-        label: 'Auto Transition',
-        options: [
+        label      : 'Transition Auto',
+        description: 'Execute an AUTO transition',
+        options    : [
             {
                 type        : 'text',
                 label       : 'No options for this action.',
@@ -115,8 +129,9 @@ exports.getActions = function () {
     }
 
     actions['fadeToBlack'] = {
-        label: 'Fade to Black',
-        options: [
+        label      : 'Transition: Fade to Black',
+        description: 'Control the Fade to Black transition',
+        options    : [
             {
                 type        : 'dropdown',
                 label       : 'Action',
@@ -131,8 +146,9 @@ exports.getActions = function () {
     }
 
     actions['setAudioVolume'] = {
-        label: 'Set input audio volume',
-        options: [
+        label      : 'Audio Input: Set Volume',
+        description: 'Set the volume level on an input channel',
+        options    : [
             {
                 type        : 'dropdown',
                 label       : 'Input',
@@ -143,7 +159,7 @@ exports.getActions = function () {
             },
             {
                 type    : 'number',
-                label   : 'Enter the volume level (-60000 to 10000)',
+                label   : 'Volume Level (-60000 to 10000)',
                 id      : 'volume',
                 tooltip : 'Enter volume level from -60000 to 10000.',
                 min     : -60000,
@@ -156,8 +172,9 @@ exports.getActions = function () {
     }
 
     actions['setAudioGain'] = {
-        label: 'Set input audio gain',
-        options: [
+        label      : 'Audio Input: Set Gain',
+        description: 'Set the Gain value on an input channel',
+        options    : [
             {
                 type        : 'dropdown',
                 label       : 'Input',
@@ -168,7 +185,7 @@ exports.getActions = function () {
             },
             {
                 type    : 'number',
-                label   : 'Enter gain level (0 to 10000)',
+                label   : 'Gain Level (0 to 10000)',
                 id      : 'gain',
                 tooltip : 'Enter the gain level from 0 to 10000',
                 min     : 0,
@@ -181,8 +198,9 @@ exports.getActions = function () {
     }
 
     actions['inputAudioMute'] = {
-        label: 'Set input audio mute',
-        options: [
+        label      : 'Audio Input: Set Mute',
+        description: 'Control the Mute state on an input channel',
+        options    : [
             {
                 type        : 'dropdown',
                 label       : 'Input',
@@ -205,8 +223,9 @@ exports.getActions = function () {
     }
 
     actions['inputAudioOnPgm'] = {
-        label: 'Set input audio to program',
-        options: [
+        label      : 'Audio Input: Set Audio to Program',
+        description: 'Set the Audio to Program state on an input channel. This is the same as pressing the AUDIO button in Livestream',
+        options    : [
             {
                 type        : 'dropdown',
                 label       : 'Input',
@@ -230,8 +249,9 @@ exports.getActions = function () {
     }
 
     actions['inputAudioHeadphones'] = {
-        label: 'Set input audio Headphones',
-        options: [
+        label      : 'Audio Input: Set Headphones',
+        description: 'Set the Audio to Headphones state on an input channel',
+        options    : [
             {
                 type        : 'dropdown',
                 label       : 'Input',
@@ -253,9 +273,108 @@ exports.getActions = function () {
         ]
     }
 
+    actions['setMasterVolume'] = {
+        label      : 'Audio Master: Set Volume',
+        description: 'Set the Volume level to an absolute value on a Master channel',
+        options    : [
+            {
+                type        : 'dropdown',
+                label       : 'Master',
+                id          : 'master',
+                tooltip     : 'Select the input to adjust the volume.',
+                choices     : masterAudioChoices
+            },
+            {
+                type    : 'number',
+                label   : 'Volume Level (-60000 to 10000)',
+                id      : 'volume',
+                tooltip : 'Enter volume level from -60000 to 10000.',
+                min     : -60000,
+                max     : 10000,
+                default : 0,
+                step    : 1,
+                required: true
+            }
+        ]
+    }
+
+    actions['setMasterVolumeIncrement'] = {
+        label      : 'Audio Master: Adjust Volume by Increment',
+        description: 'Increment the Volume by an amount on a Master channel',
+        options    : [
+            {
+                type        : 'dropdown',
+                label       : 'Master',
+                id          : 'master',
+                tooltip     : 'Select the input to adjust the volume.',
+                choices     : masterAudioChoices
+            },
+            {
+                type    : 'number',
+                label   : 'Increment (-60000 to +60000)',
+                id      : 'increment',
+                tooltip : 'Enter incremental adjustment to volume level from -60000 to +60000.',
+                min     : -60000,
+                max     : 60000,
+                default : 0,
+                step    : 1,
+                required: true
+            }
+        ]
+    }
+
+    actions['masterAudioMute'] = {
+        label      : 'Audio Master: Set Mute',
+        description: 'Set the Mute state on a Master channel',
+        options    : [
+            {
+                type        : 'dropdown',
+                label       : 'Master',
+                id          : 'master',
+                tooltip     : 'Select the Master Channel to control.',
+                choices     : masterAudioChoices
+            },
+            {
+                type   : 'dropdown',
+                label  : 'Action',
+                id     : 'muteAction',
+                tooltip: 'Select the action to perform.',
+                choices: [
+                    { id: 'on', label: 'Mute On' },
+                    { id: 'off', label: 'Mute Off' }
+                ]
+            }
+        ]
+    }
+
+    actions['masterAudioHeadphones'] = {
+        label      : 'Audio Master: Set Headphones',
+        description: 'Set the Audio to Headphones state on a Master channel',
+        options    : [
+            {
+                type        : 'dropdown',
+                label       : 'Master',
+                id          : 'master',
+                tooltip     : 'Select the Input to control.',
+                choices     : masterAudioChoices
+            },
+            {
+                type   : 'dropdown',
+                label  : 'Action',
+                id     : 'audioHeadphoneAction',
+                tooltip: 'Select the action to perform.',
+                choices: [
+                    { id: 'on', label: 'Headphone On' },
+                    { id: 'off', label: 'Headphone Off' }
+                ]
+            }
+        ]
+    }
+
     actions['controlRecord'] = {
-        label: 'Control Recording',
-        options: [
+        label      : 'Control Recording',
+        description: 'Start or Stop Recording',
+        options    : [
             {
                 type   : 'dropdown',
                 label  : 'Action',
@@ -270,8 +389,9 @@ exports.getActions = function () {
     }
 
     actions['controlStream'] = {
-        label: 'Control Streaming',
-        options: [
+        label      : 'Control Streaming',
+        description: 'Start or Stop Streaming',
+        options    : [
             {
                 type   : 'dropdown',
                 label  : 'Action',

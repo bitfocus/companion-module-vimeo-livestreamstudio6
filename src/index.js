@@ -35,9 +35,9 @@ function instance(system, id, config) {
         program       : null,
         preview       : null,
         gfx           : [
-            { id: 0, preview: false, push: false, pull: false },
-            { id: 1, preview: false, push: false, pull: false },
-            { id: 2, preview: false, push: false, pull: false },
+            { id: 0, state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
+            { id: 1, state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
+            { id: 2, state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
         ],
         streamMaster: {
             level: 0, mute: false, headphones: false
@@ -68,7 +68,8 @@ function instance(system, id, config) {
 // Return config fields for web config
 instance.prototype.config_fields = function () {
     
-    return getConfigFields();
+    var self = this;
+    return getConfigFields.bind(self)();
 
 }
 
@@ -144,7 +145,13 @@ instance.prototype.initTCP = function () {
         
 		self.socket.on('receiveline', function (line) {
 			if (line !== undefined || line !== '') {
-			    if (self.config.verbose) { self.log('debug', '[Livestream Studio] Data received: ' + line) }
+			    
+                // If verbose send received string to the log, except in the case of TrMSp & AVC
+                // both of which return large amounts of data that would be excessive for the log
+                if (self.config.verbose &&
+                    !line.startsWith('TrMSp') &&
+                    !line.startsWith('AVC') 
+                    ) { self.log('debug', '[Livestream Studio] Data received: ' + line) }
 
                self.incomingData(line);
 
@@ -231,6 +238,11 @@ instance.prototype.action = function (action) {
 
 
 // Deal with incoming data
+/**
+ *
+ *
+ * @param {*} apiData
+ */
 instance.prototype.incomingData = function (apiData) {
     var self = this;
     const apiDataArr = apiData.split(":");
@@ -239,6 +251,7 @@ instance.prototype.incomingData = function (apiData) {
 
         switch (apiDataArr[0]) {
             
+            // Inputs -----------------------------------------------
             // Number of Inputs
             case 'ILCC':
                 self.data.numberOfInputs = apiDataArr[1]
@@ -248,7 +261,7 @@ instance.prototype.incomingData = function (apiData) {
             case 'ILC':
                 self.data.inputs[apiDataArr[1]] = { 
                     id             : parseInt(apiDataArr[1]),
-                    label          : apiDataArr[1] + ': ' + apiDataArr[2].slice(1,-1),
+                    label          : (parseInt(apiDataArr[1]) + 1).toString() + ':' + apiDataArr[2].slice(1,-1),
                     audioVolume    : parseInt(apiDataArr[3]),
                     audioGain      : parseInt(apiDataArr[4]),
                     audioMute      : parseInt(apiDataArr[5]),
@@ -260,7 +273,8 @@ instance.prototype.incomingData = function (apiData) {
             
             // Input Name Change INC:%1:%2
             case 'INC':
-                self.data.inputs[parseInt(apiDataArr[1])].label = apiDataArr[1] + ': ' + apiDataArr[2].slice(1,-1)
+                self.data.inputs[parseInt(apiDataArr[1])].label = 
+                    (parseInt(apiDataArr[1]) + 1).toString() + ':' + apiDataArr[2].slice(1,-1)
                 break;
 
             // Program Source PmIS:%1
@@ -273,6 +287,7 @@ instance.prototype.incomingData = function (apiData) {
                 self.data.preview = parseInt(apiDataArr[1]);
                 break;
 
+            // Stream Master Fader ------------------------------------------
             // Stream Volume SVC:%!
             case 'SVC':
                 self.data.streamMaster.level = parseInt(apiDataArr[1]);
@@ -288,6 +303,7 @@ instance.prototype.incomingData = function (apiData) {
                 self.data.streamMaster.headphones = parseInt(apiDataArr[1]);
                 break;
 
+            // Record Master Fader ------------------------------------------
             // Record Volume
             case 'RVC':
                 self.data.recordMaster.level = parseInt(apiDataArr[1]);
@@ -303,6 +319,7 @@ instance.prototype.incomingData = function (apiData) {
                 self.data.recordMaster.headphones = parseInt(apiDataArr[1]);
                 break;
 
+            // Transitions ---------------------------------------------------
             // Fade to Black not engaged
             case 'FIn':
                 self.data.status.fadeToBlack = false;
@@ -313,38 +330,96 @@ instance.prototype.incomingData = function (apiData) {
                 self.data.status.fadeToBlack = true;
                 break;
             
+            // Streaming -----------------------------------------------------
             // Streaming Stopped
             case 'StrStopped':
                 self.data.status.streaming = false;
                 break;
 
+            // Streaming Started 
+            case 'StrStarted':
+                self.data.status.streaming = true;
+                break;
+
+            // Unknown API Response
             case 'StrSEr':
 
                 break;
 
-            // GFX is in Pushed State (Visible on PGM)
+            // Stream Starting or Stopping (indeterminate state)
+            case 'StrStarting':
+            case 'StrStopping':
+                self.data.status.streaming = 'Transitioning';
+                break;
+
+            // Recording -----------------------------------------------------
+            // Recording Stopped
+            case 'RecStopped':
+                self.data.status.recording = false;
+                break;
+
+            // Recording Started 
+            case 'RecStarted':
+                self.data.status.recording = true;
+                break;
+
+            // Unknown API Response
+            case 'RecSEr':
+
+                break;
+
+            // Record Starting or Stopping (indeterminate state)
+            case 'RecStarting':
+            case 'RecStopping':
+                self.data.status.recording = 'Transitioning';
+                break;
+
+            // GFX -----------------------------------------------------------
+            // GFX Stack On State  GMOn:%1
+            case 'GMOn':
+                self.data.gfx[parseInt(apiDataArr[1])].state = 'On';
+                break;
+
+            // GFX Stack Off State  GMOff:%1
+            case 'GMOff':
+                self.data.gfx[parseInt(apiDataArr[1])].state = 'Off';
+                break;
+
+            // GFX In Preview GMPvS:%!:%2
+            case 'GMPvS':
+
+                break;
+            
+            // GFX NOT in Preview GMPvH:%1:%2
+            case 'GMPvH':
+
+                break;
+
+            // GFX is in Pushed State (Visible on PGM)  GMOS:%1:%2
             case 'GMOS':
-                self.data.gfx[parseInt(apiDataArr[1])].push = true;
-                self.data.gfx[parseInt(apiDataArr[1])].pull = false;
+                self.data.gfx[parseInt(apiDataArr[1])].pushed = true;
+                self.data.gfx[parseInt(apiDataArr[1])].pulled = false;
                 break;
 
-            // GFX is in Pulled State (Not visible on PGM)
+            // GFX is in Pulled State (Not visible on PGM) GMOH:%1:%2
             case 'GMOH':
-                self.data.gfx[parseInt(apiDataArr[1])].pull = true;
-                self.data.gfx[parseInt(apiDataArr[1])].push = false;
+                self.data.gfx[parseInt(apiDataArr[1])].pulled = true;
+                self.data.gfx[parseInt(apiDataArr[1])].pushed = false;
                 break;
 
-            // case 'GPA':
-            //     if (parseInt(apiDataArr[1]) === 0 { 
-            //         self.data.gfx[parseInt(apiDataArr[1])].pull = true;
-            //     }
-            //     break;
+            // GFX stack can be pushed GPA:%1:%2
+            case 'GPA':
+                if (parseInt(apiDataArr[1]) === 0) { 
+                    self.data.gfx[parseInt(apiDataArr[1])].pull = true;
+                }
+                break;
 
             // Media Player Pause
             case 'MPause':
                 self.data.inputs[parseInt(apiDataArr[1])].media = 'pause';
                 break;
 
+            // Audio Faders -----------------------------------------------------
             // Audio to Program 0=off, 1=red, 2=yellow
             case 'AOC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioToPgm = parseInt(apiDataArr[2]);
