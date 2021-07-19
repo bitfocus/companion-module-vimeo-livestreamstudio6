@@ -39,6 +39,9 @@ function instance(system, id, config) {
             { id: 1, state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
             { id: 2, state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
         ],
+        media         : [
+            { id: null, state: null }
+        ],
         streamMaster: {
             level: 0, mute: false, headphones: false
         },
@@ -87,6 +90,8 @@ instance.prototype.init = function () {
     //self.setPresetDefinitions(initPresets());
     initPresets.bind(self)();
     self.initTCP();
+    self.setActions(getActions.bind(self)()); 
+    
 }
 
 // Initialize TCP connection
@@ -199,7 +204,6 @@ instance.prototype.updateConfig = function (config) {
         self.initTCP();
     }
 
-    //self.setActions(getActions());
     self.setActions(getActions.bind(self)());
     //self.setVariableDefinitions(initVariables());
     self.setVariableDefinitions(initVariables.bind(self)());
@@ -238,11 +242,6 @@ instance.prototype.action = function (action) {
 
 
 // Deal with incoming data
-/**
- *
- *
- * @param {*} apiData
- */
 instance.prototype.incomingData = function (apiData) {
     var self = this;
     const apiDataArr = apiData.split(":");
@@ -293,82 +292,82 @@ instance.prototype.incomingData = function (apiData) {
                 self.data.streamMaster.level = parseInt(apiDataArr[1]);
                 break;
                 
-            // Stream Mute
+            // Stream Mute  SMC:%1
             case 'SMC':
                 self.data.streamMaster.mute = parseInt(apiDataArr[1]);
                 break;
 
-            // Stream Headphones
+            // Stream Headphones  SSC:%1
             case 'SSC':
                 self.data.streamMaster.headphones = parseInt(apiDataArr[1]);
                 break;
 
             // Record Master Fader ------------------------------------------
-            // Record Volume
+            // Record Volume  RVC:%1
             case 'RVC':
                 self.data.recordMaster.level = parseInt(apiDataArr[1]);
                 break;
 
-            // Record Mute
+            // Record Mute  RMC:%1
             case 'RMC':
                 self.data.recordMaster.mute = parseInt(apiDataArr[1]);
                 break;
             
-            // Record Headphones
+            // Record Headphones  RSC:%1
             case 'RSC':
                 self.data.recordMaster.headphones = parseInt(apiDataArr[1]);
                 break;
 
             // Transitions ---------------------------------------------------
-            // Fade to Black not engaged
+            // Fade to Black not engaged  FIn
             case 'FIn':
                 self.data.status.fadeToBlack = false;
                 break;
 
-            // Fade to Black engaged
+            // Fade to Black engaged  FOut
             case 'FOut':
                 self.data.status.fadeToBlack = true;
                 break;
             
             // Streaming -----------------------------------------------------
-            // Streaming Stopped
+            // Streaming Stopped  StrStopped
             case 'StrStopped':
                 self.data.status.streaming = false;
                 break;
 
-            // Streaming Started 
+            // Streaming Started   StrStarted
             case 'StrStarted':
                 self.data.status.streaming = true;
                 break;
 
-            // Unknown API Response
+            // Unknown API Response  StrSEr
             case 'StrSEr':
-
+                self.log('error', '[Livestream Studio] Error Unknown API Responce - StrSEr - Please log this issue on GitHub')
                 break;
 
-            // Stream Starting or Stopping (indeterminate state)
+            // Stream Starting or Stopping (indeterminate state) StrStarting StrStopping
             case 'StrStarting':
             case 'StrStopping':
                 self.data.status.streaming = 'Transitioning';
                 break;
 
             // Recording -----------------------------------------------------
-            // Recording Stopped
+            // Recording Stopped  RecStopped
             case 'RecStopped':
                 self.data.status.recording = false;
                 break;
 
-            // Recording Started 
+            // Recording Started   RecStarted
             case 'RecStarted':
                 self.data.status.recording = true;
                 break;
 
-            // Unknown API Response
+            // Unknown API Response  RecSEr
             case 'RecSEr':
-
+                self.log('error', '[Livestream Studio] Error Unknown API Responce - RecSEr - Please log this issue on GitHub')
                 break;
 
-            // Record Starting or Stopping (indeterminate state)
+            // Record Starting or Stopping (indeterminate state)  RecStarting RecStopping
             case 'RecStarting':
             case 'RecStopping':
                 self.data.status.recording = 'Transitioning';
@@ -387,12 +386,12 @@ instance.prototype.incomingData = function (apiData) {
 
             // GFX In Preview GMPvS:%!:%2
             case 'GMPvS':
-
+                self.data.gfx[parseInt(apiDataArr[1])].preview = true;
                 break;
             
             // GFX NOT in Preview GMPvH:%1:%2
             case 'GMPvH':
-
+                self.data.gfx[parseInt(apiDataArr[1])].preview = false;
                 break;
 
             // GFX is in Pushed State (Visible on PGM)  GMOS:%1:%2
@@ -409,53 +408,73 @@ instance.prototype.incomingData = function (apiData) {
 
             // GFX stack can be pushed GPA:%1:%2
             case 'GPA':
-                if (parseInt(apiDataArr[1]) === 0) { 
-                    self.data.gfx[parseInt(apiDataArr[1])].pull = true;
+                if (parseInt(apiDataArr[2]) === 0) {
+                    self.data.gfx[parseInt(apiDataArr[1])].canPush = false;
+                } else if (parseInt(apiDataArr[2]) === 1 ) {
+                    self.data.gfx[parseInt(apiDataArr[1])].canPush = true;
                 }
                 break;
-
-            // Media Player Pause
+            
+            // Media Inputs -----------------------------------------------------
+            // Media Player Playing   MIOP:%1
+                case 'MIOP':
+                    self.data.inputs[parseInt(apiDataArr[1])].media = 'play';
+                    break;           
+            
+            // Media Player Pause   MPause:%1
             case 'MPause':
                 self.data.inputs[parseInt(apiDataArr[1])].media = 'pause';
                 break;
 
             // Audio Faders -----------------------------------------------------
-            // Audio to Program 0=off, 1=red, 2=yellow
+            // Audio to Program 0=off, 1=red, 2=yellow  AOC:%1:%2
             case 'AOC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioToPgm = parseInt(apiDataArr[2]);
                 break;
 
-            // Audio Mute
+            // Audio Mute  AMC:%1:%2
             case 'AMC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioMute = parseInt(apiDataArr[2]);
                 break;
 
-            // Audio Headphones
+            // Audio Headphones   ASC:%1:%2
             case 'ASC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioHeadphones = parseInt(apiDataArr[2]);
                 break;
 
-            // Audio Fader Volume
+            // Audio Fader Volume   AVC:%!:%2
             case 'AVC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioVolume = parseInt(apiDataArr[2]);
                 break;
 
-            // Audio Gain
+            // Audio Gain  AGC:%1:%2
             case 'AGC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioGain = parseInt(apiDataArr[2]);
                 break;
 
-            
+            // Ignored Data
+            // We want to ignore these items from the API
+            case 'TrASp':
+            case 'TrMSp':
+                // do nothing
+                break;
+
+            default:
+                self.log('warn', 'API response undefined: ' + apiData);
 
         }
-
-
     } else {
         self.log('error', '[Livestream Studio] No data received from socket')
     }
 }
 
+instance.prototype.getMediaInputs = function () {
+    var self = this;
+    
+    let mediaInputs = self.data.inputs.filter(input => input.type === 3, self);
 
+     self.data.media = mediaInputs; 
+}
 
 
 instance_skel.extendedBy(instance);

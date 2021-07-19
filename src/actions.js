@@ -1,7 +1,6 @@
 // actions.js
 // Companion module for Livestream Studio 6
 
-const { Braket } = require("aws-sdk");
 
 // ########################
 // #### Define Actions ####
@@ -79,17 +78,14 @@ exports.getActions = function () {
 
     actions['controlMedia'] = {
         label      : 'Control Media Sources',
-        description: 'Control Play/Pause state on Media Inputs',
+        description: 'Control Play/Pause state on Media Inputs. When playing you can play the full clip or just the In to Out points',
         options    : [
             {
                 type        : 'dropdown',
                 label       : 'Media Player Source',
                 id          : 'media',
                 tooltip     : 'Select the Media Player to control.',
-                choices     : [
-
-
-                ]
+                choices     : self.data.media
             },
             {
                 type   : 'dropdown',
@@ -97,7 +93,8 @@ exports.getActions = function () {
                 id     : 'mediaAction',
                 tooltip: 'Select the action to perform.',
                 choices: [
-                    { id: 'play', label: 'Play' },
+                    { id: 'playFull', label: 'Play Full Clip' },
+                    { id: 'playInOut', lebel: 'Play In to Out Point'},
                     { id: 'pause', label: 'Pause' }
                 ]
             }
@@ -437,7 +434,13 @@ exports.executeAction = function (action) {
             
             //Control Media
             case 'controlMedia':
-
+                if (options.mediaAction === 'playFull') {
+                    cmd = 'RMFP:' + options.media + '\n';
+                } else if (optoins.mediaAction === 'playInOut') {
+                    cmd = 'RMIOP:' + options.media + '\n';
+                } else if (options.mediaAction === 'pause') {
+                    cmd = 'RMPause:' + options.media + '\n';
+                }
                 break;
 
             //Cut Transition
