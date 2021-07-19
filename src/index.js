@@ -35,12 +35,12 @@ function instance(system, id, config) {
         program       : null,
         preview       : null,
         gfx           : [
-            { id: 0, state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
-            { id: 1, state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
-            { id: 2, state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
+            { id: 0, label: 'GFX-1', state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
+            { id: 1, label: 'GFX-2', state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
+            { id: 2, label: 'GFX-3', state: 'off', canPush: false, preview: false, pushed: false, pulled: false },
         ],
         media         : [
-            { id: null, state: null }
+        
         ],
         streamMaster: {
             level: 0, mute: false, headphones: false
@@ -62,7 +62,7 @@ function instance(system, id, config) {
     self.ICON_HEADPHONES_ON  = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAAEdklEQVR4nO1b107kSBQ9i5ochchJZBAg2BUgJHhglx+YmT9YfsD/sF+wUv/AzB8s88ADT7sSIBASIufUILIIQxJRsDo1Lo/bWI1n2nYz2Eey2uWuur51fCpdu+DDhw8fPn4u/GLmbTAY/BPAOwC/A8jywDP9D8BnAJ8URfli/DOMpGAwSEL+BfCrqy6+HoQAfFAUZVLvkUaSkaCHhwecnJzg8vLyTbOSlJSEvLw8BAIBeYlK+kNPVECX/29J0OHhIebm5gRRXgDrWldXh7KyMqjdyz8AKmTV4/BVReUA2A/h4uICU1NTniFIYmlpCbu7uzJZrvbLAnHq73t9Zq+CddeJ452RpBZ54fT01LMkkSC2JBXaqC5JYnPzNEGREPfjRb0DnyQLCBizPD09vUY/Y4owkkiQ10kyq/8zJT0+PrrlTxgyMjIQHx+vXTo+Po6JH2aIqZJKSkqQn58vDjOcn59je3tbHG5Nbl+NkgoKCtDY2Ijk5OSI+aiuhoYG1NTUYGNjA8vLy477ZgZXO24uIpuamlBaWqpdY7Pa2toSquFBkLzMzExBJvOyGdbW1or02NgYrq+vHfPR1G99ggQ5pSRWtLOzU1SeODs7w+zsLI6Ojp7lvbq6EgfXUouLi4LYwsJCoazu7m4MDw+L8k4gps2tq6tLI4jKGR8ft1SOoZrR0VGxQm9tbRVk09bAwADu7+8d8dUIVzru5uZmjaDp6Wmsrq5+t43NzU3hW1tbmyCqo6MDg4ODtvsaEyXl5uaiurpanIdCoag6X5YnQS0tLcJuVVUVVlZWbPTWHM+WJVJNdh0cnaD2M5OTk1HbJck7OzvCJm1zMLDTXzM42nEzLMonTrCTvr29tcXuxMQEiouLhaqoUkYW7YLrza28XERghIrW19dts8uYD+dNFRUV4piZmbHNthkc7bj5tAkO43YPCAsLC4Kg1NRUZGVl2RYLc1VJXGokJCSIcw750i47W1YMqsLW1tYi2klLS0NlZaWWpiI5LeCbnLu7O3EPNmkn13qOkcT+COo8RxcSFRWWa7WDg4MXR6eUlBQxhZDY39/XZuYszxk57c3Pz9vitxkca25yRU+S9DaN5y/dz/jQmJZlqB65bLHLb1ebW3Z2tvjlk49k86X7GZ3Wj8BSobyXkwtzx5TEp0xbbBrRKMmMJL2S9vb2TPP9KFxV0sjIiKV80SiJi+P+/v4ovLSGmEcmoyHJLbgembSz43baPwnXlaSPH/H8pfvd3Nzo39GLdEyVBBdeKQ0NDX1XfhLZ19fnmD9W4L+ctACfJAvwSbIAnyQL8EmyAEmS+Cw3PT39NfsaM0iSpqCSlJiY6D0WdDATiiRJ+xxXH7vxGhjp1JH0OYwkRVH61A+90d7ejvr6es8RlJOTg56eHv0lbQarn3H3qh+7i8xFRUUi2M4Q6VsHFWRoQX8pihKSCeO2CX67/PHNsxIZ3F/Sq88RNgVQFOUTgN/UDSleg9xX0must+kuJXzbJfD1xdnbxxfjphsfPnz48PGzAsD/DyYR6FZfHkkAAAAASUVORK5CYII=';
     self.ICON_HEADPHONES_OFF = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAAD90lEQVR4nO1b2U7cMBQ9s7BvI7EvQhQheGVeeYFPaL+g/ZV+SfsHbb+g7QuvVDwiQBUgdjHsO0x13NxRCGGSIY4zTHykKJvt2CfnXl87DiwsLCws3hYyAbWdBVBIwTv9VWsGkvIFQAlAOUUb2zwRhqDZFJLj3T55SXGbG1lcEvOamZnB0NAQuru7a1Xim8Ll5SV2d3exsrKCu7s7qfoHAN/9SPoJYKGpqQlzc3MNT44XJGhxcRGnp6e88xfAO0mSdfZU0QIPpqenU0cQQXEUi0U5nXCbnZD0XhJOTk4mUce6AMXhEsi8HAhJyg+lUUFeDA8Py5VKT5cNkzHtsCSFgCUpBPLeJOVyuR7raQx+7X9G0uPjYyO1uWYEksQEppWUy+XQ2tqKfD6PTCaj9gzs7u/vcX19jYeHB6P1qSslkZienh6196Ktra1y5fb2FmdnZzg/PzdSLz8YV1I2m8XAwMAzcqgaOC+JaeR+c3Mzent70dXVhcPDQ0VanEhcSWzwyMiIIoGgSZVKJVxcXPg+t729XamNypK8BwcHSllxIVGSWlpanhBEVRwfH1fNQxPj1tHRgcHBQZW3v79fNcQZiGpHYo6bznh0dFQ1ki9hc3OzJrMhUZzSGBsbU2TTXKlCKlA3ElOSKIhlb2xs4ObmpuYyJO/4+LgiinNd6+vrRnq/JxG3KEnnVigUVKOIvb095aBfWz4J2d7e/l9xl+np3ryIVUlsSF9fnzqms6WTjoqrqyvlvEkQnfr+/r57RjEyjJPERjBYJHZ2drSVTUVSoZz/IllbW1taykUSjpvxDcGe6DV+qBqOjo5Uj8f4SWedjSpJhhtwGqS7QxCS+BwSdXJyorV8N2JTEmMbgTsempqaQmdnpzpm1766ulq1HKZlHgHTMx+VSf/EQJMvIyjmCgujShIVsSHuMt2V4HHQ87z3eS7X2BmQJL4QXfU2ShKHEQTfeLUyg57nrbSbWAaUcEzbGEk6zU1IYlRcrcyg5/mRJNfYITBQ5RhPV72NKonxC50pTSKKuVVTEgNT6f6NKkknSWEQxSfR33EcGDeMz3F7lRTF3OKunyA2JYVFFHOLA3Uxfbu2tqamTuD0TkHPo09bXl6unDNGSpykuFHrXDWJ1BUovhb242QIWJJCwJIUApakELAkhcATktK+DgAvcCAk/YEzFtI5X/wW4frw+dtLElfEq2Ak7JirEcEPFS6RVP4SyDl7fojnKoUFfjRkQk6JpgmcseB6bhdBn+XE+2/JkvNXgPoSwa8d3HNrRND/0MVwFCALNhyLKjpruX3BVbjfUvzLxJLf/yUv/aXEhe8fnQyN/qeS+OMfAL7WQX0sLCwsLCIBwD/fItnwIMk6LgAAAABJRU5ErkJggg==';
 
-  self.setActions(getActions.bind(self)()); // export action
+  //self.setActions(getActions.bind(self)()); // export action
 
     return self;
 }
@@ -90,6 +90,7 @@ instance.prototype.init = function () {
     //self.setPresetDefinitions(initPresets());
     initPresets.bind(self)();
     self.initTCP();
+   // setTimeout(self.setMediaInputs(), 0);
     self.setActions(getActions.bind(self)()); 
     
 }
@@ -155,6 +156,7 @@ instance.prototype.initTCP = function () {
                 // both of which return large amounts of data that would be excessive for the log
                 if (self.config.verbose &&
                     !line.startsWith('TrMSp') &&
+                    !line.startsWith('TrASp') &&
                     !line.startsWith('AVC') 
                     ) { self.log('debug', '[Livestream Studio] Data received: ' + line) }
 
@@ -204,6 +206,8 @@ instance.prototype.updateConfig = function (config) {
         self.initTCP();
     }
 
+    self.log('warn', '[Livestream Studio] Update Config: Reinitializing actions, variables, and feedbacks');
+    self.setMediaInputs();
     self.setActions(getActions.bind(self)());
     //self.setVariableDefinitions(initVariables());
     self.setVariableDefinitions(initVariables.bind(self)());
@@ -389,7 +393,7 @@ instance.prototype.incomingData = function (apiData) {
                 self.data.gfx[parseInt(apiDataArr[1])].preview = true;
                 break;
             
-            // GFX NOT in Preview GMPvH:%1:%2
+            // GFX NOT in Preview  GMPvH:%1:%2
             case 'GMPvH':
                 self.data.gfx[parseInt(apiDataArr[1])].preview = false;
                 break;
@@ -406,7 +410,7 @@ instance.prototype.incomingData = function (apiData) {
                 self.data.gfx[parseInt(apiDataArr[1])].pushed = false;
                 break;
 
-            // GFX stack can be pushed GPA:%1:%2
+            // GFX stack can be pushed  0=No, 1=Flashing Push  GPA:%1:%2
             case 'GPA':
                 if (parseInt(apiDataArr[2]) === 0) {
                     self.data.gfx[parseInt(apiDataArr[1])].canPush = false;
@@ -417,9 +421,9 @@ instance.prototype.incomingData = function (apiData) {
             
             // Media Inputs -----------------------------------------------------
             // Media Player Playing   MIOP:%1
-                case 'MIOP':
-                    self.data.inputs[parseInt(apiDataArr[1])].media = 'play';
-                    break;           
+            case 'MIOP':
+                self.data.inputs[parseInt(apiDataArr[1])].media = 'play';
+                break;           
             
             // Media Player Pause   MPause:%1
             case 'MPause':
@@ -432,22 +436,22 @@ instance.prototype.incomingData = function (apiData) {
                 self.data.inputs[parseInt(apiDataArr[1])].audioToPgm = parseInt(apiDataArr[2]);
                 break;
 
-            // Audio Mute  AMC:%1:%2
+            // Audio Mute  0=Off, 1=On AMC:%1:%2  
             case 'AMC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioMute = parseInt(apiDataArr[2]);
                 break;
 
-            // Audio Headphones   ASC:%1:%2
+            // Audio Headphones  0=Off, 1=On  ASC:%1:%2  
             case 'ASC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioHeadphones = parseInt(apiDataArr[2]);
                 break;
 
-            // Audio Fader Volume   AVC:%!:%2
+            // Audio Fader Volume  -60000 to 10000  AVC:%!:%2   
             case 'AVC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioVolume = parseInt(apiDataArr[2]);
                 break;
 
-            // Audio Gain  AGC:%1:%2
+            // Audio Gain  0 to 10000  AGC:%1:%2
             case 'AGC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioGain = parseInt(apiDataArr[2]);
                 break;
@@ -468,12 +472,15 @@ instance.prototype.incomingData = function (apiData) {
     }
 }
 
-instance.prototype.getMediaInputs = function () {
+instance.prototype.setMediaInputs = function () {
     var self = this;
-    
+    self.log('info', '[Livestream Studio] Setting Media Inputs');
+
     let mediaInputs = self.data.inputs.filter(input => input.type === 3, self);
 
-     self.data.media = mediaInputs; 
+     mediaInputs.forEach(function (m) {
+         self.data.media.push({ id: m.id, label: m.label, media: m.media});
+     });
 }
 
 

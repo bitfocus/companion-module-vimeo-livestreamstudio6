@@ -23,7 +23,7 @@ This module is for Vimeo Livestream Studio 6 production swithcer software. To co
 The following actions are available to assign to a button.
 
 Action                           | Description                  
--------------------------------: | ---------------------------- 
+-------------------------------- | ---------------------------- 
 **Set Preview Bus Source**       | Sets the source on the Preview Bus [**Input**: `Available Inputs`]
 **Set Program Bus Source**       | Sets the source on the Program Bus [**Input**: `Available Inputs`]
 **Control GFX Source**           | Control GFX Souces [**GFX Stack**: `1-3`, **Action**: `Push`, `Pull`, `Preview`]
@@ -32,6 +32,7 @@ Action                           | Description
 **Transition: Auto**             | Execute an AUTO transition 
 **Transition: Fade to Black**    | Fade to Black on Program Bus [**Action**: `Fade In`, `Fade Out`]
 **Audio Input: Set Volume**      | Set audio Volume [**Input**: `Available Inputs`, **Level**: `-60000 to 10000`]
+**Audio Input: Adjust by Increment** | Adjust input volume by an increment [**Input**: `Available Inputs`, **Increment**: `-600000 to +60000`]
 **Audio Input: Set Gain**        | Set audio Gain [**Input**: `Available Inputs`, **Level**: `0 to 10000`]
 **Audio Input: Set Mute**        | Set audio Mute [**Input**: `Available Inputs`, **Mute**: `On`, `Off`]
 **Audio Input: Audio On Program**| Assign audio to program [**Input**: `Available Inputs`, **Audio**: `Off`, `Always On`, `When Source is in Program` ]

@@ -1,6 +1,8 @@
 // actions.js
 // Companion module for Livestream Studio 6
 
+const { bind } = require("lodash");
+
 
 // ########################
 // #### Define Actions ####
@@ -56,11 +58,7 @@ exports.getActions = function () {
                 id          : 'gfx',
                 tooltip     : 'Select the GFX stack to control.',
                 default     :[ 0 ],
-                choices     : [
-                    { id: 0, label: 'GFX-1' },
-                    { id: 1, label: 'GFX-2' },
-                    { id: 2, label: 'GFX-3' }
-                ]
+                choices     : self.data.gfx
             },
             {
                 type   : 'dropdown',
@@ -70,7 +68,8 @@ exports.getActions = function () {
                 choices: [
                     { id: 'push', label: 'Push' },
                     { id: 'pull', label: 'Pull' },
-                    { id: 'preview', label: 'Preview' }
+                    { id: 'previewShow', label: 'Preview Show' },
+                    { id: 'previewHide', label: 'Preview Hide' }
                 ]
             }
         ]
@@ -94,7 +93,7 @@ exports.getActions = function () {
                 tooltip: 'Select the action to perform.',
                 choices: [
                     { id: 'playFull', label: 'Play Full Clip' },
-                    { id: 'playInOut', lebel: 'Play In to Out Point'},
+                    { id: 'playInOut', label: 'Play In to Out Point'},
                     { id: 'pause', label: 'Pause' }
                 ]
             }
@@ -167,6 +166,32 @@ exports.getActions = function () {
             }
         ]
     }
+
+    actions['setAudioVolumeIncrement'] = {
+        label      : 'Audio Input: Adjust Volume by Increment',
+        description: 'Increment the Volume by an amount on a Input channel',
+        options    : [
+            {
+                type        : 'dropdown',
+                label       : 'Input',
+                id          : 'input',
+                tooltip     : 'Select the input to adjust the volume.',
+                choices     : self.data.inputs
+            },
+            {
+                type    : 'number',
+                label   : 'Increment (-60000 to +60000)',
+                id      : 'increment',
+                tooltip : 'Enter incremental adjustment to volume level from -60000 to +60000.',
+                min     : -60000,
+                max     : 60000,
+                default : 0,
+                step    : 1,
+                required: true
+            }
+        ]
+    }
+
 
     actions['setAudioGain'] = {
         label      : 'Audio Input: Set Gain',
@@ -337,8 +362,8 @@ exports.getActions = function () {
                 id     : 'muteAction',
                 tooltip: 'Select the action to perform.',
                 choices: [
-                    { id: 'on', label: 'Mute On' },
-                    { id: 'off', label: 'Mute Off' }
+                    { id: 0, label: 'Mute Off' },
+                    { id: 1, label: 'Mute On' }
                 ]
             }
         ]
@@ -361,8 +386,8 @@ exports.getActions = function () {
                 id     : 'audioHeadphoneAction',
                 tooltip: 'Select the action to perform.',
                 choices: [
-                    { id: 'on', label: 'Headphone On' },
-                    { id: 'off', label: 'Headphone Off' }
+                    { id: 0, label: 'Headphone Off' },
+                    { id: 1, label: 'Headphone On' }
                 ]
             }
         ]
@@ -419,17 +444,33 @@ exports.executeAction = function (action) {
 
             // Set Preview Source
             case 'setPreviewSrc':
-                cmd = 'SPrI:' + options.input + '\n'
+                cmd = 'SPrI:' + parseInt(options.input) + '\n'
                 break;
             
             // Set Program Source                
             case 'setProgramSrc':
-                cmd = 'SPmI:' + options.input + '\n'
+                cmd = 'SPmI:' + parseInt(options.input) + '\n'
                 break;
 
             //Control GFX stacks
             case 'controlGFX':
+                switch (options.gfxAction) {
+                    case 'push':
+                        cmd = 'RGMOS:' + parseInt(options.gfx) + '\n';
+                        break;
+                    
+                    case 'pull':
+                        cmd = 'RGMOH:' + parseInt(options.gfx) + '\n';
+                        break;
+                    
+                    case 'previewShow':
+                        cmd = 'RGPvS:' + parseInt(options.gfx) + '\n';
+                        break;
 
+                    case 'previewHide': 
+                        cmd = 'RGMPvH:' + parseInt(options.gfx) + '\n';
+                        break;
+                }
                 break;
             
             //Control Media
@@ -445,26 +486,31 @@ exports.executeAction = function (action) {
 
             //Cut Transition
             case 'transitionCut':
-                cmd = 'RCut'
+                cmd = 'RCut\n'
                 break;
             
             //Auto Transition
             case 'transitionAuto':
-                cmd = 'RAuto'
+                cmd = 'RAuto\n'
                 break;
 
             //Fade to Black
             case 'fadeToBlack':
                 if (options.action === 'fadeIn') {
-                    cmd = 'RFIn';
+                    cmd = 'RFIn\n';
                 } else if (options.action === 'fadeOut') {
-                    cmd = 'RFOut';
+                    cmd = 'RFOut\n';
                 }
                 break;
 
             //Audio Volume Level
             case 'setAudioVolume':
                 cmd = 'SIVL:' + parseInt(options.input) + ':' + parseInt(options.volume) + '\n'
+                break;
+
+            //Audio Volume Level by Increment
+            case 'setAudioVolumeIncrement':
+                cmd = 'IVL:' + parseInt(options.input) + ':' + parseInt(options.increment) + '\n'
                 break;
 
             //Audio Gain
@@ -475,47 +521,83 @@ exports.executeAction = function (action) {
             //Audio Mute
             case 'inputAudioMute':
                 if (options.muteAction === 'on') {
-                    cmd = 'IAM:' + parseInt(options.input) + ':1'
+                    cmd = 'IAM:' + parseInt(options.input) + ':1\n'
                 } else if (options.muteAction === 'off') {
-                    cmd = 'IAM:' + parseInt(options.input) + ':0'
+                    cmd = 'IAM:' + parseInt(options.input) + ':0\n'
                 }
                 break;
 
             //Audio on Program
             case 'inputAudioOnPgm':
                 if (options.audioOnPgmAction === 'always') {
-                    cmd = 'IAP:' + parseInt(options.input) + ':1'
+                    cmd = 'IAP:' + parseInt(options.input) + ':1\n'
                 } else if (options.audioOnPgmAction === 'sourceInPgm') {
-                    cmd = 'IAP:' + parseInt(options.input) + ':2'
+                    cmd = 'IAP:' + parseInt(options.input) + ':2\n'
                 } else if (options.audioOnPgmAction === 'off') {
-                    cmd = 'IAP:' + parseInt(options.input) + ':0'
+                    cmd = 'IAP:' + parseInt(options.input) + ':0\n'
                 }
                 break;
 
             //Audio headphones
             case 'inputAudioHeadphones':
                 if (options.audioHeadphoneAction === 'on') {
-                    cmd = 'IAH:' + parseInt(options.input) + ':1'
+                    cmd = 'IAH:' + parseInt(options.input) + ':1\n'
                 } else if (options.audioHeadphoneAction === 'off') {
-                    cmd = 'IAH:' + parseInt(options.input) + ':0'
+                    cmd = 'IAH:' + parseInt(options.input) + ':0\n'
+                }
+                break;
+
+            //Master Volume Stream or Record
+            case 'setMasterVolume':
+                if (options.master === 'str') {
+                    cmd = 'SSVL:' + parseInt(options.volume) + '\n';
+                } else if (options.master === 'rec') {
+                    cmd = 'SRVL:' + parseInt(options.volume) + '\n';
+                }
+                break;
+
+            // Master Volume Increment Stream or Record
+            case 'setMasterVolumeIncrement':
+                if (options.master === 'str') {
+                    cmd = 'SVL:' + parseInt(options.increment) + '\n';
+                } else if (options.master === 'rec') {
+                    cmd = 'RVL:' + parseInt(options.increment) + '\n';
+                }
+                break;
+
+            // Master Audio Mute Stream or Record
+            case 'masterAudioMute':
+                if (options.master === 'str') {
+                    cmd = 'SM:' + parseInt(options.muteAction) + '\n';
+                } else if (options.master === 'rec') {
+                    cmd = 'RM:' + parseInt(options.muteAction) + '\n';
+                }
+                break;
+
+            // Master Audio Headphones Stream or Record
+            case 'masterAudioHeadphones':
+                if (options.master === 'str') {
+                    cmd = 'SH:' + parseInt(options.audioHeadphoneAction) + '\n';
+                } else if (options.master === 'rec') {
+                    cmd = 'RH:' + pasrseInt(options.audioHeadphoneAction) + '\n';
                 }
                 break;
 
             //Recoding
             case 'controlRecord':
                 if (options.recordAction === 'startRecording') {
-                    cmd = 'RecStart'
+                    cmd = 'RecStart\n'
                 } else if (options.recordAction === 'stopRecording') {
-                    cmd = 'RecStop'
+                    cmd = 'RecStop\n'
                 }
                 break;
 
             //Streaming
             case 'controlStream':
                 if (options.streamAction === 'startStream') {
-                    cmd = 'StrStart'
+                    cmd = 'StrStart\n'
                 } else if (options.recordAction === 'stopStream') {
-                    cmd = 'StrStop'
+                    cmd = 'StrStop\n'
                 }
                 break;
 
