@@ -20,18 +20,30 @@ A summary of Livestream Studio 6 commands that are implemented by this module ar
 - Pgm/Prv Source
 - Push/Pull Graphics 1, 2, 3 to Program
 - Preview Graphics 1, 2, 3
-- Play/Stop Media Players 
+- Play/Stop Media Players Full clip or from In to Out Point
 - Cut Transition
 - Auto Transition
 - Fade-to-Black
-- T-Bar Position
 - Audio Channel Volume
-- Audio Gain
-- Audio Mute
-- Audio on Program
-- Audio on Headphones
+- Audio Gain on Inputs
+- Audio Mute on Inputs / Master Channels
+- Audio to Program on Inputs
+- Audio to Headphones on Inputs / Master Channels
 - Start/Stop Recording
 - Start/Stop Streaming
+
+**Important Note**: The commands broght forward as actions by this module are completely dependant on the API that Vimeo Livestream has baked into their software. Where this falls short is when the software manufacturer does not include a specific feature or function in the API.  This module has been developed to take advantage of every single command that is availale in the API. Please keep this in mind when posting feature requests. There are **many features of Livestream Studio that are not covered by the API**, and if the API doesn't implement it, I cannot make this module control it. 
+
+**Features not implemented in the Livestream Studio API:**
+- Ability to change data in GFX stacks
+- Ability to manipulate GFX stack layers
+- Chaning clips in a Media input play list
+- Full Tally Feedback of all sources/layers
+- GFX Tie to transition
+- Control of AUX Busses
+- Feedback on stream/record quality or errors
+- Changing Auto Transition Style
+- Countdown time for Media input clips
 
 
 ## Additional Information

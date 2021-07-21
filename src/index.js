@@ -90,7 +90,9 @@ instance.prototype.init = function () {
     //self.setPresetDefinitions(initPresets());
     initPresets.bind(self)();
     self.initTCP();
-   // setTimeout(self.setMediaInputs(), 0);
+
+    setImmediate(self.setMediaInputs());
+
     self.setActions(getActions.bind(self)()); 
     
 }
@@ -112,7 +114,7 @@ instance.prototype.initTCP = function () {
         self.config.port = 9923;
     }
 
-    if (self.config.host) {
+    //if (self.config.host) {
         self.socket = new tcp(self.config.host, self.config.port);
       
         self.socket.on('status_change', function (status, message) {
@@ -166,7 +168,7 @@ instance.prototype.initTCP = function () {
 				self.log('error', '[Livestream Studio] Data received was undefined or null')
 			}
 		});
-	}
+	//}
 }
 
 // When module gets deleted
@@ -272,6 +274,7 @@ instance.prototype.incomingData = function (apiData) {
                     audioToPgm     : parseInt(apiDataArr[7]),
                     type           : parseInt(apiDataArr[8])
                 }
+                self.setVariable('')
                 break;
             
             // Input Name Change INC:%1:%2
