@@ -53,7 +53,7 @@ Feedback                  | Description
 ------------------------ | ---------------------------------- 
  **Preview Source**      | Indicate which input is in preview 
  **Program Source**      | Indicate which input is in program
- **GFX in Preview**      | Indicate when a GFX stack is in preview
+ **GFX in Preview**      | GFX is in the Preview state
  **GFX is Pulled**       | GFX is in the Pulled state
  **GFX is Pushed**       | GFX is in the Pushed state
  **Media Player State**  | Indicate the Play/Pause state of a Media player

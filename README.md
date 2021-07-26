@@ -12,6 +12,7 @@ The Studio 6 API is not published and has been reverse-engineered by its users o
 
 This module was developed against **Livestream Studo ver 6.8.20**
 
+---
 ## Commands Implemented #
 A summary of Livestream Studio 6 commands that are implemented by this module are as follows:
 
@@ -32,7 +33,14 @@ A summary of Livestream Studio 6 commands that are implemented by this module ar
 - Start/Stop Recording
 - Start/Stop Streaming
 
-**Important Note**: The commands broght forward as actions by this module are completely dependant on the API that Vimeo Livestream has baked into their software. Where this falls short is when the software manufacturer does not include a specific feature or function in the API.  This module has been developed to take advantage of every single command that is availale in the API. Please keep this in mind when posting feature requests. There are **many features of Livestream Studio that are not covered by the API**, and if the API doesn't implement it, I cannot make this module control it. 
+> **Important Note**: The commands broght forward as actions by this module are
+> completely dependant on the API that Vimeo Livestream has baked into their
+> software. Where this falls short is when the software manufacturer does not
+> include a specific feature or function in the API.  This module has been
+> developed to take advantage of every single command that is availale in the
+> API. Please keep this in mind when posting feature requests. There are **many**
+> **features of Livestream Studio that are not covered by the API**, and if the
+> API doesn't implement it, I cannot make this module control it. 
 
 **Features not implemented in the Livestream Studio API:**
 - Ability to change data in GFX stacks
@@ -44,8 +52,9 @@ A summary of Livestream Studio 6 commands that are implemented by this module ar
 - Feedback on stream/record quality or errors
 - Changing Auto Transition Style
 - Countdown time for Media input clips
+- ...and others
 
-
+---
 ## Additional Information
 
 Please see the [HELP](/HELP.md) document for the following:
@@ -56,6 +65,7 @@ Please see the [HELP](/HELP.md) document for the following:
 - Variables
 - Presets
 
+----
 ## Changelog
 
 **v1.0.0** 

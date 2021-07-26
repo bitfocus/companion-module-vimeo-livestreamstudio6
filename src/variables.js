@@ -14,11 +14,11 @@ exports.initVariables = function() {
 
     ];
 
-    for (let index in self.data.numberOfInputs) {
+    for (let i = 0; i < self.data.numberOfInputs; i++) {
+          
+        variables.push({ label: `Input ${i + 1} Name`, name: `input_${i + 1}_name` });
 
-            variables.push({ label: `Input ${index}: Name`, name: `input_${index}_name` });
-
-    };
+    }
 
     return variables;
     
