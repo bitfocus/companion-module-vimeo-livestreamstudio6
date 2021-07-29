@@ -86,7 +86,12 @@ Variable                               | Description
 **$studio:input_`x`_name)**  | Name of a given input `x`
 **$(studio:pvwSource)**      | Which input number is on the Preview Bus
 **$(studio:pgmSource)**      | Which input number is on the Program Bus
-**$(studio:GFX_`x`_active)** | Indicates if 
+**$(studio:GFX_`x`_active)** | Indicates if a GFX is active (on)
+**$(studio:GFX_`x`_state)**  | Indicates the state of a GFX stack (`pulled, pushed, preview`)
+**$(studio:Media_`x`_state)**| State of Media `x` Player (`Play, Pause`)
+**$(studio:streaming)**      | Streaming (`true, false`)
+**$(studio:recording)**      | Recording (`true, false`)
+
 
 ---
 ## Presets
