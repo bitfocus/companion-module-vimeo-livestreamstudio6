@@ -5,7 +5,7 @@
     "product": [
       "Studio 6"
     ],
-    "shortname": "livestreamstudio",
+    "shortname": "studio",
     "description": "A module to control Vimeo Livestream Studio 6",
     "main": "src/index.js",
     "scripts": {

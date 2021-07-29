@@ -432,8 +432,15 @@ exports.getActions = function () {
 }
 
 
+
+// ###########################
+// #### Implement Actions ####
+// ###########################
+
 exports.executeAction = function (action) {
     var self = this;
+    self.log('debug', '[Livestream Studio] Setting Action definitions')
+
     var cmd;
     var options = action.options;
 

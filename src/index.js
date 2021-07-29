@@ -13,7 +13,6 @@ const { initPresets }                    = require('./presets')
 var debug = debug;
 var log = log;
 
-
 // ########################
 // #### Instance setup ####
 // ########################
@@ -54,6 +53,8 @@ function instance(system, id, config) {
         }
     };
 
+    self.refreshConfigBool = false;
+    self.refreshConfigIteration = 0;
 
     // Define icons
     self.ICON_SPEAKER_ON     = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAAES0lEQVR4nO2baUrkQBTH32irqKjtDi7giuKGI4r6aXr0k9/mCHqBjB5hTjCQC8zcYMYbiAqCKLggqLgggjvabriiw79INZVKdxudJB1N/SB2m6rwXv79XuVVJSGFQqFQvC8+xfNW1/UaIvpORJ0B+T2jRDSuadrveI0WkXRd/0lEo5645j8WiGhE07SFhCLpuv6LiIbx/fHxkfb29tjnR6ewsJBtBoiqr6JQIUGgUS4QxFlbWwuEQJyysjJqbW2lUCgUJiIEy2felib0wxhEZ2dntLKyEiiBwNHRETtvg05d14f5P0wkXdcjRITBmkVQUIFQl5eX/Oy/mETiVzFEj9ApkBwfH/PTrpFFQh4GXqBEpL3tsGChRLKBEskGSiQbKJFs4AuRsrOzk7bzaUMoFErazy1SY1WgoqKCbXNzcwn7QKD6+npWx+3s7NDW1pZr/jw/P1v2heQOT09PrjkgU1lZyeZLp6entuwikiAWIm95edkzPy2RFE9JN4BAbW1ttuzKbYi88/NzFlVO45tIys/Pp/b2dtt2kV7o09jYGNvX0NBA29vbjvv2okjAbZEKCgqot7fXsp/bLS4upv7+frq5uWGz8oODA7q/v2cTb6RZVVUV65eRkcGicXd311H/4olkubqhk1tbXl4e9fX1sRNMZpeMK153dze1tLTE9q+urpqOKS8vd8VXGdfSrbm5mZqammz1Fe3KTtbV1dH+/j6dnJzQ9fU1+ywpKWFtSFsvhgdXI+k18GMgBEQRqa6ujrVDJE5OTs77jqTXiCTavbq6opmZGRocHGTjFxnjGG/H+CSSnp5ODw8PjvicyG/XBu7XRpJsFxHFRULEJBIJY9fd3d1/+8uxJZJTddJb0o1TWlrKaiFONBo1DegiWJN3Et9V3PHs4q5FJBIxtaMe4u2IKhEv/HUtklAAHh4emvaFw2Hq6uqK25/ble0jUsS5GkTkYOHe6RmCp5GE9XJ5zZwXhqiVEtkV7UPkycnJ2D6UA7m5uaZ2pyPJFxX3xsYGcwRVdTy7uLotLS2xSlocb4qKiixRuLm5mRqRvJjgQiikDWb0sl1E3+Lioqk/+qH6zszMjO2DQG7c3fHVwD09Pc3sYaL6kl2kmCgQUnZ2dtYzXz1PN5GpqSl28tiS2RV/Xaw94bjb21tXfLIVSV6tJ3EwMGPhLZndi4sLtnaEDanqJr4YuGUQEfPz80n7rK+vs80LfDNw+xnfVtx+wpfp9h5Q6SZha/lWYcUkkliwKayRNIE/WDvOysoKtDy4WSHDRYo9jtvR0ZEi91IPBMINDINx/oWJpGkanl1mT8P39PSIHQMDMmhoaIifb0wPkq5uY0T0DWtjAwMDbPkUSxbi3YmPCMSpra1lwSGk2pgROAz5jQA8hftHfPI0gIzI75iYrm7GqwJ4Ev6HEXJB4q/xuoTlJZy4bylJkRX+6EppmjbhAzcUCoVC4QhE9A+xanO+citviwAAAABJRU5ErkJggg==';
@@ -84,14 +85,20 @@ instance.prototype.init = function () {
     
     self.status(self.STATUS_UNKNOWN);
     self.setVariableDefinitions(initVariables.bind(self)());
-    self.setFeedbackDefinitions(initFeedbacks());
-    self.setPresetDefinitions(initPresets.bind(self)());
     self.initTCP();
-
-    self.setMediaInputs();
-
-    self.setActions(getActions.bind(self)()); 
     
+
+    if (!self.refreshConfigBool && self.data.startup) { 
+        
+        self.setFeedbackDefinitions(initFeedbacks.bind(self)());
+        
+        self.setPresetDefinitions(initPresets.bind(self)());
+       
+        self.setMediaInputs();
+    
+        self.setActions(getActions.bind(self)()); 
+        self.data.startup = false;
+    }
 }
 
 // Initialize TCP connection
@@ -159,7 +166,7 @@ instance.prototype.initTCP = function () {
                     !line.startsWith('AVC') 
                     ) { self.log('debug', '[Livestream Studio] Data received: ' + line) }
 
-               self.incomingData(line);
+               self.parseIncomingAPI(line);
 
 			} else {
 				self.log('error', '[Livestream Studio] Data received was undefined or null')
@@ -206,12 +213,11 @@ instance.prototype.updateConfig = function (config) {
     }
 
     self.log('warn', '[Livestream Studio] Update Config: Reinitializing actions, variables, and feedbacks');
-    //self.setMediaInputs();
+   
     self.setActions(getActions.bind(self)());
-    //self.setVariableDefinitions(initVariables());
     self.setVariableDefinitions(initVariables.bind(self)());
     self.setMediaInputs();
-    self.setFeedbackDefinitions(initFeedbacks());
+    self.setFeedbackDefinitions(initFeedbacks.bind(self)());
     self.setPresetDefinitions(initPresets.bind(self)());
 }
 
@@ -243,9 +249,22 @@ instance.prototype.action = function (action) {
 };
 
 
+// Refresh Companion configuration to setup inputs in actions/presets/variables
+instance.prototype.refreshConfig = function () {
+    var self = this;
+    self.log('debug', '[Livestream Studio] Refreshing config, actions, variables, and presets')
+
+    self.setMediaInputs();
+    self.setActions(getActions.bind(self)());
+    self.setVariableDefinitions(initVariables.bind(self)());
+    self.setFeedbackDefinitions(initFeedbacks.bind(self)());
+    self.setPresetDefinitions(initPresets.bind(self)());
+    self.refreshConfigBool = false;
+};
+
 
 // Deal with incoming data
-instance.prototype.incomingData = function (apiData) {
+instance.prototype.parseIncomingAPI = function (apiData) {
     var self = this;
     const apiDataArr = apiData.trim().split(/:/);
     
@@ -257,6 +276,7 @@ instance.prototype.incomingData = function (apiData) {
             // Number of Inputs  ILCC:%1
             case 'ILCC':
                 self.data.numberOfInputs = parseInt(apiDataArr[1])
+
                 break;
 
             // Inputs  ILC:%1:%2:%3:%4:%5:%6:%7:%8
@@ -272,6 +292,14 @@ instance.prototype.incomingData = function (apiData) {
                     type           : parseInt(apiDataArr[8])
                 }
                 self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_name`, apiDataArr[2].slice(1,-1))
+                
+                // When the API has finished dumping all of the input details, refresh 
+                // the config variables, feedbacks, and actions so they are aware of new inputs
+                self.refreshConfigIteration++;
+                if (self.refreshConfigIteration === self.data.numberOfInputs) {
+                    self.refreshConfigBool = true;
+                    self.refreshConfig();
+                }
                 break;
             
             // Input Name Change INC:%1:%2
@@ -284,11 +312,13 @@ instance.prototype.incomingData = function (apiData) {
             // Program Source PmIS:%1
             case 'PmIS':
                 self.data.program = parseInt(apiDataArr[1])
+                self.setVariable('pgmSource', parseInt(apiDataArr[1]))
                 break;
 
             // Preview Source PwIS:%1
             case 'PwIS':
                 self.data.preview = parseInt(apiDataArr[1])
+                self.setVariable('pvwSource', parseInt(apiDataArr[1]))
                 break;
 
             // Stream Master Fader ------------------------------------------
@@ -338,11 +368,13 @@ instance.prototype.incomingData = function (apiData) {
             // Streaming Stopped  StrStopped
             case 'StrStopped':
                 self.data.status.streaming = false
+                self.setVariable('streaming', false)
                 break;
 
             // Streaming Started   StrStarted
             case 'StrStarted':
                 self.data.status.streaming = true
+                self.setVariable('streaming', true)
                 break;
 
             // Unknown API Response  StrSEr
@@ -354,17 +386,20 @@ instance.prototype.incomingData = function (apiData) {
             case 'StrStarting':
             case 'StrStopping':
                 self.data.status.streaming = 'Transitioning'
+                self.setVariable('streaming', 'transitioning')
                 break;
 
             // Recording -----------------------------------------------------
             // Recording Stopped  RecStopped
             case 'RecStopped':
                 self.data.status.recording = false
+                self.setVariable('recording', false)
                 break;
 
             // Recording Started   RecStarted
             case 'RecStarted':
                 self.data.status.recording = true
+                self.setVariable('recording', true)
                 break;
 
             // Unknown API Response  RecSEr
@@ -376,39 +411,46 @@ instance.prototype.incomingData = function (apiData) {
             case 'RecStarting':
             case 'RecStopping':
                 self.data.status.recording = 'Transitioning'
+                self.setVariable('recording', 'transitioning')
                 break;
 
             // GFX -----------------------------------------------------------
             // GFX Stack On State  GMOn:%1
             case 'GMOn':
                 self.data.gfx[parseInt(apiDataArr[1])].state = 'On'
+                self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_active`, true)
                 break;
 
             // GFX Stack Off State  GMOff:%1
             case 'GMOff':
                 self.data.gfx[parseInt(apiDataArr[1])].state = 'Off'
+                self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_active`, false)
                 break;
 
             // GFX In Preview GMPvS:%!:%2
             case 'GMPvS':
                 self.data.gfx[parseInt(apiDataArr[1])].preview = true
+                self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_state`, 'preview')
                 break;
             
             // GFX NOT in Preview  GMPvH:%1:%2
             case 'GMPvH':
                 self.data.gfx[parseInt(apiDataArr[1])].preview = false
+                self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_state`, 'previewOff')
                 break;
 
             // GFX is in Pushed State (Visible on PGM)  GMOS:%1:%2
             case 'GMOS':
                 self.data.gfx[parseInt(apiDataArr[1])].pushed = true
                 self.data.gfx[parseInt(apiDataArr[1])].pulled = false
+                self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_state`, 'pushed')
                 break;
 
             // GFX is in Pulled State (Not visible on PGM) GMOH:%1:%2
             case 'GMOH':
                 self.data.gfx[parseInt(apiDataArr[1])].pulled = true
                 self.data.gfx[parseInt(apiDataArr[1])].pushed = false
+                self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_state`, 'pulled')
                 break;
 
             // GFX stack can be pushed  0=No, 1=Flashing Push  GPA:%1:%2
@@ -424,11 +466,13 @@ instance.prototype.incomingData = function (apiData) {
             // Media Player Playing   MIOP:%1
             case 'MIOP':
                 self.data.inputs[parseInt(apiDataArr[1])].media = 'play'
+                self.data.media[parseInt(apiDataArr[1])].media = 'playing'
                 break;           
             
             // Media Player Pause   MPause:%1
             case 'MPause':
                 self.data.inputs[parseInt(apiDataArr[1])].media = 'pause'
+                self.data.media[parseInt(apiDataArr[1])].media = 'paused'
                 break;
 
             // Audio Faders -----------------------------------------------------
@@ -484,6 +528,8 @@ instance.prototype.incomingData = function (apiData) {
 instance.prototype.setMediaInputs = function () {
     var self = this;
     self.log('info', '[Livestream Studio] Setting Media Inputs');
+
+    self.data.media = [];
 
     let mediaInputs = self.data.inputs.filter(input => input.type === 3, self);
 

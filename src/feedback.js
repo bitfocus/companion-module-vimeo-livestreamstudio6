@@ -7,6 +7,8 @@
 // ##########################
 
 exports.initFeedbacks = function() {
+    var self = this;
+    self.log('debug', '[Livestream Studio] Setting feedback definitions')
 
     var feedbacks = {};
 

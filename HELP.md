@@ -7,7 +7,8 @@ This module was developed against **Livestream Studo ver 6.8.20**
 ## Configuration
 
 This module is for Vimeo Livestream Studio 6 production swithcer software. To configure: 
-- In the module settings add the **IP address** of the machine where Livestream Studio 6 is running. If it is running on the same machine as Companion then use the default of `127.0.0.1`.
+- In the module settings add the **IP address** of the machine where Livestream Studio 6 is running. If it is running on the same machine as Companion then use the default of `127.0.0.1`. You may have to create an exception in the firewall on either machine for the TCP port listed in the config.
+
 - **Important:** You must complete the following steps in order to allow Livestream Studio to accept connections over the network.
   - In Livestream Studio settings go to the **Hardware Crontrol** tab and enable **Allow Incoming Connections**.
 
@@ -15,7 +16,7 @@ This module is for Vimeo Livestream Studio 6 production swithcer software. To co
 
   - Finally, back in Livestream Studio settings under **Pending Connections**, click **Allow** for the IP address where Companion will be connecting from.
    
-- **Note:** The TCP port in Livesteam Studio 6 is locked to port `9923` and **CANNOT** be changed by the user. The ability to set a port exists in this module for those users who wish to implement port proxying/remapping. Only change the TCP Port in you know what you are doing.
+- **Note:** The TCP port in Livesteam Studio 6 is locked to port `9923` and **CANNOT** be changed by the user. The ability to set a port exists in this module for those users who wish to implement port proxying/remapping. Only change the TCP Port if you know what you are doing.
 
 ---
 ## Available Actions
@@ -27,7 +28,7 @@ Action                           | Description
 **Set Preview Bus Source**       | Sets the source on the Preview Bus [**Input**: `Available Inputs`]
 **Set Program Bus Source**       | Sets the source on the Program Bus [**Input**: `Available Inputs`]
 **Control GFX Source**           | Control GFX Souces [**GFX Stack**: `1-3`, **Action**: `Push`, `Pull`, `Preview`]
-**Control Media Source**         | Control Media Source [**Media Souce**: `Available Media Inputs`, **Action**: `Play`, `Pause`]
+**Control Media Source**         | Control Media Source [**Media Souce**: `Available Media Inputs`, **Action**: `Play full Clip`, `Play In to Out Point`, `Pause`]
 **Transition: Cut**              | Execute a CUT transition 
 **Transition: Auto**             | Execute an AUTO transition 
 **Transition: Fade to Black**    | Fade to Black on Program Bus [**Action**: `Fade In`, `Fade Out`]
@@ -81,15 +82,11 @@ The following variables are available to Companion.
 
 Variable                               | Description 
 -------------------------------------- | ----------------------------------- 
-**$(livestreamstudio:status)**         | Is Livestream Studio connected to Companion (`True`, `False`, `Error`)
-**$(livestreamstudio:input_`x`_name)** | Name of a given input `x`
-**$(livestreamstudio:pvwSource)**      | Which input number is on the Preview Bus
-**$(livestreamstudio:pgmSource)**      | Which input number is on the Program Bus
-**$(livestreamstudio:GFX_`x`_state)**  | State of GFX-`x` Stack 
-**$(livestreamstudio:Media_`x`_state)**| State of Media `x` Player (`Play, Pause`)
-**$(livestreamstudio:streaming)**      | Streaming (`true, false`)
-**$(livestreamstudio:recording)**      | Recording (`true, false`)
-
+**$(studio:status)**         | Is Livestream Studio connected to Companion (`True`, `False`, `Error`)
+**$studio:input_`x`_name)**  | Name of a given input `x`
+**$(studio:pvwSource)**      | Which input number is on the Preview Bus
+**$(studio:pgmSource)**      | Which input number is on the Program Bus
+**$(studio:GFX_`x`_active)** | Indicates if 
 
 ---
 ## Presets
@@ -116,7 +113,7 @@ Preset               | Description
 ### Notes
 **IMPORTANT:** Vimeo Livestream Studio 6 has a very limited network API available. If there is a feature of the program that you do not see represented above, it is because that feature is NOT available through the API. Every available command has been implemented in this module. Please keep this in mind when submitting bugs & feature requests. 
 
-###### (Refer to the README file in the [GitHub Repository](https://github.com/bitfocus/companion-module-vimeo-livestreamstudio6)  for a list of features not implemented by the Livestream Studio API.) 
+##### (Refer to the README file in the [GitHub Repository](https://github.com/bitfocus/companion-module-vimeo-livestreamstudio6)  for a list of features not implemented by the Livestream Studio API.) 
 
 ---
 

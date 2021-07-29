@@ -8,6 +8,8 @@
 
 exports.initPresets = function () {
     var self = this;
+    self.log('debug', '[Livestream Studio] Setting preset definitions')
+    
     var presets = [];
   
  presets.push({
