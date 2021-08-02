@@ -13,13 +13,19 @@ exports.initVariables = function () {
     var variables = []
 
     variables.push({ 
-        label: 'Connection status of this Recorder instance', name: 'status' 
+        label: 'Connection status of this Studio instance', name: 'status' 
     })
 
     for (let i = 0; i < self.data.numberOfInputs; i++) {
-
-        variables.push({ label: `Input ${i + 1} Name`, name: `input_${i + 1}_name` });
-
+        variables.push({ 
+            name: `input_${i + 1}_name`, label: `Input ${i + 1} Name`
+        })
+        variables.push({
+            name: `input_${i + 1}_volume`, label: `Input ${i + 1} Volume`
+        })
+        variables.push({
+            name: `input_${i + 1}_gain`, label: `Input ${i + 1} Input Gain`
+        })
     }
 
     variables.push({
@@ -28,29 +34,31 @@ exports.initVariables = function () {
     variables.push({
         name: 'pgmSource', label: 'Program bus Source'
     })
-    variables.push({
-        name: 'GFX_1_active', label: 'GFX-1 Active'
-    })
-    variables.push({
-        name: 'GFX_1_state', label: 'GFX-1 State'
-    })
-    variables.push({
-        name: 'GFX_2_active', label: 'GFX-2 Active'
-    })
-    variables.push({
-        name: 'GFX_2_state', label: 'GFX-2 State'
-    })
-    variables.push({
-        name: 'GFX_3_active', label: 'GFX-3 Active'
-    })
-    variables.push({
-        name: 'GFX_3_state', label: 'GFX-3 State'
-    })
+    
+    for (let i = 0; i <= 2; i++) {
+        variables.push({
+            name: `GFX_${i + 1}_active`, label: `GFX-${i + 1} Active`
+        })
+        variables.push({
+            name: `GFX_${i + 1}_state`, label: `GFX-${i + 1} State`
+        })
+        variables.push({
+            name: `GFX_${i + 1}_preview`, label: `GFX-${i + 1} Preview`
+        })
+    }
     
     self.data.media.forEach((media) => {
         variables.push({
-            name: `Media_${media.id}_state`, label: `Media ${media.id} state`
+            name: `media_${media.id}_state`, label: `Media ${media.label} state`
         })
+    })
+
+    variables.push({
+        name: 'streamVolume', label: 'Master stream volume level'
+    })
+    
+    variables.push({
+        name: 'recordVolume', label: 'Master record volume level'
     })
 
     variables.push({
