@@ -65,10 +65,10 @@ Feedback                      | Description
 **Audio Input: Mute**         | Indicate the Mute state on an input
 **Audio Input: Audio On Pgm** | Indicate the Audio on Program state for an input
 **Audio Input: Headphones**   | Indicate the audio to headphones state of an input
-**Record Master: Level**      | Returns the db value of the Record Master
+**Record Master: Level**      | Returns the volume level of the Record Master
 **Record Master: Mute**       | Indicate the Mute state on the Record Master
 **Record Master: Headphones** | Indicate the Headphones state on the Record Master
-**Stream Master: Level**      | Returns the db value of the Stream Master
+**Stream Master: Level**      | Returns the volume level of the Stream Master
 **Stream Master: Mute**       | Indicate the Mute state of the Stream Master
 **Stream Master: Headphones** | Indicate the Headphones state for the Stream Master
 **Record State**              | Indicates if Recording is active, or transitioning **Stream State**              | Indicates if Streaming is active, or transitionin

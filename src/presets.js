@@ -8,7 +8,7 @@
 
 exports.initPresets = function () {
     var self = this;
-    self.log('debug', '[Livestream Studio] Setting preset definitions')
+    self.log('info', '[Livestream Studio] Setting preset definitions')
     
     var presets = [];
   

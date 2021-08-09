@@ -9,7 +9,7 @@ const { getConfigFields }                = require('./config')
 const { executeFeedback, initFeedbacks } = require('./feedback')
 const { initVariables }                  = require('./variables')
 const { initPresets }                    = require('./presets')
-const  _ = require('underscore');
+//const  _ = require('underscore');
 
 var debug = debug;
 var log = log;
@@ -24,6 +24,7 @@ function instance(system, id, config) {
     // super-constructor
     instance_skel.apply(this, arguments);
 
+    // Initial data structure to hold state of the application from the API 
     self.data = {
         startup       : true,
         connected     : false,
@@ -71,11 +72,10 @@ function instance(system, id, config) {
 
 // Return config fields for web config
 instance.prototype.config_fields = function () {
-    
     var self = this;
     return getConfigFields.bind(self)();
-
 }
+
 
 // Initalize module
 instance.prototype.init = function () {
@@ -85,24 +85,17 @@ instance.prototype.init = function () {
     log = self.log;
     
     self.status(self.STATUS_UNKNOWN);
-    self.setVariableDefinitions(initVariables.bind(self)());
+    //self.setVariableDefinitions(initVariables.bind(self)());
     self.initTCP();
-    
 
-   // if (!self.refreshConfigBool && self.data.startup) { 
-        _.defer(function(self){
-            self.log('debug', '[Livestream Studio] Deferred functions running')
-            self.setFeedbackDefinitions(initFeedbacks.bind(self)());
-            
-            self.setMediaInputs();
-            
-            self.setPresetDefinitions(initPresets.bind(self)());
-        
-            self.setActions(initActions.bind(self)()); 
-            self.data.startup = false;
-        },self)
-        
-    //}
+    if (!self.data.startup) {
+        self.log('info', '[Livestream Studio] Deferred functions running')
+        self.setMediaInputs();
+        self.setFeedbackDefinitions(initFeedbacks.bind(self)());
+        self.setPresetDefinitions(initPresets.bind(self)());
+        self.setActions(initActions.bind(self)());
+        self.data.startup = false;
+    }
 }
 
 // Initialize TCP connection
@@ -226,12 +219,6 @@ instance.prototype.updateConfig = function (config) {
     }
 
     self.log('warn', '[Livestream Studio] Update Config: Reinitializing actions, variables, and feedbacks');
-   
-    // self.setVariableDefinitions(initVariables.bind(self)());
-    // self.setMediaInputs();
-    // self.setFeedbackDefinitions(initFeedbacks.bind(self)());
-    // self.setPresetDefinitions(initPresets.bind(self)());
-    // self.setActions(initActions.bind(self)());
 
     self.refreshConfig()
 }
@@ -260,25 +247,37 @@ instance.prototype.sendCommand = function (cmd) {
 // Refresh Companion configuration to setup inputs in actions/presets/variables
 instance.prototype.refreshConfig = function () {
     var self = this;
-    self.log('debug', '[Livestream Studio] Refreshing config, actions, variables, and presets')
+    self.log('info', '[Livestream Studio] Refreshing config, actions, variables, and presets')
 
     self.setMediaInputs();
     self.setActions(initActions.bind(self)());
     self.setVariableDefinitions(initVariables.bind(self)());
     self.setFeedbackDefinitions(initFeedbacks.bind(self)());
     self.setPresetDefinitions(initPresets.bind(self)());
+
+    self.data.media.forEach(function (m) {
+        self.setVariable(`media_${m.id.toString()}_state`, m.media)
+    });
+
+    self.data.startup = false;
     self.refreshConfigBool = false;
 };
 
+
+// Populates media[] by pulling all type 3 inputs from input[]
 instance.prototype.setMediaInputs = function () {
     var self = this;
     self.log('info', '[Livestream Studio] Setting Media Inputs');
 
     self.data.media = [];
 
+    // Filter inputs by input type to find the media inputs
+    // Then add those to the media index with a paused state since we don't 
+    // get the state of the media players until it changes
     let mediaInputs = self.data.inputs.filter(input => input.type === 3, self);
+
      mediaInputs.forEach(function (m) {
-         self.data.media.push({ id: m.id, label: m.label, media: null});
+         self.data.media.push({ id: m.id, label: m.label, media: 'paused'});
      });
 }
 
@@ -322,26 +321,29 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 if (self.refreshConfigIteration === self.data.numberOfInputs) {
                     self.refreshConfigBool = true;
                     self.refreshConfig();
+                    self.refreshConfigIteration = 0;
                 }
                 break;
 
             // Input Name Change INC:%1:%2
             case 'INC':
-                self.data.inputs[parseInt(apiDataArr[1])].label = 
-                    (parseInt(apiDataArr[1]) + 1).toString() + ': ' + apiDataArr[2].slice(1,-1)
-                    self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_name`, apiDataArr[2].slice(1,-1))
+                self.data.inputs[parseInt(apiDataArr[1])].label =
+                    (parseInt(apiDataArr[1]) + 1).toString() + ': ' + apiDataArr[2].slice(1, -1)
+                self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_name`, apiDataArr[2].slice(1, -1))
                 break;
 
             // Program Source PmIS:%1
             case 'PmIS':
                 self.data.program = parseInt(apiDataArr[1])
-                self.setVariable('pgmSource', parseInt(apiDataArr[1]))
+                self.setVariable('pgmSource', parseInt(apiDataArr[1]) + 1)
+                self.checkFeedbacks('programSource')
                 break;
 
             // Preview Source PwIS:%1
             case 'PwIS':
                 self.data.preview = parseInt(apiDataArr[1])
-                self.setVariable('pvwSource', parseInt(apiDataArr[1]))
+                self.setVariable('pvwSource', parseInt(apiDataArr[1]) + 1)
+                self.checkFeedbacks('previewSource')
                 break;
 
             // Stream Master Fader ------------------------------------------
@@ -387,6 +389,30 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             // Fade to Black engaged  FOut
             case 'FOut':
                 self.data.status.fadeToBlack = true
+                break;
+
+            // Cut transition occurred  Cut
+            case 'Cut':
+                let pgmCut = self.data.program
+                let pvwCut = self.data.preview
+                self.data.program = pvwCut
+                self.data.preview = pgmCut
+                self.setVariable('pgmSource', self.data.program + 1)
+                self.setVariable('pvwSource', self.data.preview + 1)
+                self.checkFeedbacks('programSource')
+                self.checkFeedbacks('previewSource')
+                break;
+
+            // T-Bar Transition or Auto Transition occurred TrAStop
+            case 'TrAStop':
+                let pgmAuto = self.data.program
+                let pvwAuto = self.data.preview
+                self.data.program = pvwAuto
+                self.data.preview = pgmAuto
+                self.setVariable('pgmSource', self.data.program + 1)
+                self.setVariable('pvwSource', self.data.preview + 1)
+                self.checkFeedbacks('programSource')
+                self.checkFeedbacks('previewSource')
                 break;
             
             // Streaming -----------------------------------------------------
@@ -538,14 +564,14 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 break;
 
             // Ignored Data
-            // We want to ignore these items from the API
-            case 'TrASp':
-            case 'TrMSp':
+            // We want to ignore these items from the API due to large amount of messages from API
+            case 'TrASp':    // T-Bar Auto transition steps
+            case 'TrMSp':    // T-Bar manual transition steps
                 // do nothing
                 break;
 
             default:
-                self.log('warn', 'API response undefined: ' + apiData)
+                self.log('warn', '[Livestream Studio] API response undefined: ' + apiData)
 
         }
 

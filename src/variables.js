@@ -8,7 +8,7 @@
 
 exports.initVariables = function () {
     var self = this;
-    self.log('debug', '[Livestream Studio] Setting variable definitions')
+    self.log('info', '[Livestream Studio] Setting variable definitions')
 
     var variables = []
 
@@ -62,10 +62,10 @@ exports.initVariables = function () {
     })
 
     variables.push({
-        name: 'streaming', label: 'Is Livestream Studio Streaming'
+        name: 'streaming', label: 'Livestream Studio Streaming state'
     })
     variables.push({
-        name: 'recording', label: 'Is Livestream Studio Recording'
+        name: 'recording', label: 'Livestream Studio Recording state'
     })
 
     return variables;

@@ -1,9 +1,6 @@
 // actions.js
 // Companion module for Livestream Studio 6
 
-//const { bind } = require("lodash");
-
-
 // ########################
 // #### Define Actions ####
 // ########################
@@ -12,6 +9,7 @@
 exports.initActions = function () {
     var self = this;
     var actions = {};
+    //self.log('info', '[Livestream Studio] Setting action definitions')
 
     const masterAudioChoices = [
         { id: 'str', label: 'Stream' },
@@ -439,7 +437,7 @@ exports.initActions = function () {
 
 exports.executeAction = function (action) {
     var self = this;
-    self.log('debug', '[Livestream Studio] Setting Action definitions')
+    self.log('info', '[Livestream Studio] Setting Action definitions')
 
     var cmd;
     var options = action.options;
@@ -606,6 +604,11 @@ exports.executeAction = function (action) {
                 } else if (options.recordAction === 'stopStream') {
                     cmd = 'StrStop\n'
                 }
+                break;
+
+            // Log error message if the action sent over doesn't exist
+            default:
+                self.log('error', '[Livestream Studio] Action not found: ' + action.toString())
                 break;
 
         }
