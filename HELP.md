@@ -52,12 +52,12 @@ The following feedback has been implemented allowing Companion to indicate the s
 
 Feedback                      | Description                        
 ----------------------------- | ---------------------------------- 
-**Preview Source**            | Indicate which input is in preview 
-**Program Source**            | Indicate which input is in program
-**GFX-`x` Active**            | GFX stack `x` is enabled (on)
-**GFX-`x` Can Push**          | GFX stack `x` can be pushed (same as blinking `Push` button in the software)
-**GFX-`x` State**             | GFX stack `x` state (`Pushed, Pulled`)
-**GFX-`x` Preview**           | GFX stack `x` in Preview (`true, false`)
+**Preview Source**            | Change properties if input is in preview 
+**Program Source**            | Change properties if input is in program
+**GFX Not Active**            | GFX stack `x` is not active (Off)
+**GFX Push Enabled**          | GFX stack `x` can be pushed (same as blinking `Push` button in the software)
+**GFX State**                 | GFX stack `x` state (`Pushed, Pulled`)
+**GFX-`x` Preview**           | GFX stack `x` in Preview
 **Media Player State**        | Indicate the state of a Media player (`Playing full clip, playing in to out, paused`)
 **Fade to Black State**       | Indicate if Fade to Black is acitve
 **Audio Input: Level**        | Returns the value of an inputs level
@@ -71,7 +71,8 @@ Feedback                      | Description
 **Stream Master: Level**      | Returns the volume level of the Stream Master
 **Stream Master: Mute**       | Indicate the Mute state of the Stream Master
 **Stream Master: Headphones** | Indicate the Headphones state for the Stream Master
-**Record State**              | Indicates if Recording is active, or transitioning **Stream State**              | Indicates if Streaming is active, or transitionin
+**Record State**              | Indicates if Recording is active, or transitioning 
+**Stream State**              | Indicates if Streaming is active, or transitioning
 
 ---
 ## Variables

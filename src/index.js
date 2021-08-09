@@ -470,24 +470,28 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             case 'GMOn':
                 self.data.gfx[parseInt(apiDataArr[1])].state = 'On'
                 self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_active`, true)
+                self.checkFeedbacks('gfxActive')
                 break;
 
             // GFX Stack Off State  GMOff:%1
             case 'GMOff':
                 self.data.gfx[parseInt(apiDataArr[1])].state = 'Off'
                 self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_active`, false)
+                self.checkFeedbacks('gfxActive')
                 break;
 
             // GFX In Preview GMPvS:%!:%2
             case 'GMPvS':
                 self.data.gfx[parseInt(apiDataArr[1])].preview = true
                 self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_preview`, true)
+                self.checkFeedbacks('gfxPreview')
                 break;
             
             // GFX NOT in Preview  GMPvH:%1:%2
             case 'GMPvH':
                 self.data.gfx[parseInt(apiDataArr[1])].preview = false
                 self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_preview`, false)
+                self.checkFeedbacks('gfxPreview')
                 break;
 
             // GFX is in Pushed State (Visible on PGM)  GMOS:%1:%2
@@ -495,6 +499,8 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 self.data.gfx[parseInt(apiDataArr[1])].pushed = true
                 self.data.gfx[parseInt(apiDataArr[1])].pulled = false
                 self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_state`, 'pushed')
+                self.checkFeedbacks('gfxPushed')
+                self.checkFeedbacks('gfxPulled')
                 break;
 
             // GFX is in Pulled State (Not visible on PGM) GMOH:%1:%2
@@ -502,6 +508,8 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 self.data.gfx[parseInt(apiDataArr[1])].pulled = true
                 self.data.gfx[parseInt(apiDataArr[1])].pushed = false
                 self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_state`, 'pulled')
+                self.checkFeedbacks('gfxPulled')
+                self.checkFeedbacks('gfxPushed')
                 break;
 
             // GFX stack can be pushed  0=No, 1=Flashing Push  GPA:%1:%2
@@ -511,6 +519,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 } else if (parseInt(apiDataArr[2]) === 1 ) {
                     self.data.gfx[parseInt(apiDataArr[1])].canPush = true
                 }
+                self.checkFeedbacks('gfxCanPush')
                 break;
             
             // Media Inputs -----------------------------------------------------
@@ -519,6 +528,8 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 mediaElement =  self.data.media.find(m => m.id === parseInt(apiDataArr[1]))
                 mediaElement.media = 'playingInOut'
                 self.setVariable(`media_${apiDataArr[1]}_state`, mediaElement.media)
+                self.checkFeedbacks('mediaPlayingInOut')
+                self.checkFeedbacks('mediaPaused')
                 break;           
             
             // Media Player Playing Full Clip    MFP:%1
@@ -526,6 +537,8 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 mediaElement =  self.data.media.find(m => m.id === parseInt(apiDataArr[1]))
                 mediaElement.media = 'playingFull'
                 self.setVariable(`media_${apiDataArr[1]}_state`, mediaElement.media)
+                self.checkFeedbacks('mediaPlayingFull')
+                self.checkFeedbacks('mediaPaused')
                 break;
 
             // Media Player Pause   MPause:%1
@@ -533,6 +546,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 mediaElement =  self.data.media.find(m => m.id === parseInt(apiDataArr[1]))
                 mediaElement.media = 'paused'
                 self.setVariable(`media_${apiDataArr[1]}_state`, mediaElement.media)
+                self.checkFeedbacks('mediaPaused')
                 break;
 
             // Audio Faders -----------------------------------------------------
