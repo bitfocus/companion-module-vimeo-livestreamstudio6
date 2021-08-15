@@ -183,7 +183,7 @@ exports.initFeedbacks = function() {
         label      : 'Media Playing In/Out',
         description: 'Change colors if a Media source is playing from in to out points',
         style      : {
-             bgcolor: self.rgb(0,122,204)
+            bgcolor: self.rgb(0,122,204)
         },
         options    : [{
                 type        : 'dropdown',
@@ -246,6 +246,129 @@ exports.initFeedbacks = function() {
             return false
         }
     }
+
+    feedbacks['fadeToBlack'] = {
+        type       : 'boolean',
+        label      : 'Fade to Black State',
+        description: 'Change colors if Fade to Black is active',
+        style      : {
+            bgcolor: self.rgb(200,0,0)
+        },
+        options    : [{
+                type        : 'text',
+                label       : 'No options for this feedback'
+        }],
+        callback: function (feedback) {
+            if (self.data.status.fadeToBlack) {
+                return true
+            }
+            return false
+        }
+    }
+
+    // TO DO
+    feedbacks['inputAudioVolume'] = {
+        type       : 'boolean',
+        label      : 'Audio Input: Volume',
+        description: 'Change colors based on input audio volume',
+        style      : {
+            bgcolor: self.rgb(50,50,50)
+        },
+        options    : [{
+                type        : 'dropdown',
+                label       : 'Select Input',
+                id          : 'input',
+                tooltip     : 'Select the Input this feedback monitors',
+                default     : 0,
+                choices     : self.data.inputs
+        }],
+        callback: function (feedback) {
+            if (true) {
+                return true
+            }
+            return false
+        }
+    }
+
+    // TO DO
+    feedbacks['inputAudioGain'] = {
+        type       : 'boolean',
+        label      : 'Audio Input: Gain',
+        description: 'Change colors based on input audio gain',
+        style      : {
+            bgcolor: self.rgb(50,50,50)
+        },
+        options    : [{
+                type        : 'dropdown',
+                label       : 'Select Input',
+                id          : 'input',
+                tooltip     : 'Select the Input this feedback monitors',
+                default     : 0,
+                choices     : self.data.inputs
+        }],
+        callback: function (feedback) {
+            if (true) {
+                return true
+            }
+            return false
+        }
+    }
+
+    feedbacks['inputAudioMute'] = {
+        type       : 'advanced',
+        label      : 'Audio Input: Mute',
+        description: 'Change colors based on input audio mute',
+        options    : [{
+            type   : 'dropdown',
+            label  : 'Select Input',
+            id     : 'input',
+            tooltip: 'Select the Input this feedback monitors',
+            default: 0,
+            choices: self.data.inputs
+        }],
+        callback: function (feedback) {
+            if (self.data.inputs[parseInt(feedback.options.input)].audioMute === 1) {
+                return {
+                    bgcolor: self.rgb(150, 0, 0),
+                    png64  : self.ICON_SPEAKER_OFF
+                }
+            } else if (self.data.inputs[parseInt(feedback.options.input)].audioMute === 0) {
+                return {
+                   // bgcolor: self.rgb(0, 0, 150),
+                    png64  : self.ICON_SPEAKER_ON
+                }
+            }
+        }
+    }
+
+    feedbacks['inputAudioHeadphones'] = {
+        type       : 'advanced',
+        label      : 'Audio Input: Headphones',
+        description: 'Change colors based on input audio to headphones state',
+        options    : [{
+            type   : 'dropdown',
+            label  : 'Select Input',
+            id     : 'input',
+            tooltip: 'Select the Input this feedback monitors',
+            default: 0,
+            choices: self.data.inputs
+        }],
+        callback: function (feedback) {
+            if (self.data.inputs[parseInt(feedback.options.input)].audioHeadphones === 1) {
+                return {
+                    bgcolor: self.rgb(0, 225, 0),
+                    png64  : self.ICON_HEADPHONES_OFF
+                }
+            } else if (self.data.inputs[parseInt(feedback.options.input)].audioHeadphones === 0) {
+                return {
+                   bgcolor: self.rgb(0, 100, 0),
+                    png64  : self.ICON_HEADPHONES_ON 
+                }
+            }
+        }
+    }
+
+
 
 
     return feedbacks;
