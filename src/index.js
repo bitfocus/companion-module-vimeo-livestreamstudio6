@@ -178,6 +178,7 @@ instance.prototype.initTCP = function () {
 	}
 }
 
+
 // When module gets deleted
 instance.prototype.destroy = function () {
     var self = this;
@@ -198,6 +199,14 @@ instance.prototype.action = function (action) {
     executeAction.bind(this)(action);
 
 };
+
+
+// Execute feedback
+instance.prototype.feedback = function (feedback, bank) {
+
+    return executeFeedback.bind(this)(feedback, bank)
+
+}
 
 
 // Update module after a config change
@@ -581,6 +590,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             case 'AVC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioVolume = parseInt(apiDataArr[2])
                 self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_volume`, parseInt(apiDataArr[2]))
+                self.checkFeedbacks('inputAudioVolume')
                 break;
 
             // Audio Gain  0 to 10000  AGC:%1:%2

@@ -17,7 +17,7 @@ exports.initFeedbacks = function() {
     feedbacks['previewSource'] = {
         type       : 'boolean',
         label      : 'Preview Source',
-        description: 'Chanage colors if source is in Preview Bus',
+        description: 'Change colors if source is in Preview Bus',
         style      : {
             color  : self.rgb(255,255,255),
             bgcolor: self.rgb(0, 175, 0)
@@ -41,7 +41,7 @@ exports.initFeedbacks = function() {
     feedbacks['programSource'] = {
         type       : 'boolean',
         label      : 'Program Source',
-        description: 'Chanage colors if source is in Program Bus',
+        description: 'Change colors if source is in Program Bus',
         style      : {
             color  : self.rgb(255,255,255),
             bgcolor: self.rgb(200, 0, 0)
@@ -137,7 +137,8 @@ exports.initFeedbacks = function() {
         label      : 'GFX Pulled',
         description: 'Change colors if a GFX stack is Pulled',
         style      : {
-            color  : self.rgb(200,200,0)
+            color  : self.rgb(200,200,0),
+            png64  : self.ICON_PULL
         },
         options    : [{
                 type        : 'dropdown',
@@ -160,7 +161,8 @@ exports.initFeedbacks = function() {
         label      : 'GFX In Preview',
         description: 'Change colors if a GFX stack is in Preview',
         style      : {
-            color  : self.rgb(0,200,0)
+            color  : self.rgb(0,200,0),
+            png64  : self.ICON_PREVIEW_COLOR
         },
         options    : [{
                 type        : 'dropdown',
@@ -266,32 +268,8 @@ exports.initFeedbacks = function() {
         }
     }
 
-    // TO DO
-    feedbacks['inputAudioVolume'] = {
-        type       : 'boolean',
-        label      : 'Audio Input: Volume',
-        description: 'Change colors based on input audio volume',
-        style      : {
-            bgcolor: self.rgb(50,50,50)
-        },
-        options    : [{
-                type        : 'dropdown',
-                label       : 'Select Input',
-                id          : 'input',
-                tooltip     : 'Select the Input this feedback monitors',
-                default     : 0,
-                choices     : self.data.inputs
-        }],
-        callback: function (feedback) {
-            if (true) {
-                return true
-            }
-            return false
-        }
-    }
-
-    // TO DO
-    feedbacks['inputAudioGain'] = {
+       // TO DO
+       feedbacks['inputAudioGain'] = {
         type       : 'boolean',
         label      : 'Audio Input: Gain',
         description: 'Change colors based on input audio gain',
@@ -371,6 +349,98 @@ exports.initFeedbacks = function() {
 
 
 
+
+    // Volume options for volume level feedback
+    const volumeOptions = [{
+        type   : 'dropdown',
+        label  : 'Select Input',
+        id     : 'input',
+        tooltip: 'Select the Input this feedback monitors',
+        default: 0,
+        choices: self.data.inputs
+    },
+    {
+        type   : 'checkbox',
+        label  : 'Show the actual dB Value',
+        id     : 'value',
+        default: false,
+    },
+    {
+        type   : 'checkbox',
+        label  : 'Color Text',
+        id     : 'colortxt',
+        default: true,
+    },
+    {
+        type   : 'checkbox',
+        label  : 'Color Background',
+        id     : 'colorbg',
+        default: false,
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Base Text Color',
+        id     : 'colorbase',
+        default: self.rgb(255, 255, 255),
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Text color above -1 dB',
+        id     : 'color',
+        default: self.rgb(255, 0, 0),
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Text color below -1 dB',
+        id     : 'color1',
+        default: self.rgb(255, 255, 0),
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Text color below -6 dB',
+        id     : 'color6',
+        default: self.rgb(0, 255, 0),
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Text color below -18 dB',
+        id     : 'color18',
+        default: self.rgb(0, 192, 0),
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Text color below -36 dB',
+        id     : 'color36',
+        default: self.rgb(0, 128, 0),
+    }]
+
+    // Volume level feedback
+    feedbacks['inputAudioVolume'] = {
+        type       : 'advanced',
+        label      : 'Audio Input: Volume',
+        description: 'Change colors based on input audio volume',
+        options    : volumeOptions
+    }
+
+    feedbacks['streamAudioVolume'] = {
+        type       : 'advanced',
+        label      : 'Master Input:Stream Volume',
+        description: 'Change colors based on master stream audio volume',
+        options    : volumeOptions
+    }
+
+    feedbacks['recordAudioVolume'] = {
+        type       : 'advanced',
+        label      : 'Master Input:Record Volume',
+        description: 'Change colors based on master record audio volume',
+        options    : volumeOptions
+    }
+
+ 
+
+
+
+
     return feedbacks;
    
 }
@@ -380,6 +450,164 @@ exports.initFeedbacks = function() {
 // ###########################
 
 exports.executeFeedback = function (feedback, bank) {
+    var self = this;
+
+    if (feedback.type === 'inputAudioVolume') {
+        let input = self.data.inputs[feedback.options.input]
+
+        var rawLevel = parseFloat(input.audioVolume) + 60000
+
+        var volLinear = (rawLevel * 100) / 70000
+           
+        //var dBLevel = Math.round(Math.pow(volLinear / 100, 0.25) * 100)
+
+        var dBLevel = (10 * Math.log(volLinear)) / Math.LN10
+        
+        dBLevel = (+dBLevel - 38.7).toFixed(1)
+
+        const color = () => {
+            if (dBLevel > -1) {
+                return feedback.options.color
+            } else if (dBLevel > -6) {
+                return feedback.options.color1
+            } else if (dBLevel > -18) {
+                return feedback.options.color6
+            } else if (dBLevel > -36) {
+                return feedback.options.color18
+            }
+            return feedback.options.color36
+        }
+
+        let txt = ''
+        let colorfg = ''
+        let colorbg = ''
+
+        if (feedback.options.value == true) {
+            if (bank.text != '') {
+                txt = bank.text + `\\n ${dBLevel} dB`
+            } else {
+                txt = bank.text + `${dBLevel} dB`
+            }
+        } else {
+            txt = bank.text
+        }
+
+        if (feedback.options.colortxt == true) {
+            colorfg = color()
+        } else {
+            colorfg = feedback.options.colorbase
+        }
+
+        if (feedback.options.colorbg == true) {
+            colorbg = color()
+        }
+        return { color: colorfg, bgcolor: colorbg, text: txt }
+    }
+
+
+    if (feedback.type === 'streamAudioVolume') {
+        let masterInput = self.data.streamMaster
+
+        var rawLevel = parseFloat(masterInput.level) + 60000
+
+        var volLinear = (rawLevel * 100) / 70000
+
+        var dBLevel = (10 * Math.log(volLinear)) / Math.LN10
+        
+        dBLevel = (+dBLevel - 38.7).toFixed(1)
+
+        const color = () => {
+            if (dBLevel > -1) {
+                return feedback.options.color
+            } else if (dBLevel > -6) {
+                return feedback.options.color1
+            } else if (dBLevel > -18) {
+                return feedback.options.color6
+            } else if (dBLevel > -36) {
+                return feedback.options.color18
+            }
+            return feedback.options.color36
+        }
+
+        let txt = ''
+        let colorfg = ''
+        let colorbg = ''
+
+        if (feedback.options.value == true) {
+            if (bank.text != '') {
+                txt = bank.text + `\\n ${dBLevel} dB`
+            } else {
+                txt = bank.text + `${dBLevel} dB`
+            }
+        } else {
+            txt = bank.text
+        }
+
+        if (feedback.options.colortxt == true) {
+            colorfg = color()
+        } else {
+            colorfg = feedback.options.colorbase
+        }
+
+        if (feedback.options.colorbg == true) {
+            colorbg = color()
+        }
+        return { color: colorfg, bgcolor: colorbg, text: txt }
+    }
+
+
+    if (feedback.type === 'recordAudioVolume') {
+        let masterInput = self.data.recordMaster
+
+        var rawLevel = parseFloat(masterInput.level) + 60000
+
+        var volLinear = (rawLevel * 100) / 70000
+           
+        //var dBLevel = Math.round(Math.pow(volLinear / 100, 0.25) * 100)
+
+        var dBLevel = (10 * Math.log(volLinear)) / Math.LN10
+        
+        dBLevel = (+dBLevel - 38.7).toFixed(1)
+
+        const color = () => {
+            if (dBLevel > -1) {
+                return feedback.options.color
+            } else if (dBLevel > -6) {
+                return feedback.options.color1
+            } else if (dBLevel > -18) {
+                return feedback.options.color6
+            } else if (dBLevel > -36) {
+                return feedback.options.color18
+            }
+            return feedback.options.color36
+        }
+
+        let txt = ''
+        let colorfg = ''
+        let colorbg = ''
+
+        if (feedback.options.value == true) {
+            if (bank.text != '') {
+                txt = bank.text + `\\n ${dBLevel} dB`
+            } else {
+                txt = bank.text + `${dBLevel} dB`
+            }
+        } else {
+            txt = bank.text
+        }
+
+        if (feedback.options.colortxt == true) {
+            colorfg = color()
+        } else {
+            colorfg = feedback.options.colorbase
+        }
+
+        if (feedback.options.colorbg == true) {
+            colorbg = color()
+        }
+        return { color: colorfg, bgcolor: colorbg, text: txt }
+    }
+
 
 
 }
