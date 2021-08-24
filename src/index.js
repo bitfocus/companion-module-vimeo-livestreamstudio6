@@ -6,7 +6,7 @@ const tcp                                = require('../../../tcp');
 const instance_skel                      = require('../../../instance_skel');
 const { executeAction, initActions }     = require('./actions')
 const { getConfigFields }                = require('./config')
-const { executeFeedback, initFeedbacks } = require('./feedback')
+const { executeAdvFeedback, initFeedbacks } = require('./feedback')
 const { initVariables }                  = require('./variables')
 const { initPresets }                    = require('./presets')
 //const  _ = require('underscore');
@@ -55,6 +55,7 @@ function instance(system, id, config) {
         }
     };
 
+    self.blinkingFB = {};
     self.refreshConfigBool = false;
     self.refreshConfigIteration = 0;
 
@@ -132,6 +133,12 @@ instance.prototype.initTCP = function () {
             self.debug('Network error', err);
             self.setVariable('status', 'Error');
             self.data.connected = false;
+            
+            if (self.blinker) {
+				clearInterval(self.blinker);
+				delete self.blinker;
+			}
+
             self.log('error', '[Livestream Studio] TCP Socket error: ' + err.message);
         });
 
@@ -140,6 +147,7 @@ instance.prototype.initTCP = function () {
             self.setVariable('status', 'Connected');
             self.data.connected = true;
             self.log('info', '[Livestream Studio] Connected to Livestream Studio at IP ' + self.config.host + ' on port ' + self.config.port);
+            self.blinker = setInterval( function() { self.blink(); }, 1000);
         });
         
         // separate buffered stream into lines with responses
@@ -189,6 +197,11 @@ instance.prototype.destroy = function () {
         self.socket.destroy()
     }
 
+    if (self.blinker) {
+        clearInterval(self.blinker);
+        delete self.blinker;
+    }
+    
     self.debug('[Livestream Studio] Destroy', self.id);
 }
 
@@ -196,18 +209,25 @@ instance.prototype.destroy = function () {
 // Carry out the actions of a button press
 instance.prototype.action = function (action) {
 
-    executeAction.bind(this)(action);
+    return executeAction.bind(this)(action);
 
 };
 
 
-// Execute feedback
+// Execute advanced feedback
 instance.prototype.feedback = function (feedback, bank) {
 
-    return executeFeedback.bind(this)(feedback, bank)
+    return executeAdvFeedback.bind(this)(feedback, bank)
 
 }
 
+// Blink the feedbacks that want it
+instance.prototype.blink = function () {
+    var self = this;
+    for (var f in self.blinkingFB) {
+        self.checkFeedbacks(f);
+    }
+};
 
 // Update module after a config change
 instance.prototype.updateConfig = function (config) {

@@ -99,11 +99,35 @@ exports.initFeedbacks = function() {
                 tooltip     : 'Select the GFX Stack this feedback monitors',
                 default     : 0,
                 choices     : self.data.gfx
+        },
+        {
+                type        : 'checkbox',
+                label       : 'Blink?',
+                id          : 'blink',
+                tooltip     : '',
+                default     : 1
         }],
-        callback: function (feedback) {
-            if (self.data.gfx[parseInt(feedback.options.gfx)].canPush) {
-                return true
-            }
+        callback: function (feedback, bank) {
+            //if (self.data.gfx[parseInt(feedback.options.gfx)].canPush) {
+                //return true
+                var opt = feedback.options;
+
+                if (self.data.gfx[parseInt(feedback.options.gfx)].canPush) {
+                    if (opt.blink) {		// wants blink
+                        if (self.blinkingFB[feedback.type]) {
+                            self.blinkingFB[feedback.type] = false;
+                            // blink off
+                            return;
+                        } else {
+                            self.blinkingFB[feedback.type] = true;
+                        }
+                    }
+                    return { color: opt.fg, bgcolor: opt.bg };
+                } else if (self.blinkingFB[feedback.type]) {
+                    delete self.blinkingFB[feedback.type];
+                }
+                //
+           // }
             return false
         }
     }
@@ -449,13 +473,27 @@ exports.initFeedbacks = function() {
 // #### Execute Feedbacks ####
 // ###########################
 
-exports.executeFeedback = function (feedback, bank) {
+exports.executeAdvFeedback = function (feedback, bank) {
     var self = this;
 
-    if (feedback.type === 'inputAudioVolume') {
-        let input = self.data.inputs[feedback.options.input]
+    let level;
+    switch (feedback.type) {
+        case 'inputAudioVolume':
+            level = parseFloat(self.data.inputs[feedback.options.input].audioVolume);
+            break;
+         
+        case 'streamAudioVolume':
+            level = parseFloat(self.data.streamMaster.level);
+            break;
 
-        var rawLevel = parseFloat(input.audioVolume) + 60000
+        case 'recordAudioVolume':
+            level = parseFloat(self.data.recordMaster.level);
+            break;       
+    }
+    
+    if (level !== '') {
+
+        var rawLevel = parseFloat(level) + 60000
 
         var volLinear = (rawLevel * 100) / 70000
            
@@ -503,111 +541,5 @@ exports.executeFeedback = function (feedback, bank) {
         }
         return { color: colorfg, bgcolor: colorbg, text: txt }
     }
-
-
-    if (feedback.type === 'streamAudioVolume') {
-        let masterInput = self.data.streamMaster
-
-        var rawLevel = parseFloat(masterInput.level) + 60000
-
-        var volLinear = (rawLevel * 100) / 70000
-
-        var dBLevel = (10 * Math.log(volLinear)) / Math.LN10
-        
-        dBLevel = (+dBLevel - 38.7).toFixed(1)
-
-        const color = () => {
-            if (dBLevel > -1) {
-                return feedback.options.color
-            } else if (dBLevel > -6) {
-                return feedback.options.color1
-            } else if (dBLevel > -18) {
-                return feedback.options.color6
-            } else if (dBLevel > -36) {
-                return feedback.options.color18
-            }
-            return feedback.options.color36
-        }
-
-        let txt = ''
-        let colorfg = ''
-        let colorbg = ''
-
-        if (feedback.options.value == true) {
-            if (bank.text != '') {
-                txt = bank.text + `\\n ${dBLevel} dB`
-            } else {
-                txt = bank.text + `${dBLevel} dB`
-            }
-        } else {
-            txt = bank.text
-        }
-
-        if (feedback.options.colortxt == true) {
-            colorfg = color()
-        } else {
-            colorfg = feedback.options.colorbase
-        }
-
-        if (feedback.options.colorbg == true) {
-            colorbg = color()
-        }
-        return { color: colorfg, bgcolor: colorbg, text: txt }
-    }
-
-
-    if (feedback.type === 'recordAudioVolume') {
-        let masterInput = self.data.recordMaster
-
-        var rawLevel = parseFloat(masterInput.level) + 60000
-
-        var volLinear = (rawLevel * 100) / 70000
-           
-        //var dBLevel = Math.round(Math.pow(volLinear / 100, 0.25) * 100)
-
-        var dBLevel = (10 * Math.log(volLinear)) / Math.LN10
-        
-        dBLevel = (+dBLevel - 38.7).toFixed(1)
-
-        const color = () => {
-            if (dBLevel > -1) {
-                return feedback.options.color
-            } else if (dBLevel > -6) {
-                return feedback.options.color1
-            } else if (dBLevel > -18) {
-                return feedback.options.color6
-            } else if (dBLevel > -36) {
-                return feedback.options.color18
-            }
-            return feedback.options.color36
-        }
-
-        let txt = ''
-        let colorfg = ''
-        let colorbg = ''
-
-        if (feedback.options.value == true) {
-            if (bank.text != '') {
-                txt = bank.text + `\\n ${dBLevel} dB`
-            } else {
-                txt = bank.text + `${dBLevel} dB`
-            }
-        } else {
-            txt = bank.text
-        }
-
-        if (feedback.options.colortxt == true) {
-            colorfg = color()
-        } else {
-            colorfg = feedback.options.colorbase
-        }
-
-        if (feedback.options.colorbg == true) {
-            colorbg = color()
-        }
-        return { color: colorfg, bgcolor: colorbg, text: txt }
-    }
-
-
 
 }
