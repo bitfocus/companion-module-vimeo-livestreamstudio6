@@ -2,13 +2,13 @@
 // companion-module-livesteam-studio v1.0.0
 // GitHub: https://github.com/bitfocus/companion-module-vimeo-livestreamstudio6
 
-const tcp                                = require('../../../tcp');
-const instance_skel                      = require('../../../instance_skel');
-const { executeAction, initActions }     = require('./actions')
-const { getConfigFields }                = require('./config')
+const tcp                                   = require('../../../tcp');
+const instance_skel                         = require('../../../instance_skel');
+const { executeAction, initActions }        = require('./actions')
+const { getConfigFields }                   = require('./config')
 const { executeAdvFeedback, initFeedbacks } = require('./feedback')
-const { initVariables }                  = require('./variables')
-const { initPresets }                    = require('./presets')
+const { initVariables }                     = require('./variables')
+const { initPresets }                       = require('./presets')
 //const  _ = require('underscore');
 
 var debug = debug;
@@ -63,7 +63,7 @@ function instance(system, id, config) {
     self.ICON_SPEAKER_ON     = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAADrUlEQVR4nO2aTUsbQRjHn43xlSi+4cEcrCJ6sEQRPQWFYtBrPoJfYL5DDz325H4Be/JqTwqCBArqQaRQRES9CPVdDCai+JIp/zGTphDrzG6y2SXzg5F1dndefpl9dnYYi3NOhv8TMn7ex0hSwEhSIOzkJtu2k0SE9MHrBjskTUQpIlpkjKV1i9AK3LZtt3POf1iW9bHy/So/nPOsZVmMMbaoU7iWpIWFhV8QdHNzQ8fHx3RxcVH1jqvQ3NxMvb29NDAwIK/+xBhLqd6vHJNs256Xgra3twMjCNzf39PR0RHt7u6K/znnX3Tu1wnciEG0v7+v2UT/cHJyQplMhizLiiN0VEKSKBSVBJnLy0vZ+rFKSKpZjCQFjCQFjCQFfCEpHA6LuUwpML/p6OioavuqLgmCJiYmqKmpqeR5SMJ5JFxbDbRrfXl5KVsz6+vrRedbW1spl8uVLFt+EWA0jYyM0M7Ojqs6UY8u2iMJlZQj1dXV0eTkpBAkZSC/sbGRIpFIoY6DgwN6fn4W1/T09AhZbup3ssioPZKc/BKlGB8fp7a2tn/KRYpGozQ0NES3t7fi8weTv42NDZqenhbX4XzRhFAbX0uKx+OFYzxmxYKoaCTJTuA8HsVUKkXpdJqur6+pq6tLJDc/lK8loXPvlYuE76vh4WGRB1GdnZ10dXUlRg/KwFvQa0mexSSVxuM6rDLs7e0V8uXIKe5czcSkUuUi4VHs6+sr5ENaKUlOCbQkOZIGBweppaVF5D09PdH5+bnIl3lu2+CJJKfzpKWlpcJxQ0MDzczMUHv73yUdlIskOwFBW1tb9PDwIK7HWw1gsc/NXC0wIwkdX1tbo0QiUfjkkCPp7OxMHGMl8e7uTgiampoSjyFAfs08bhCF+c/s7KwQIGPS6empSBLMjzCJBJB2eHjoqt7AxSS82ldXV2lubq4wkt7i8fGR1tfXXdcfyMANUSsrK2+WjUkkEhbxs9ms6/oC+3aDqLfY3Nwsa12+frv5BSc/sm/mSV4R6MmkV3jy7VaLaEuSi2RBpbu7W7ZceXeJjqRl/BkdHQ20oP7+foSM34yxn6r36Uha5JxnYrGYWHbFMmuQwLdfMpl87XQo9FWn6br7k8by+5MilN+AEAQQIorCxDfG2HzFJOVFYXfb51wulwiFQtFAWHrle36n27LujWaLsgJmCqCAkaSAkaSAkaSAkaSAkaSAkaSAkaSAkaSAkaSAkaSAkaSAkaSAkaSAkaSAkaSAkfQeRPQH4RqoYPTbGZgAAAAASUVORK5CYII=';
     self.ICON_SPEAKER_OFF    = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAACaUlEQVR4nO2aT6oaQRCHfx0UUaI8FMFlUHDjZhb+wUXIFXIEj/DICZKThNwgB3CRqHsD2bqICxciyFOCKKIdanBEIU+rZEZntD5omUba7v5muuyZKWOthXKaN+rnPCqJgUriQDFJUgA4AL5T0ygVY8xvAC3pfKmIArcxpgXgKx0nk0mkUqnbnV0B6/Ua8/nca/DNWtuStGdLMsa8o7NhrX1bqVRQLBYDm1QQkKR+v+/J+mKt/cztRhKTnklQuVyOnCAik8mgVqu5x8aYT5K2EkkUiyIpyIPCQ6FQoDiTNsY43Hbif7d4PH7J+EIDXVE7nrhj0i0AA5XEQCUxUEkMQi0pnU6jVCrdfBwxaYNrPVohQdVqFcPh8Gp9voZY0na7DXxQ3sYvFou5gvzs8xLhoZNEgur1uisIu0k9vKRcLrc/po2q4zh7QYiqpM1mI+7kFM1m8+T3NCk/+7xEeChj0iG63BioJAYqCcBkMjmq5/P5o7pKAtBut4/q9Lyq0Wjs6yrpPwwGA/dq8h7u6RbgFXq9njsZum8jQX72eVeBu9vtuptLXW5n6HQ67o5cJZ1guVxiNBr5+pt3uU/ym7sJ3EFylXu3R8xnerhn3JesBImkF/pYLBbiTsLEwfh/cYclkUTpNhiPx5GNS9PpFKvVig5/WmtfuO2kqTc/AHxIJBLIZrOReuU9m83cAuAvgPfWWvaVJE3geopiAtdBobwbJ9AkLo9dRsZHccPb8odOsGSZ7eerKcrn0dfcDFQSA5XEQCUxUEkMVBIDlcRAJTFQSQxUEgOVxEAlMVBJDFQSA5XEQCUxUEnnAPAPxYQmn/AWJMQAAAAASUVORK5CYII=';
     self.ICON_HEADPHONES_ON  = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAADp0lEQVR4nO2a20obQRjH/y2KaBOJeAIxISieULHeeKMIIt6XPoF9gHmHvkBB2FuhhzfoG7TGKwXxQvEsVfF8ihpR8VS+6W5JbQ7ftya7Cc4PZo3L7Lczv8x8mVn21ePjIwyZeW38ZMdIYmAkMSiRXmBZVgjAKIB3fjT4GcwCGFNK/ZKGECVuy7LeAogBCHjTr7zwQSn1RRKYLcmyrCiAOQBvEokENjY2cHV1VSgdz0hpaSkikQiqqqqcakNKqR/c6yXT7aMjaHp6Gnd3dznrhBccHBygs7MTDQ0NdLdvACLc20oS93s6LC4uFp0gh6WlJedj2J4ZLCSSgnQ4PT3NQ/O9gb7cpPbnRdKLxUhiIF4nvcS9nljSw8NDXhpSXl6uC0FLi3wtL9x8yb5KovVLNBpFY2PjX0EOlGT39vawsrLi+3rMN0nhcFivW0pK/jTh+PhYF6KyshI1NTVaHpXl5WVdckHRjKTe3l4tCfbaZX19Hbe3t//VozpdXV1obW1FdXU1pqamUtbLN55Lam5u1p2nzk5OTuLs7CxtXdr67OzsYGBgQEuikTczM/Os+xf8SKqtrUV3d7cWNDExkVGQw83Nja47ODio91/xeByrq6uu2+AGsaT7+3vXN2tvb9d/ae93cnIiuidNtZGREXR0dKSdnhzcjCTxYpJGkptCiZhG0uHhIba2tsQxSOr8/Lz+RWxpaXHdDjd4Jol+6mFvkN3GWFtb0zEoltsYBZ2T6Kecpsjm5qb+v6mpCYFAAPTohaZPKurr63UhSNDFxYV+5FFXV6fXVZeXl67aIsUTSSSDpokzzWBLIgH7+/tpEzHJoERP7O7uakm0wKTzoVBI/y+lYHNSRUWFvpbySqrcwJka9JnOkSyCnjJ6lZM8GUnONU5HkfSNJp97SrKkpx3NdF0mPMlJbpYA29vbGB8f/+dcsqR0MZMl0GeqlyqWhKLb4GaLmWq6+YFvko6OjnTHaVObLub5+bnelhDX19c5uXdRjaRYLJa1zsLCgi5+Yx7fMjCSGBhJDIwkBmJJwWDQj3bmDHoSYRPnxpRI+k6Hvr4+f3qXA3p6evQeEkBCKTXLjSiRNEaHtrY2DA8PF9WIKisr04L6+/udU58k10vfT6KXtz4L21hofFVKjUraJMpJ9stPQwB+FqGcOfsFLpEgSEfSS8UsARgYSQyMJAZGEgMjiYGRxMBIYmAkMTCSGBhJDIwkBkYSAyOJgZHEwEhiYCQxMJKyAeA3RGYeXU/StLUAAAAASUVORK5CYII=';
-    self.ICON_HEADPHONES_OFF = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAADKklEQVR4nO2ay24aMRSGjwcSLhGoEixYVixYtRJSd1nlEfoI6TP0BfImbd6gj9A96ioP0Kg7JBKJa0i4uPotXE0pl3OGzE09v2SYJPYZ+/Nvj+2MsdaS6rAC5XNcCokhhcQR5iRJIqIrIvqGonlKxpg7IvoobS+SaOI2xlwT0RdcVyoVqlar6fWuQIvFgkajkS9wa629lpRnQzLGvCWin2dnZ9TtdqnVasXWqDj08PBAvV7PASOiT9bar9zbSOakG3x0Op3cAYIajQZdXl66a2PMZ0lZNiRjzAd8t9tteQ0zonq97pK19p2kRmxICIzeyLswXUilSwCGFBJDRWmB9XqdRj1TlQgSlgtxQDLGuLR9rzg231FipuqkIAioUCj8Ayis1WrlUppKxUmAgqcMINEGPED4XsbfPUAkXGMR+Br3zoWTAOD8/Nw1HLFeXl72xvR5AQpQn5+fU5kTE3cS9nwAtFwuXaOP9ezT0xOVSiUHCd+z2eykuSrzTvKuwNBCY7kCKNosBBHD/5yUEnMShg6cAE2nU3EcQK3Vag7UfD6PPJln2kkABFAYYhhqUQQHXVxcODcBdFISOylqD6JhtHFR1BhwE86wECt0PiRS7E46ZbhhmMBBm/McN3SKxaL73Xg83lkGk3y5XHbXyIO8GGr4PcriyShVZoeb33mH1zpopHfXvph4Cvo8Ph9iABKGblLLgUSXAHCCL+979FDMcK/7fN49eEpGqUtmneTPmDFUdpXnQEIe76RDseJQIk5C72/PH6c4KcpctCsmV2InxbHZ3BczDM/v79JQakclGDJ4pIfnqW2FtyCH9ngSJeKk1zrjGQ6HR/MAkmT7Epf0+JYhhcSQQmJIAmnitxT/mySQfgBS3kFFqb8EEl63oX6/L75JVjQYDDykW0mVRK/eBEFwh39342yo2Wy6/VNe9Pj4SJPJBLXFx3tr7T276sIXuN4Q0fe8vcAVSr+IqBvrS1x/7GfM1eaNtzzpXvJO0l/t1VeUj0vXSQwpJIYUEkMKiSGFxJBCYkghMaSQGFJIDCkkhhQSQwqJIYXEkEJiSCExpJAYUkjHRES/ATgm3LG9n//mAAAAAElFTkSuQmCC';
+    self.ICON_HEADPHONES_OFF = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAADe0lEQVR4nO2aSU4bQRSG/2qCmMEMAoQQsgCxIpKl7FhxhByBnCEXyE0SbpAjZI+yghWTjUECxGhjBglBRX/JjYzk4b3G7nYr9Utlt+16NXz9qupVu4y1Fl7NFXg+reUhCeQhScQ5SZMArAP4TdM0JWPMNoCv2v4yqSZuY8wGgJ+8HhgYwODgYHJ3V6Hn52eUy+XQYNNau6GxF0MyxmQB5Ht7e5HL5TA7O9uxTnVCV1dX2NracsAAfLPW/pJWo5mTfvBlZWUldYCoyclJrK2tuWtjzHeNrRiSMeYL3xcXF/Ut7BKNjo66ZK1d1bRIDIkF826kXZwutPIhgEAekkCftAavr69JtDNRqSAxXOgEpP7+foyMjLz77unpCXd3d22vK8qGPlFPGh8fx/T0dMPJ9OXlxcU3TLxOSol4Uk9PD7LZLIaGhtxnRsOlUikM9BAEAcbGxtxyTYiZTAZHR0d4fHz8cN2p8CQCYqzFbQ07XSwW63b+9vbW5V1YWHDAaLO/v98WUFrF7knLy8sOEIfQyclJ02HEug4ODjA/P+88irY7OzsfGnpd70kzMzMYHh7Gw8MD8vm82I7eRq9iMEtgGtt2KDZPYifn5ubc9d7enrqcQqHgABPU6empAx1FXe1J7BxBXVxcRJpXWC+H59LSkvNIDsO4pPakqPPB1NSUe+cqFbWMs7MztypOTExgd3c3Uhkd96SPDDeuUPf3929exNWKw6dSqeDw8LCuDT2GiaLn0P7y8tJ9x+CTYYNWXTvcCIMikNCeMRLBNQPf19fn8qA6pzEfyyAk/hbXFikWT2JwSNGL6tk3KrP2rjMPU/gYNiqkrvWkcMm/ubl5sw8b2wx8bYfCfPXK6rRi8SR2jNFyI2k8qVVZkj5opfakdm00az2pUZm18Hid1CY3sUcljHm4NWk0T6H6D0cIkytbO+qOxZPadcDi+Pi4ZR4u90xJyz++FchDEshDEkgDqRI+OfzfpIH0l5DSDipK+zWQeNwG5+fn6kq6RVwpq5A2NU1SHb0JgmCbf3dz38RHH9x0pkXX19duc8xpA8Bna21B3HTlAa4MgD9pO8BVk4oAch09xPXmfsasV0+8pUkFzZmkd/31R5Rby8dJAnlIAnlIAnlIAnlIAnlIAnlIAnlIAnlIAnlIAnlIAnlIAnlIAnlIAnlIAnlIAnlIrQTgHxN87HRLBWg/AAAAAElFTkSuQmCC';
     self.ICON_PREVIEW        = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAAD30lEQVR4nO2aS0vjUBSAT9KoUx9lqKAyvopUBEFaFwriCKOb8WfMwGzzH2Y1e8nCrSt3A+5cqYMIU60youALrSDURX2ND6yP2AznYjpOTZrLcE+Ccj8ImNvbc5vPk5uT5CqWZYGkPKr0442UxIGUxIGUxIFGEdQwjBgAfDVN8z1F/FJUVc2oqvpN1/UfFPGFX90Mw0halvVTUZQ3Z2dnQmO7EYlErFAopADAZ13XJ0THFy5pbGzsl2VZiXQ6rVxeXgqN7YamadDX1wc1NTV5RVHe6br+W2R8oXOSYRhvVVVNZrNZ3wQhpmnC3t4eKIoSBoCk6PiiJ272A3O5nOCw3tzf35PFllc3DqQkDkhKAF7q6uogmUxCPp93/UY4HIbV1VXwc44rhUQSXjELhYJnv0QiAWtra9DS0gLr6+uOfVBkb28vzM/Pe45JBYkkFOQlKRKJwM3NDcukyspKdhlfWVl51u/8/JxlWm1tLVxcXJQdkwoySQ8PD2X73N7eQigUAiw4GxoaYHd31/U7KBD7l4v54iTxnG5XV1fssn10dASbm5uOWVJRUQGtra2sH/b3GpOKwE43JJVKQU9PDzQ1Nbn2ub6+Zv284r3KTILHU255eVnYmFSQSMK5w2tOohiTikAzSfSYVAQ6J4kek4rASgCKMakI5HSLRqNwenr6TxsWlMjd3d1/j0mFr6cbVte4wWOdtLGxwbbR0dFiGYDylpaWoK2tDbq7u2F2dhYODg5gZGSEtU1OTjqKpMwkkqcAdiaVbvZ/e2ZmhmUOCrMPDuUsLi6yLEM5Ozs7rL2xsZH1QUEoC29lysWmwNcSwD6Q6upqJgmzCfthO+7H43H2Od70YiWOn7e3t8Ph4SFr39/fd53rKOfAQDJpYGAATk5OYG5urphJKKm+vp49EkFB2I5S8Ma2s7OT9clkMo5xX2Qmuc1J9oGMj48/az8+Pobt7W0YHh5mtyrpdBqy2Sz7OxaLMWF4qpUbkwqyJ5N44E6b02c2eKOLmYRSsB0zx56kUZJbTOpFH74+mdza2irOL09ZWFgo7k1PT0NVVVVxf2pqiu1jpgWFr5IwS5wewz4VUCojSDk28kUABySS7Or5tSBUkr1goaOjw3c9+MKACuGZZJrm966uLvYmxC+am5thaGgIy4AcxcoS4RO3pmlfCoVCYnBwMN7f38/edlCC1TtulmXhYomPFEORLSw1DOMTAHwAgBjJAH/BFSSYPROiV5PYyNW3HMgSgAMpiQMpiQMpiQMpiQMpiQMpiQMpiQMpiQMpiQMpiQMpiQMpiQMpiQMpiQMpiQMpiQMpyQsA+AN5nnPb8NY8/AAAAABJRU5ErkJggg==';
     self.ICON_PREVIEW_COLOR  = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAAERElEQVR4nO2a7WscRRzHv7uzuWfzaJq9YvNkC4KKwVc2BBFBfSkV8YWCWKIgpQVfCL5REJEiiu8k0heB/gOK9o3iCxHbmBeCjegLMWmu5wPeXR7MXS632b3dGdm5XtJesreD7NyRMh9YyO3O/X53n/xmdm52NMYYFO3RlZ9wlCQBlCQBlCQBDBlBZwtj4wDe1SvpGRnxW2EJZ5XF6hfnzfx3MuJHfnebLYxNwdMXQWii/nsm0thB9IxaDAlPA3B23sxfjjp+5JJevXnqOoX3yNZH92vun8lIYwehpTwMvHkDJGtbIPT4vJnfijJ+pGPSbGGsnyWcqd2FgY4J8mE1gp0rIwChftKpqONHPXDzD2gv9UUcNhxqEWmx1d1NACVJAClTAOHkJyz0nrsJuhELbKMPOajMjaOTY1wrUiQxykApDW3Xey6H6qenkJ0cQu7bw29Ixold9J/PYf2tB0JzykKKJMpoqKSe0V2geA9GzxCUH7yKydQ0Vq6UD7Rz8jF46zGQ+2qo/5Fom1MWciR5FJ7ntW2jbQM0swPt++NID/+Lwg924Hu0pAt3G21j+jllIae7CVSSUyKgNR057Sewi1lUN7YPtNFTFOnHy7yd3x4IjsmOXCUJjknFj7MYfHkNxqPLSAW0cdcN3i4sHj1qY5JIJfnQKlCaGxaM2j7ekaskj4aPSTJyyqKrU4Coc8qia1MAGTll0bUpgIycsujKwJ2cdGGt3pmapBvdxdvR/ndOWXR0CmC+VIP5Yo3/7ZR0rH2RxNqXSZz8oIzMw3V+3soZ+PtSGn2nHQw/ayH3fi/KizFMvFNB32MOfnlh6FCRMqcAUlYBmpXUejRXQVffy/DK8aU1ZDJYqwR/XUohOeFyOevfNH70ph9yeBtfkC+rvs0CYt8lUwB2q7qMYy6X5BR13s53578efMrm1//5vAfVZfDr/acdVJYa/8vNBRI41t01U4BmJY2+vovaDR35uUSjCsBAMgyxEQq7qKO6rPHzmwsGzOccDD3t8PdtXCOBY53MKYCU7kZDutvik2n8/FoSW9cbMsCAnRUdKx/GER+hMM/Y/Hz5VgUNTLu8iuqVw7saPyR2Nzkrk4xxIQeOvct3XuOWwFD6isAuahiY8fj5jav63iC9eY0cHrMZQ+LGj46uTJa+NvbGl9vJfbK/Mvnb23EYmf0v/Osbjdd+pXWLjkqyCxrswsGnGrcLaJXRTTlN1IMAAaRIIp15ut0xIpXU3LAwONPZ320+cfMoTQFqPZ8de8ZF9nk38tBB9E15mLhQBxy9JGNniYxdJf2wyY+Ieyf52nQ+Hmn8VozhOox7XcDTLBA2PW/ml6LOIW1j6Wxh7BUATwAYl5JgH/+BnV89l6PeTdJE7b4VQE0BBFCSBFCSBFCSBFCSBFCSBFCSBFCSBFCSBFCSBFCSBFCSBFCSBFCSBFCSBFCSBFCSBFCSwgDwHzxBdMEpCbkiAAAAAElFTkSuQmCC';
     self.ICON_PULL           = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAAD0UlEQVR4nO2az0sbQRTH347VBESpYg56EMRU9KYHiYKF3oInK6X/gJ4q7B/Ra6977X/QS7xoDyKCQkE9RPCgGGMu/iD+CooYxZ2UN3TCdEnMJJ23pjIfWHZ3frzZ/e6btzOz65RKJbA8D7P61MaKpIEVSYM3VIY9z/sIAKNU9gPkACDlum6BwrjxwO153ttSqfTTcZyEUcM14JznGWNJ13XTpm0b9yTO+XfGWCKbzcLh4aFp8xXp6+uD4eHhGOf8BwC8M23feExijH06OTkJTSAE28tkMg5jLO553gfT9o2KJC/w+vrapFktbm9vyWyTvN3u7+8pzL4YZG+3eujq6oLu7u6/aqDQ2I2agaYYJ6FAKJQkGo2KYNwskHgSDis453WVv7q6wuBbFm1wcLBuG1SQiIQ3V+sGW1tbIZFIQEdHhzhHgWQd3KNQyWQSnp6eYGNjo2acq0fQeiHpbtKTntseHh4gnU4LEXZ2dmB/f79c/uLiAtbX10Xe9vY23N3d1bT3Kj0JKRQKsLm5CePj4+L45uZGpKOXTUxMwO7uLpyfn2u3SQWJJ+EF+76vteXzedjb2xNCMcZE2uTkJJyenkIul9O2QylSUwTug4MD6OzshKmpKeFRCHazetukgsyT6t22trZE3VgsBmtraw3ZoKIpPEmyuroK7e3tIqg30iYVJCLJONFIvWKx2HCbVDSVJ/1rm1S86BDAdJtUkIlE6f7V2qQilO42Nzcn9o+Pj3B2dgYrKyvldDxfWlqC3t5emJ6ehuXlZTFGUvMkY2NjYpNlgm1SEcoQAP6MhS4vL6G/vx/i8Xg5XZ3CQKCrBqc3UohXOwRQn3TwplQBgnXV42plgvZNE9oQYGhoSOyPjo4APxLIfLw5tbx6LPOCQlSy/98NAaDCk8VZPi55qANFXJfGpZK2tjYYGBgQaZiv1tU5pia05Vuc4QdH0nJiOz8/L85xuRaXSSS4OrmwsCDOFhcXy+kzMzPl8qlUivzaQxEJb1Aug6jgfA27H3oRioPHah0VzEcb6rp3I9OXRghFpOPj46p5ePOq9zxXB0Wh/HRUDfvDhAamRRLf4WUQDhMM/lQYFQn/6uCcZ0ZGRqCnpyc0iSKRiPiowDkvygdlEuMxiTH2GQB+zc7ORrLZrFMpYJsEBcKHguviAPCF4vcbkn8mPc8b9X3/G2PsveM4UeMNBPB9P93S0vLVdV2S8YD9sVQD+3bTwIqkgRVJAyuSBlYkDaxIGliRNLAiaWBF0sCKpIEVSQMrkgZWJA2sSBpYkTSwImlgRdLAiqSBFakWAPAbuGkm2KjAfLQAAAAASUVORK5CYII=';
@@ -99,8 +99,8 @@ instance.prototype.init = function () {
         self.log('info', '[Livestream Studio] Deferred functions running')
         self.setMediaInputs();
         self.setFeedbackDefinitions(initFeedbacks.bind(self)());
-        self.setPresetDefinitions(initPresets.bind(self)());
         self.setActions(initActions.bind(self)());
+        self.setPresetDefinitions(initPresets.bind(self)());
         self.data.startup = false;
     }
 }
@@ -112,6 +112,12 @@ instance.prototype.initTCP = function () {
 
     if (self.socket !== undefined) {
         self.log('warn', '[Livestream Studio] Killing existing socket connections');
+
+        if (self.blinker) {
+            clearInterval(self.blinker);
+            delete self.blinker;
+        }
+        
         self.socket.destroy();
         self.setVariable('status', 'Not Connected');
         self.data.connected = false;
@@ -224,9 +230,10 @@ instance.prototype.feedback = function (feedback, bank) {
 // Blink the feedbacks that want it
 instance.prototype.blink = function () {
     var self = this;
-    for (var f in self.blinkingFB) {
-        self.checkFeedbacks(f);
-    }
+    //for (var fbkNameId in self.blinkingFB) {   
+    //    self.checkFeedbacks(fbkNameId.split(/:/)[0]);
+    //}
+    self.checkFeedbacks('gfxCanPush')
 };
 
 // Update module after a config change
@@ -619,7 +626,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_gain`, parseInt(apiDataArr[2]))
                 break;
 
-            // Ignored Data
+            // Ignored Data ----------------------------------------------------
             // We want to ignore these items from the API due to large amount of messages from API
             case 'TrASp':    // T-Bar Auto transition steps
             case 'TrMSp':    // T-Bar manual transition steps

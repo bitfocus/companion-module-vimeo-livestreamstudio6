@@ -12,54 +12,164 @@ exports.initPresets = function () {
     
     var presets = [];
   
-    presets.push({
-        category: 'Pgm/Pvw Bus',
-        label   : 'setPreviewSource',
-        bank    : {
-            style  : 'text',
-            text   : 'PVW\\n' + self.data.inputs[0].label.toString(),
-            size   : 'auto'
-        },
-        actions: [{
-            action : 'setPreviewSrc',
-            options: {
-                input: [0]
-            }
-        }],
-        feedbacks: [{
-            type: 'previewSource',
-            options: {
-                input: 0
-            },
-            style : {
-                color  : self.rgb(255,255,255),
-                bgcolor: self.rgb(0, 175, 0)
-            }
-        },
-        {
-            type: 'programSource',
-            options: {
-                input: 0
-            },
-            style : {
-                color  : self.rgb(255,255,255),
-                bgcolor: self.rgb(200, 0, 0)
-            }
-        }]
-    });
+    // Iterate inputs to create program/preview buses
+    for (const input in self.data.inputs) {
+        if (Object.hasOwnProperty.call(self.data.inputs, input)) {
+            const element = self.data.inputs[input];
+            
+            // Preview Bus
+            presets.push({
+                category: 'Pgm/Pvw Bus',
+                label   : 'setPreviewSource' + element.id,
+                bank    : {
+                    style  : 'text',
+                    text   : 'PVW ' + element.label.split(/:/)[0] + '\\n' + element.label.split(/:/)[1],
+                    size   : '14',
+                    color  : self.rgb(255,255,255),
+                    bgcolor: self.rgb(50,50,50)
+                },
+                actions: [{
+                    action : 'setPreviewSrc',
+                    options: {
+                        input: [parseInt(element.id)]
+                    }
+                }],
+                feedbacks: [{
+                    type: 'previewSource',
+                    options: {
+                        input: parseInt(element.id)
+                    },
+                    style : {
+                        color  : self.rgb(255,255,255),
+                        bgcolor: self.rgb(0, 175, 0)
+                    }
+                }]
+            });
+            
+            
+             // Program Bus
+             presets.push({
+                category: 'Pgm/Pvw Bus',
+                label   : 'setProgramSource' + element.id,
+                bank    : {
+                    style  : 'text',
+                    text   : 'PGM ' + element.label.split(/:/)[0] + '\\n' + element.label.split(/:/)[1],
+                    size   : '14',
+                    color  : self.rgb(255,255,255)
+                },
+                actions: [{
+                    action : 'setProgramSrc',
+                    options: {
+                        input: [parseInt(element.id)]
+                    }
+                }],
+                feedbacks: [{
+                    type: 'programSource',
+                    options: {
+                        input: parseInt(element.id)
+                    },
+                    style : {
+                        color  : self.rgb(255,255,255),
+                        bgcolor: self.rgb(200, 0, 0)
+                    }
+                }]
+            });
 
+            // Audio: Mute Toggle
+            presets.push({
+                category: 'Audio',
+                label   : `audioMute${element.id}`,
+                bank    : {
+                    style    : 'text',
+                    text     : element.label,
+                    size     : '14',
+                    alignment: 'center:bottom',
+                    png64    : self.ICON_SPEAKER_ON,
+                    color    : self.rgb(255,255,255),
+                    bgcolor  : self.rgb(0,0,0),
+                    latch    : true
+                },
+                actions: [{
+                    action : 'inputAudioMute',
+                    options: {
+                        input     : [element.id],
+                        muteAction: 'on'
+                    }
+                }],
+                release_actions: [{
+                    action : 'inputAudioMute',
+                    options: {
+                        input     : [element.id],
+                        muteAction: 'off'
+                    }
+                }],
+                feedbacks: [{
+                    type   : 'inputAudioMute',
+                    options: {
+                        input: [element.id]
+                    },
+                    style : {
+                        bgcolor: self.rgb(150,0,0),
+                        png64  : self.ICON_SPEAKER_OFF
+                    }
+                }]
+            });
+            
+            // Audio: Headphones Toggle
+            presets.push({
+                category: 'Audio',
+                label   : `audioHeadphones${element.id}`,
+                bank    : {
+                    style    : 'text',
+                    text     : element.label,
+                    size     : '14',
+                    alignment: 'center:bottom',
+                    png64    : self.ICON_HEADPHONES_OFF,
+                    color    : self.rgb(255,255,255),
+                    bgcolor  : self.rgb(0,0,50),
+                    latch    : true
+                },
+                actions: [{
+                    action : 'inputAudioHeadphones',
+                    options: {
+                        input     : [element.id],
+                        audioHeadphoneAction: 'on'
+                    }
+                }],
+                release_actions: [{
+                    action : 'inputAudioHeadphones',
+                    options: {
+                        input     : [element.id],
+                        audioHeadphoneAction: 'off'
+                    }
+                }],
+                feedbacks: [{
+                    type   : 'inputAudioHeadphones',
+                    options: {
+                        input: [element.id]
+                    },
+                    style : {
+                        bgcolor: self.rgb(0,0,150),
+                        png64  : self.ICON_HEADPHONES_ON
+                    }
+                }]
+            });
+        }
+    }
+   
 
+    // Generate GFX presets
     for (let i = 0; i <= 2; i++) {
-    
         presets.push({
             category: 'GFX',
             label   : `pushGFX${i}`,
             bank    : {
-                style  : 'text',
-                text   : `GFX-${i + 1}`,
-                size   : '14',
-            alignment: 'center:bottom',
-                png64  : self.ICON_PUSH_COLOR
+                style    : 'text',
+                text     : `GFX-${i + 1}`,
+                size     : '14',
+                alignment: 'center:bottom',
+                png64    : self.ICON_PUSH_COLOR,
+                color    : self.rgb(255,255,255)
             },
             actions: [{
                 action : 'controlGFX',
@@ -69,18 +179,66 @@ exports.initPresets = function () {
                 }
             }],
             feedbacks: [{
-                type: 'gfxPushed',
+                type   : 'gfxPushed',
                 options: {
                     gfx: [i]
                 },
                 style : {
-                    png64 : self.ICON_PUSH
+                    png64: self.ICON_PUSH
                 }
-            }]
+            },
+            {
+                type: 'gfxCanPush',
+                options: {
+                    gfx: [i],
+                    blink: 1
+                },
+                style: {
+                    png64 : self.ICON_PUSH,
+                    color : self.rgb(200,200,0)
+                } 
+            }
+        ]
         });
-
     }
 
+    // Cut Transition
+    presets.push({
+        category: 'Transitions',
+        label   : 'executeCut',
+        bank    : {
+            style  : 'text',
+            text   : 'CUT',
+            size   : '24',
+            color  : self.rgb(0,0,0),
+            bgcolor: self.rgb(200,200,200)
+        },
+        actions: [{
+            action : 'transitionCut',
+            options: {
+            }
+        }]
+    });
+
+    // Auto Transition
+    presets.push({
+        category: 'Transitions',
+        label   : 'executeAuto',
+        bank    : {
+            style  : 'text',
+            text   : 'AUTO',
+            size   : '24',
+            color  : self.rgb(0,0,0),
+            bgcolor: self.rgb(200,200,200)
+        },
+        actions: [{
+            action : 'transitionAuto',
+            options: {
+            }
+        }]
+    });
+
+   
 
 return presets;
   //this.setPresetDefinitions(presets)

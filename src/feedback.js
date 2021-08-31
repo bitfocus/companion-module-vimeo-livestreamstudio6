@@ -104,32 +104,31 @@ exports.initFeedbacks = function() {
                 type        : 'checkbox',
                 label       : 'Blink?',
                 id          : 'blink',
-                tooltip     : '',
+                tooltip     : 'Enable flashing between this feedback state and the previous state',
                 default     : 1
         }],
         callback: function (feedback, bank) {
-            //if (self.data.gfx[parseInt(feedback.options.gfx)].canPush) {
-                //return true
-                var opt = feedback.options;
+            var opt = feedback.options;
 
-                if (self.data.gfx[parseInt(feedback.options.gfx)].canPush) {
-                    if (opt.blink) {		// wants blink
-                        if (self.blinkingFB[feedback.type]) {
-                            self.blinkingFB[feedback.type] = false;
-                            // blink off
-                            return;
-                        } else {
-                            self.blinkingFB[feedback.type] = true;
-                        }
+            if (self.data.gfx[parseInt(opt.gfx)].canPush) {
+                let fbkNameId = feedback.type + ':' + feedback.id
+                if (opt.blink) {		// wants blink
+                    if (self.blinkingFB[fbkNameId]) {
+                        self.blinkingFB[fbkNameId] = false;
+                        // blink off
+                        return false;
+                    } else {
+                        self.blinkingFB[fbkNameId] = true;
+                        return true
                     }
-                    return { color: opt.fg, bgcolor: opt.bg };
-                } else if (self.blinkingFB[feedback.type]) {
-                    delete self.blinkingFB[feedback.type];
+                } else if (self.blinkingFB[fbkNameId]) {
+                    delete self.blinkingFB[fbkNameId];
                 }
-                //
-           // }
-            return false
+            } else {
+                return false
+            }
         }
+        
     }
     
     feedbacks['gfxPushed'] = {
@@ -220,7 +219,8 @@ exports.initFeedbacks = function() {
                 choices     : self.data.media
         }],
         callback: function (feedback) {
-            if (self.data.media[parseInt(feedback.options.media)].media === 'playingInOut') {
+            let mediaElement =  self.data.media.find(m => m.id === parseInt(feedback.options.media))
+            if (mediaElement.media === 'playingInOut') {
                 return true
             }
             return false
@@ -230,7 +230,7 @@ exports.initFeedbacks = function() {
     feedbacks['mediaPlayingFull'] = {
         type       : 'boolean',
         label      : 'Media Playing Full Clip',
-        description: 'Change colors if a Media source is playing full clip',
+        description: 'Change style if a Media source is playing full clip',
         style      : {
             bgcolor: self.rgb(0,0,204)
         },
@@ -243,7 +243,8 @@ exports.initFeedbacks = function() {
                 choices     : self.data.media
         }],
         callback: function (feedback) {
-            if (self.data.media[parseInt(feedback.options.media)].media === 'playingFull') {
+            let mediaElement =  self.data.media.find(m => m.id === parseInt(feedback.options.media))
+            if (mediaElement.media === 'playingFull') {
                 return true
             }
             return false
@@ -253,7 +254,7 @@ exports.initFeedbacks = function() {
     feedbacks['mediaPaused'] = {
         type       : 'boolean',
         label      : 'Media Paused',
-        description: 'Change colors if a Media source is paused',
+        description: 'Change style if a Media source is paused',
         style      : {
             bgcolor: self.rgb(50,50,50)
         },
@@ -266,7 +267,8 @@ exports.initFeedbacks = function() {
                 choices     : self.data.media
         }],
         callback: function (feedback) {
-            if (self.data.media[parseInt(feedback.options.media)].media === 'paused') {
+            let mediaElement =  self.data.media.find(m => m.id === parseInt(feedback.options.media))
+            if (mediaElement.media === 'paused') {
                 return true
             }
             return false
@@ -276,7 +278,7 @@ exports.initFeedbacks = function() {
     feedbacks['fadeToBlack'] = {
         type       : 'boolean',
         label      : 'Fade to Black State',
-        description: 'Change colors if Fade to Black is active',
+        description: 'Change style if Fade to Black is active',
         style      : {
             bgcolor: self.rgb(200,0,0)
         },
@@ -317,9 +319,12 @@ exports.initFeedbacks = function() {
     }
 
     feedbacks['inputAudioMute'] = {
-        type       : 'advanced',
+        type       : 'boolean',
         label      : 'Audio Input: Mute',
-        description: 'Change colors based on input audio mute',
+        description: 'Change style based on input audio mute',
+        style      : {
+                bgcolor : self.rgb(150,0,0)
+        },
         options    : [{
             type   : 'dropdown',
             label  : 'Select Input',
@@ -330,23 +335,20 @@ exports.initFeedbacks = function() {
         }],
         callback: function (feedback) {
             if (self.data.inputs[parseInt(feedback.options.input)].audioMute === 1) {
-                return {
-                    bgcolor: self.rgb(150, 0, 0),
-                    png64  : self.ICON_SPEAKER_OFF
-                }
+                return true
             } else if (self.data.inputs[parseInt(feedback.options.input)].audioMute === 0) {
-                return {
-                   // bgcolor: self.rgb(0, 0, 150),
-                    png64  : self.ICON_SPEAKER_ON
-                }
+                return false
             }
         }
     }
 
     feedbacks['inputAudioHeadphones'] = {
-        type       : 'advanced',
+        type       : 'boolean',
         label      : 'Audio Input: Headphones',
-        description: 'Change colors based on input audio to headphones state',
+        description: 'Change style based on input audio to headphones state',
+        style      : {
+                bgcolor : self.rgb(0,0,150)
+        },
         options    : [{
             type   : 'dropdown',
             label  : 'Select Input',
@@ -357,15 +359,9 @@ exports.initFeedbacks = function() {
         }],
         callback: function (feedback) {
             if (self.data.inputs[parseInt(feedback.options.input)].audioHeadphones === 1) {
-                return {
-                    bgcolor: self.rgb(0, 225, 0),
-                    png64  : self.ICON_HEADPHONES_OFF
-                }
+                return true
             } else if (self.data.inputs[parseInt(feedback.options.input)].audioHeadphones === 0) {
-                return {
-                   bgcolor: self.rgb(0, 100, 0),
-                    png64  : self.ICON_HEADPHONES_ON 
-                }
+                return false
             }
         }
     }
