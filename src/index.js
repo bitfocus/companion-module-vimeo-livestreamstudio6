@@ -71,6 +71,11 @@ function instance(system, id, config) {
     self.ICON_PUSH           = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAAD90lEQVR4nO2az0sbQRTH3467xt/4q8EfKCKIiqL1F20uagVPeih46tmb5/4P/SfqtQfpIRc9Fw9qEDUoFI1FC6JRYyX+QIwxO+UNzhJ/oCPs22zLfGDIzuzO251v3sy82R2Dcw6a52Fan5fRIimgRVJAi6SASWHUMIxy0zS/MMZCFPYfwjn/lU6nP3POf1PYd312MwyjiTH2MxAIBBoaGjzx1L29PUilUinbtt9zzqNu23ddpPz8/O+maU4MDQ2BZVmu2n6O5eVlSCQSidvb26Dbtl3/p9Pp9ERra6unAiEdHR2QyWTeGIbx1m3bJN2hqKiIwqzqPcvdtu2r2c00TSgtLfXBk9zHVyJ1dnZCf3+/EMtP+EYkHMcKCgrg+PhYCOUnSESybftVqba2Furq6mBjY0MkuBuIX2uHCjKRMpmMUiouLoa2tjZYWVmBZDIpypaWliAYDEJjY6OyHUz/nEgqKS8vD/r6+mBrawtjHKdOKpWChYUFaGlpgYqKiv/TkzBAVWlUKBSCwsJCqKmpgfr6eqccZzjsbmgHxyfM51IkkmlE9aHX19fFL3YrFEvWQQ/DGS4SiYg8ehalCC9BJpLKGHF0dCR+q6qqRDBYWVkp8ug5Nzc3zvlcQyKS7G6qXF5eQnV1NbS3tzs1cBDPpfdkk9PuJtnZ2RHJr/jCk/wOiUjUcYvXaE9SwBdjkt8hDwF6e3uhp6dHHB8eHsLq6irE43GnfG5uTuTHxsbENbOzs1BSUgKjo6NOSDA/Pw/b29viGgw8p6enRfnk5CSsra0Jm5SQR9zy9fDi4qJo4ODg4L3y7OtkPVyOoECxWEwIcHBw8GSdh/eigry7yYZh1IwBomyULH84fuHx9fW1OG5qahJruLOzs3v2x8fHH/0hlJC/BZANGB4eFkLhC/vscnktdjFsMB5Ho1FxnayHazwszxY226uoZ1PPXgHOzMzAycmJk0evgrslSCAQEL/yPB5vbm7CxcUFjIyMiGg8m3A4LHJTU1OePLtnImULhKAIAwMDQgSJXPB2d3dDV1eXU76/v+/VYz4JxcdJjqt6+fUCvaKsrOzJhuK55uZm/FbneI4sR+/BtLu76wiMefQ6aQtfr5yfnzv10AYAfOCc/3C1TdQieQmVSHrDhAKui8QY+3N1dUXxrM8iuxwAuL5pgsKTvp6enmayHpocjKvi8ThnjEUodpaQ7JlkjH3jnH+yLMu2LIu0S2N8hPEXYyxm2/Y7znnS7XuQbSy927jwkcT4Y6Kc8zCVcb37VgE9uymgRVJAi6SAFkkBLZICWiQFtEgKaJEU0CIpoEVSQIukgBZJAS2SAlokBbRICmiRFNAiKaBFegkA+AvJQCAfByzMpQAAAABJRU5ErkJggg==';
     self.ICON_PUSH_COLOR     = 'iVBORw0KGgoAAAANSUhEUgAAAEkAAAA5CAYAAAB6UQYdAAAACXBIWXMAAAsSAAALEgHS3X78AAAEXUlEQVR4nO2abWgURxjH/3tebnOXkF5stqktTaOmrQZTtEHbxoZ+qBWMiopaGmoRo0ir0lqoVtt+sAUpFCkFSyg01DeQNgehBXO+gCAqhSKSwJGAVVCoGmMMicm9mtsdmbnsvcSrmcDO3Z6dHwy7++zMszP/e2ZnZm8UQggkj8ch9ZkcKRIHUiQOpEgcOEU4HQg0eWMP8N1YHG+K8D8RRcG1Ejc+1+r8N4T4t3p0Gwg0Vcd19I4EoV687MhJpC5+zUBZKWJFTryh1fm7rfZveSSFIjgQjcG976AT4ajV3rPz51kHdmzQ1drZ5AyAZ6z2b/kvXeLGWlrpXAlk8lunA6oL2kCgab7VvoV0h3tDigi3vM/0Wu3bVqObpxiommG/FYCtRGpZp2P3Fp2JZSdsI1LzcgMVXqCrV2FC2QkhIhFiwDD4U8MCnQ3jbT4Fv/jou4WgZa0+JR80iUKISLTCuq5zpecrdTSvIPjxCMH1mwnb/p8JFtQSLGng82GmAhOJcP3yxaqBnRsVdJw20HM1ZQ+GDOxvNbDmXQWvzOTzVXCRxNvdvvrYgYpyoH6egrfqkbS/MINgw6rEkP7ZJge7zqdIQtZuZiRNxpGOOMvx9qKEWGYZt+pgI9yBtjF2HQwR5jNfCBLJ4HpHBK4k8sydXQRtuoI5sxL2qucIQhGCwJWxvAmTjjCRphL+/fcM1NY4sX5ZqjrX/9WFdqGpIEQk+mVhKg08+1eMJbtii0iyO3l9J/2vRTKnAE8KeZ0CFArClyUfrPLg1OFKlr7fU455Lzsz7OY1vUcTPadzptZvpyfLvdOgJvPQa9M3Pad+CnRZkpoFm9/QW48N49U5Luza6s2wp+czR8WljW7MqirCmQthHO0YQXdvNGsZpI2kBTfjTp8CmA0bDekIhQ22wk9v8MTpAj0fDSaiYnF9MX46OoTb/Q8y/P/wtZb1WaIQFEmplbm5nPjio6cxGjLwa/tQht3MW1kxjTWYnv9+YhiHfMPJcts/9DJ7urCpqCLCu5uQSMrG5t23cPVGKiKC4USjntWcKC1xsOO18fv0/OS5UdwZGMPebRpqql0ZHj/Z18eO59tn5qTuORMpXSDKyXNBtKwvZyLsHbf5/PfZ8b3lT2FdU1kyb1dPjv96mYBwkWhEdPdGHrHTb0abdt1C4yIPSj3TxiMn8VWgvfM+unoiqKlWcfFSKCnwwcODLOpMPv2mD31346KbIF4k2nCz8dnu+TpH/rPMhUvhDPvEaMxVhMkNExxYLlI4YgzOr3WLqOtjaVzoMW9bvmnCcpEIQdv7K8v0tEoL56VqF77coZFojPwtYmeJkD2TNy8vO666lOa7g3Hjdn9caJemL/KaF12Ixsg/xaryulbnH7b6GcI2lo5vXFgtxPmjdGt1/j9EOZe7bzmQoxsHUiQOpEgcSJE4kCJxIEXiQIrEgRSJAykSB1IkDqRIHEiROJAicSBF4kCKxIEUiQMpEgdSpMkA8BC1+zeRbpUHAgAAAABJRU5ErkJggg==';
 
+    self.masterAudioChoices = [
+        { id: 'str', label: 'Stream' },
+        { id: 'rec', label: 'Record' }
+    ]
+
     self.setActions(initActions.bind(self)()); // export actions
   
     return self;
@@ -395,16 +400,19 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             case 'SVC':
                 self.data.streamMaster.level = parseInt(apiDataArr[1])
                 self.setVariable('streamVolume', parseInt(apiDataArr[1]))
+                self.checkFeedbacks('masterAudioVolume')
                 break;
                 
             // Stream Mute  SMC:%1
             case 'SMC':
                 self.data.streamMaster.mute = parseInt(apiDataArr[1])
+                self.checkFeedbacks('masterAudioMute')
                 break;
 
             // Stream Headphones  SSC:%1
             case 'SSC':
                 self.data.streamMaster.headphones = parseInt(apiDataArr[1])
+                self.checkFeedbacks('masterAudioHeadphones')
                 break;
 
             // Record Master Fader ------------------------------------------
@@ -412,16 +420,19 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             case 'RVC':
                 self.data.recordMaster.level = parseInt(apiDataArr[1])
                 self.setVariable('recordVolume', parseInt(apiDataArr[1]))
+                self.checkFeedbacks('masterAudioVolume')
                 break;
 
             // Record Mute  RMC:%1
             case 'RMC':
                 self.data.recordMaster.mute = parseInt(apiDataArr[1])
+                self.checkFeedbacks('masterAudioMute')
                 break;
             
             // Record Headphones  RSC:%1
             case 'RSC':
                 self.data.recordMaster.headphones = parseInt(apiDataArr[1])
+                self.checkFeedbacks('masterAudioHeadphones')
                 break;
 
             // Transitions ---------------------------------------------------
@@ -464,14 +475,16 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             // Streaming -----------------------------------------------------
             // Streaming Stopped  StrStopped
             case 'StrStopped':
-                self.data.status.streaming = false
-                self.setVariable('streaming', false)
+                self.data.status.streaming = 'stopped'
+                self.setVariable('streaming', 'stopped')
+                self.checkFeedbacks('streamState')
                 break;
 
             // Streaming Started   StrStarted
             case 'StrStarted':
-                self.data.status.streaming = true
-                self.setVariable('streaming', true)
+                self.data.status.streaming = 'started'
+                self.setVariable('streaming', 'started')
+                self.checkFeedbacks('streamState')
                 break;
 
             // Unknown API Response  StrSEr
@@ -482,21 +495,24 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             // Stream Starting or Stopping (indeterminate state) StrStarting StrStopping
             case 'StrStarting':
             case 'StrStopping':
-                self.data.status.streaming = 'Transitioning'
+                self.data.status.streaming = 'transitioning'
                 self.setVariable('streaming', 'transitioning')
+                self.checkFeedbacks('streamState')
                 break;
 
             // Recording -----------------------------------------------------
             // Recording Stopped  RecStopped
             case 'RecStopped':
-                self.data.status.recording = false
-                self.setVariable('recording', false)
+                self.data.status.recording = 'stopped'
+                self.setVariable('recording', 'stopped')
+                self.checkFeedbacks('recordState')
                 break;
 
             // Recording Started   RecStarted
             case 'RecStarted':
-                self.data.status.recording = true
-                self.setVariable('recording', true)
+                self.data.status.recording = 'started'
+                self.setVariable('recording', 'started')
+                self.checkFeedbacks('recordState')
                 break;
 
             // Unknown API Response  RecSEr
@@ -507,8 +523,9 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             // Record Starting or Stopping (indeterminate state)  RecStarting RecStopping
             case 'RecStarting':
             case 'RecStopping':
-                self.data.status.recording = 'Transitioning'
+                self.data.status.recording = 'transitioning'
                 self.setVariable('recording', 'transitioning')
+                self.checkFeedbacks('recordState')
                 break;
 
             // GFX -----------------------------------------------------------
@@ -599,6 +616,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             // Audio to Program 0=off, 1=red, 2=yellow  AOC:%1:%2
             case 'AOC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioToPgm = parseInt(apiDataArr[2])
+                self.checkFeedbacks('inputAudioToPgm')
                 break;
 
             // Audio Mute  0=Off, 1=On AMC:%1:%2  
@@ -624,10 +642,14 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             case 'AGC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioGain = parseInt(apiDataArr[2])
                 self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_gain`, parseInt(apiDataArr[2]))
+                self.checkFeedbacks('inputAudioGain')
                 break;
 
             // Ignored Data ----------------------------------------------------
             // We want to ignore these items from the API due to large amount of messages from API
+            // for T-Bar feature which is not implemented yet in this module. 
+            case 'TrAStart': // T-Bar Auto transition start
+            case 'TrAStop':  // T-Bar Auto transitoin stop
             case 'TrASp':    // T-Bar Auto transition steps
             case 'TrMSp':    // T-Bar manual transition steps
                 // do nothing

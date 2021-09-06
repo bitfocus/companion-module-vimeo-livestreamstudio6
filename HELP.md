@@ -62,15 +62,12 @@ Feedback                      | Description
 **Fade to Black State**       | Indicate if Fade to Black is acitve
 **Audio Input: Level**        | Returns the value of an inputs level
 **Audio Input: Gain**         | Returns the value of an input gain 
-**Audio Input: Mute**         | Indicate the Mute state on an input
+**Audio Input: Mute**         | Indicate the Mute state on an input 
 **Audio Input: Audio On Pgm** | Indicate the Audio on Program state for an input
 **Audio Input: Headphones**   | Indicate the audio to headphones state of an input
-**Record Master: Level**      | Returns the volume level of the Record Master
-**Record Master: Mute**       | Indicate the Mute state on the Record Master
-**Record Master: Headphones** | Indicate the Headphones state on the Record Master
-**Stream Master: Level**      | Returns the volume level of the Stream Master
-**Stream Master: Mute**       | Indicate the Mute state of the Stream Master
-**Stream Master: Headphones** | Indicate the Headphones state for the Stream Master
+**Audio Master: Level**       | Returns the volume level of the selected Master channel (Master: `Record`, `Stream`)
+**Audio Master: Mute**        | Indicate the Mute state on the selected Master channel (Master: `Record`, `Stream`)
+**Audio Master: Headphones**  | Indicate the Headphones state on the selected Master channel (Master: `Record`, `Stream`)
 **Record State**              | Indicates if Recording is active, or transitioning 
 **Stream State**              | Indicates if Streaming is active, or transitioning
 

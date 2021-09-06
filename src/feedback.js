@@ -1,6 +1,7 @@
 // feedback.js
 // Companion module for Livestream Studio 6
 
+const { Braket } = require("aws-sdk");
 
 // ##########################
 // #### Define Feedbacks ####
@@ -12,8 +13,92 @@ exports.initFeedbacks = function() {
 
     var feedbacks = {};
 
+     // Volume options for volume level feedback
+     const volumeOptions = [{
+        type   : 'checkbox',
+        label  : 'Show the actual dB Value',
+        id     : 'value',
+        default: false,
+    },
+    {
+        type   : 'checkbox',
+        label  : 'Color Text',
+        id     : 'colortxt',
+        default: true,
+    },
+    {
+        type   : 'checkbox',
+        label  : 'Color Background',
+        id     : 'colorbg',
+        default: false,
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Base Text Color',
+        id     : 'colorbase',
+        default: self.rgb(255, 255, 255),
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Text color above -1 dB',
+        id     : 'color',
+        default: self.rgb(255, 0, 0),
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Text color below -1 dB',
+        id     : 'color1',
+        default: self.rgb(255, 255, 0),
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Text color below -6 dB',
+        id     : 'color6',
+        default: self.rgb(0, 255, 0),
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Text color below -18 dB',
+        id     : 'color18',
+        default: self.rgb(0, 192, 0),
+    },
+    {
+        type   : 'colorpicker',
+        label  : 'Text color below -36 dB',
+        id     : 'color36',
+        default: self.rgb(0, 128, 0),
+    }]
 
-    
+    let inputVolOptions = [{
+        type   : 'dropdown',
+        label  : 'Select Input',
+        id     : 'input',
+        tooltip: 'Select the Input this feedback monitors',
+        default: 0,
+        choices: self.data.inputs
+    }]
+
+    let masterVolOptions = [{
+        type   : 'dropdown',
+        label  : 'Select Master',
+        id     : 'master',
+        tooltip: 'Select which Master channel this feedback monitors',
+        default: 0,
+        choices: self.masterAudioChoices
+    }]
+
+    for (const opt in volumeOptions) {
+        if (Object.hasOwnProperty.call(volumeOptions, opt)) {
+            const element = volumeOptions[opt];
+            
+            inputVolOptions.push(element);
+            masterVolOptions.push(element);
+        }
+    }
+
+
+    // Feedbacks 
+
     feedbacks['previewSource'] = {
         type       : 'boolean',
         label      : 'Preview Source',
@@ -294,8 +379,8 @@ exports.initFeedbacks = function() {
         }
     }
 
-       // TO DO
-       feedbacks['inputAudioGain'] = {
+    // TO DO
+    feedbacks['inputAudioGain'] = {
         type       : 'boolean',
         label      : 'Audio Input: Gain',
         description: 'Change colors based on input audio gain',
@@ -316,6 +401,13 @@ exports.initFeedbacks = function() {
             }
             return false
         }
+    }
+
+    feedbacks['inputAudioVolume'] = {
+        type       : 'advanced',
+        label      : 'Audio Input: Volume',
+        description: 'Change colors based on input audio volume',
+        options    : inputVolOptions
     }
 
     feedbacks['inputAudioMute'] = {
@@ -366,100 +458,166 @@ exports.initFeedbacks = function() {
         }
     }
 
+    feedbacks['inputAudioToPgm'] = {
+        type       : 'boolean',
+        label      : 'Audio Input: Audio to Program',
+        description: 'Change style based on an input\'s Audio to Program state',
+        style      : {
+                bgcolor : self.rgb(200,0,0)
+        },
+        options    : [{
+            type   : 'dropdown',
+            label  : 'Select Input',
+            id     : 'input',
+            tooltip: 'Select the Input this feedback monitors',
+            default: 0,
+            choices: self.data.inputs
+        },
+        {
+            type   : 'dropdown',
+            label  : 'Select Audio to Program state',
+            id     : 'audioToPgmState',
+            tooltip: 'Select which audio to program state this feedback contols',
+            choices: [
+                { id: '0', label: 'Not Routed to Program (Grey Audio)' },
+                { id: '1', label: 'Always Routed (Red Audio)' },
+                { id: '2', label: 'When Source is live (Yellow Audio)' }
+            ]
+        }],
+        callback: function (feedback) {
+            let newState = self.data.inputs[parseInt(feedback.options.input)].audioToPgm;
+            switch (feedback.options.audioToPgmState) {
+                case '0':
+                    return (newState === 0) ? true : false;
+                    break;
 
+                case '1':
+                    return (newState === 1) ? true : false;
+                    break;
 
-
-
-    // Volume options for volume level feedback
-    const volumeOptions = [{
-        type   : 'dropdown',
-        label  : 'Select Input',
-        id     : 'input',
-        tooltip: 'Select the Input this feedback monitors',
-        default: 0,
-        choices: self.data.inputs
-    },
-    {
-        type   : 'checkbox',
-        label  : 'Show the actual dB Value',
-        id     : 'value',
-        default: false,
-    },
-    {
-        type   : 'checkbox',
-        label  : 'Color Text',
-        id     : 'colortxt',
-        default: true,
-    },
-    {
-        type   : 'checkbox',
-        label  : 'Color Background',
-        id     : 'colorbg',
-        default: false,
-    },
-    {
-        type   : 'colorpicker',
-        label  : 'Base Text Color',
-        id     : 'colorbase',
-        default: self.rgb(255, 255, 255),
-    },
-    {
-        type   : 'colorpicker',
-        label  : 'Text color above -1 dB',
-        id     : 'color',
-        default: self.rgb(255, 0, 0),
-    },
-    {
-        type   : 'colorpicker',
-        label  : 'Text color below -1 dB',
-        id     : 'color1',
-        default: self.rgb(255, 255, 0),
-    },
-    {
-        type   : 'colorpicker',
-        label  : 'Text color below -6 dB',
-        id     : 'color6',
-        default: self.rgb(0, 255, 0),
-    },
-    {
-        type   : 'colorpicker',
-        label  : 'Text color below -18 dB',
-        id     : 'color18',
-        default: self.rgb(0, 192, 0),
-    },
-    {
-        type   : 'colorpicker',
-        label  : 'Text color below -36 dB',
-        id     : 'color36',
-        default: self.rgb(0, 128, 0),
-    }]
-
-    // Volume level feedback
-    feedbacks['inputAudioVolume'] = {
-        type       : 'advanced',
-        label      : 'Audio Input: Volume',
-        description: 'Change colors based on input audio volume',
-        options    : volumeOptions
+                case '2':
+                    return (newState === 2) ? true : false;
+                    break;
+            }
+        }
     }
 
-    feedbacks['streamAudioVolume'] = {
+    feedbacks['masterAudioVolume'] = {
         type       : 'advanced',
-        label      : 'Master Input:Stream Volume',
+        label      : 'Audio Master: Volume',
         description: 'Change colors based on master stream audio volume',
-        options    : volumeOptions
+        options    : masterVolOptions
     }
 
-    feedbacks['recordAudioVolume'] = {
-        type       : 'advanced',
-        label      : 'Master Input:Record Volume',
-        description: 'Change colors based on master record audio volume',
-        options    : volumeOptions
+    feedbacks['masterAudioMute'] = {
+        type       : 'boolean',
+        label      : 'Audio Master: Mute',
+        description: 'Change style based on master audio mute state',
+        style      : {
+                bgcolor : self.rgb(150,0,0)
+        },
+        options    : [{
+            type   : 'dropdown',
+            label  : 'Select Master',
+            id     : 'master',
+            tooltip: 'Select which Master channel this feedback monitors',
+            default: 0,
+            choices: self.masterAudioChoices
+        }],
+        callback: function (feedback) {
+            if (feedback.options.master === 'str') {
+                if (self.data.streamMaster.mute === 1) {
+                    return true
+                } else if (self.data.streamMaster.mute === 0) {
+                    return false
+                }
+            } else if (feedback.options.master === 'rec') {
+                if (self.data.recordMaster.mute === 1) {
+                    return true
+                } else if (self.data.recordMaster.mute === 0) {
+                    return false
+                }
+            }
+        }
     }
 
- 
+    feedbacks['masterAudioHeadphones'] = {
+        type       : 'boolean',
+        label      : 'Audio Master: Headphones',
+        description: 'Change style based on master audio to headphones state',
+        style      : {
+                bgcolor : self.rgb(0,0,150)
+        },
+        options    : [{
+            type   : 'dropdown',
+            label  : 'Select Master',
+            id     : 'master',
+            tooltip: 'Select which Master channel this feedback monitors',
+            default: 0,
+            choices: self.masterAudioChoices
+        }],
+        callback: function (feedback) {
+            if (feedback.options.master === 'str') {
+                if (self.data.streamMaster.headphones === 1) {
+                    return true
+                } else if (self.data.streamMaster.headphones === 0) {
+                    return false
+                }
+            } else if (feedback.options.master === 'rec') {
+                if (self.data.recordMaster.headphones === 1) {
+                    return true
+                } else if (self.data.recordMaster.headphones === 0) {
+                    return false
+                }
+            }
+        }
+    }
 
+    feedbacks['streamState'] = {
+        type       : 'boolean',
+        label      : 'Streaming State',
+        description: 'Change style based on streaming state',
+        style      : {
+                bgcolor : self.rgb(200,0,0)
+        },
+        options    : [{
+            type   : 'dropdown',
+            label  : 'Select Streaming state',
+            id     : 'stateStream',
+            tooltip: 'Select which Streaming state this feedback contols',
+            choices: [
+                { id: 'started', label: 'Streaming Started' },
+                { id: 'transitioning', label: 'Transitioning States' },
+                { id: 'stopped', label: 'Streaming Stopped' }
+            ]
+        }],
+        callback: function (feedback) {
+            return (feedback.options.stateStream == self.data.status.streaming) ? true : false;
+        }
+    }
 
-
+    feedbacks['recordState'] = {
+        type       : 'boolean',
+        label      : 'Recording State',
+        description: 'Change style based on recording state',
+        style      : {
+                bgcolor : self.rgb(200,0,0)
+        },
+        options    : [{
+            type   : 'dropdown',
+            label  : 'Select Record state',
+            id     : 'stateRecord',
+            tooltip: 'Select which Recording state this feedback contols',
+            choices: [
+                { id: 'started', label: 'Recording Started' },
+                { id: 'transitioning', label: 'Transitioning States' },
+                { id: 'stopped', label: 'Recording Stopped' }
+            ]
+        }],
+        callback: function (feedback) {
+            return (feedback.options.stateRecord == self.data.status.recording) ? true : false;
+        }
+    }
 
     return feedbacks;
    
@@ -478,13 +636,13 @@ exports.executeAdvFeedback = function (feedback, bank) {
             level = parseFloat(self.data.inputs[feedback.options.input].audioVolume);
             break;
          
-        case 'streamAudioVolume':
-            level = parseFloat(self.data.streamMaster.level);
-            break;
-
-        case 'recordAudioVolume':
-            level = parseFloat(self.data.recordMaster.level);
-            break;       
+        case 'masterAudioVolume':
+            if (feedback.options.master ==='str') {
+                level = parseFloat(self.data.streamMaster.level);
+            } else if (feedback.options.master === 'rec') {
+                level = parseFloat(self.data.recordMaster.level);
+            }
+            break;    
     }
     
     if (level !== '') {

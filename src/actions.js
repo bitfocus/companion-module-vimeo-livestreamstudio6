@@ -11,11 +11,6 @@ exports.initActions = function () {
     var actions = {};
     //self.log('info', '[Livestream Studio] Setting action definitions')
 
-    const masterAudioChoices = [
-        { id: 'str', label: 'Stream' },
-        { id: 'rec', label: 'Record' }
-    ]
-
     actions['setPreviewSrc'] = {
         label      : 'Set Preview Bus Source',
         description: 'Set the source input on the Preview bus',
@@ -302,7 +297,7 @@ exports.initActions = function () {
                 label       : 'Master',
                 id          : 'master',
                 tooltip     : 'Select the input to adjust the volume.',
-                choices     : masterAudioChoices
+                choices     : self.masterAudioChoices
             },
             {
                 type    : 'number',
@@ -327,7 +322,7 @@ exports.initActions = function () {
                 label       : 'Master',
                 id          : 'master',
                 tooltip     : 'Select the input to adjust the volume.',
-                choices     : masterAudioChoices
+                choices     : self.masterAudioChoices
             },
             {
                 type    : 'number',
@@ -352,7 +347,7 @@ exports.initActions = function () {
                 label       : 'Master',
                 id          : 'master',
                 tooltip     : 'Select the Master Channel to control.',
-                choices     : masterAudioChoices
+                choices     : self.masterAudioChoices
             },
             {
                 type   : 'dropdown',
@@ -376,7 +371,7 @@ exports.initActions = function () {
                 label       : 'Master',
                 id          : 'master',
                 tooltip     : 'Select the Input to control.',
-                choices     : masterAudioChoices
+                choices     : self.masterAudioChoices
             },
             {
                 type   : 'dropdown',
@@ -401,8 +396,8 @@ exports.initActions = function () {
                 id     : 'recordAction',
                 tooltip: 'Select the action to perform.',
                 choices: [
-                    { id: 'startRecording', label: 'Start Recording' },
-                    { id: 'stopRecording', label: 'Stop Recording' }
+                    { id: 'startRecord', label: 'Start Recording' },
+                    { id: 'stopRecord', label: 'Stop Recording' }
                 ]
             }
         ]
@@ -590,9 +585,9 @@ exports.executeAction = function (action) {
 
             //Recoding
             case 'controlRecord':
-                if (options.recordAction === 'startRecording') {
+                if (options.recordAction === 'startRecord') {
                     cmd = 'RecStart\n'
-                } else if (options.recordAction === 'stopRecording') {
+                } else if (options.recordAction === 'stopRecord') {
                     cmd = 'RecStop\n'
                 }
                 break;
@@ -601,7 +596,7 @@ exports.executeAction = function (action) {
             case 'controlStream':
                 if (options.streamAction === 'startStream') {
                     cmd = 'StrStart\n'
-                } else if (options.recordAction === 'stopStream') {
+                } else if (options.streamAction === 'stopStream') {
                     cmd = 'StrStop\n'
                 }
                 break;
