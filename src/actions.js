@@ -255,9 +255,9 @@ exports.initActions = function () {
                 id     : 'audioOnPgmAction',
                 tooltip: 'Select the action to perform.',
                 choices: [
-                    { id: 'always', label: 'Always On (Audio button RED)' },
-                    { id: 'sourceInPgm', label: 'On when source in Program (Audio button YELLOW)' },
-                    { id: 'off', label: 'Audio Off (Audio Button Off)' }
+                    { id: 1, label: 'Always On (Audio button RED)' },
+                    { id: 2, label: 'On when source in Program (Audio button YELLOW)' },
+                    { id: 0, label: 'Audio Off (Audio Button Off)' }
                 ]
             }
         ]
@@ -432,8 +432,6 @@ exports.initActions = function () {
 
 exports.executeAction = function (action) {
     var self = this;
-    self.log('info', '[Livestream Studio] Setting Action definitions')
-
     var cmd;
     var options = action.options;
 
@@ -444,31 +442,31 @@ exports.executeAction = function (action) {
 
             // Set Preview Source
             case 'setPreviewSrc':
-                cmd = 'SPrI:' + parseInt(options.input) + '\n'
+                cmd = 'SPrI:' + parseInt(options.input);
                 break;
             
             // Set Program Source                
             case 'setProgramSrc':
-                cmd = 'SPmI:' + parseInt(options.input) + '\n'
+                cmd = 'SPmI:' + parseInt(options.input);
                 break;
 
             //Control GFX stacks
             case 'controlGFX':
                 switch (options.gfxAction) {
                     case 'push':
-                        cmd = 'RGMOS:' + parseInt(options.gfx) + '\n';
+                        cmd = 'RGMOS:' + parseInt(options.gfx);
                         break;
                     
                     case 'pull':
-                        cmd = 'RGMOH:' + parseInt(options.gfx) + '\n';
+                        cmd = 'RGMOH:' + parseInt(options.gfx);
                         break;
                     
                     case 'previewShow':
-                        cmd = 'RGPvS:' + parseInt(options.gfx) + '\n';
+                        cmd = 'RGPvS:' + parseInt(options.gfx);
                         break;
 
                     case 'previewHide': 
-                        cmd = 'RGMPvH:' + parseInt(options.gfx) + '\n';
+                        cmd = 'RGMPvH:' + parseInt(options.gfx);
                         break;
                 }
                 break;
@@ -476,128 +474,128 @@ exports.executeAction = function (action) {
             //Control Media
             case 'controlMedia':
                 if (options.mediaAction === 'playFull') {
-                    cmd = 'RMFP:' + options.media + '\n';
+                    cmd = 'RMFP:' + options.media;
                 } else if (optoins.mediaAction === 'playInOut') {
-                    cmd = 'RMIOP:' + options.media + '\n';
+                    cmd = 'RMIOP:' + options.media;
                 } else if (options.mediaAction === 'pause') {
-                    cmd = 'RMPause:' + options.media + '\n';
+                    cmd = 'RMPause:' + options.media;
                 }
                 break;
 
             //Cut Transition
             case 'transitionCut':
-                cmd = 'RCut\n'
+                cmd = 'RCut'
                 break;
             
             //Auto Transition
             case 'transitionAuto':
-                cmd = 'RAuto\n'
+                cmd = 'RAuto'
                 break;
 
             //Fade to Black
             case 'fadeToBlack':
                 if (options.action === 'fadeIn') {
-                    cmd = 'RFIn\n';
+                    cmd = 'RFIn';
                 } else if (options.action === 'fadeOut') {
-                    cmd = 'RFOut\n';
+                    cmd = 'RFOut';
                 }
                 break;
 
             //Audio Volume Level
             case 'setAudioVolume':
-                cmd = 'SIVL:' + parseInt(options.input) + ':' + parseInt(options.volume) + '\n'
+                cmd = 'SIVL:' + parseInt(options.input) + ':' + parseInt(options.volume)
                 break;
 
             //Audio Volume Level by Increment
             case 'setAudioVolumeIncrement':
-                cmd = 'IVL:' + parseInt(options.input) + ':' + parseInt(options.increment) + '\n'
+                cmd = 'IVL:' + parseInt(options.input) + ':' + parseInt(options.increment)
                 break;
 
             //Audio Gain
             case 'setAudioGain':
-                cmd = 'SIGL:' + parseInt(options.input) + ':' + parseInt(options.gain) + '\n'
+                cmd = 'SIGL:' + parseInt(options.input) + ':' + parseInt(options.gain)
                 break; 
 
             //Audio Mute
             case 'inputAudioMute':
                 if (options.muteAction === 'on') {
-                    cmd = 'IAM:' + parseInt(options.input) + ':1\n'
+                    cmd = 'IAM:' + parseInt(options.input) + ':1'
                 } else if (options.muteAction === 'off') {
-                    cmd = 'IAM:' + parseInt(options.input) + ':0\n'
+                    cmd = 'IAM:' + parseInt(options.input) + ':0'
                 }
                 break;
 
-            //Audio on Program
+            //Audio on Program  0=off  1=always on  2=source in pgm
             case 'inputAudioOnPgm':
-                if (options.audioOnPgmAction === 'always') {
-                    cmd = 'IAP:' + parseInt(options.input) + ':1\n'
-                } else if (options.audioOnPgmAction === 'sourceInPgm') {
-                    cmd = 'IAP:' + parseInt(options.input) + ':2\n'
-                } else if (options.audioOnPgmAction === 'off') {
-                    cmd = 'IAP:' + parseInt(options.input) + ':0\n'
+                if (options.audioOnPgmAction === 1) {
+                    cmd = 'IAP:' + parseInt(options.input) + ':1'
+                } else if (options.audioOnPgmAction === 2) {
+                    cmd = 'IAP:' + parseInt(options.input) + ':2'
+                } else if (options.audioOnPgmAction === 0) {
+                    cmd = 'IAP:' + parseInt(options.input) + ':0'
                 }
                 break;
 
             //Audio headphones
             case 'inputAudioHeadphones':
                 if (options.audioHeadphoneAction === 'on') {
-                    cmd = 'IAH:' + parseInt(options.input) + ':1\n'
+                    cmd = 'IAH:' + parseInt(options.input) + ':1'
                 } else if (options.audioHeadphoneAction === 'off') {
-                    cmd = 'IAH:' + parseInt(options.input) + ':0\n'
+                    cmd = 'IAH:' + parseInt(options.input) + ':0'
                 }
                 break;
 
             //Master Volume Stream or Record
             case 'setMasterVolume':
                 if (options.master === 'str') {
-                    cmd = 'SSVL:' + parseInt(options.volume) + '\n';
+                    cmd = 'SSVL:' + parseInt(options.volume);
                 } else if (options.master === 'rec') {
-                    cmd = 'SRVL:' + parseInt(options.volume) + '\n';
+                    cmd = 'SRVL:' + parseInt(options.volume);
                 }
                 break;
 
             // Master Volume Increment Stream or Record
             case 'setMasterVolumeIncrement':
                 if (options.master === 'str') {
-                    cmd = 'SVL:' + parseInt(options.increment) + '\n';
+                    cmd = 'SVL:' + parseInt(options.increment);
                 } else if (options.master === 'rec') {
-                    cmd = 'RVL:' + parseInt(options.increment) + '\n';
+                    cmd = 'RVL:' + parseInt(options.increment);
                 }
                 break;
 
             // Master Audio Mute Stream or Record
             case 'masterAudioMute':
                 if (options.master === 'str') {
-                    cmd = 'SM:' + parseInt(options.muteAction) + '\n';
+                    cmd = 'SM:' + parseInt(options.muteAction);
                 } else if (options.master === 'rec') {
-                    cmd = 'RM:' + parseInt(options.muteAction) + '\n';
+                    cmd = 'RM:' + parseInt(options.muteAction);
                 }
                 break;
 
             // Master Audio Headphones Stream or Record
             case 'masterAudioHeadphones':
                 if (options.master === 'str') {
-                    cmd = 'SH:' + parseInt(options.audioHeadphoneAction) + '\n';
+                    cmd = 'SH:' + parseInt(options.audioHeadphoneAction);
                 } else if (options.master === 'rec') {
-                    cmd = 'RH:' + pasrseInt(options.audioHeadphoneAction) + '\n';
+                    cmd = 'RH:' + pasrseInt(options.audioHeadphoneAction);
                 }
                 break;
 
             //Recoding
             case 'controlRecord':
                 if (options.recordAction === 'startRecord') {
-                    cmd = 'RecStart\n'
+                    cmd = 'RecStart'
                 } else if (options.recordAction === 'stopRecord') {
-                    cmd = 'RecStop\n'
+                    cmd = 'RecStop'
                 }
                 break;
 
             //Streaming
             case 'controlStream':
                 if (options.streamAction === 'startStream') {
-                    cmd = 'StrStart\n'
+                    cmd = 'StrStart'
                 } else if (options.streamAction === 'stopStream') {
-                    cmd = 'StrStop\n'
+                    cmd = 'StrStop'
                 }
                 break;
 
@@ -615,7 +613,7 @@ exports.executeAction = function (action) {
 
     // Send the command 
     if (cmd !== undefined) {
-        self.sendCommand(cmd);
+        self.sendCommand(`${cmd}\n`);
         cmd = ''
     }
     else {

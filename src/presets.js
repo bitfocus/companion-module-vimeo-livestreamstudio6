@@ -22,11 +22,12 @@ exports.initPresets = function () {
                 category: 'Pgm/Pvw Bus',
                 label   : 'setPreviewSource' + element.id,
                 bank    : {
-                    style  : 'text',
-                    text   : 'PVW ' + element.label.split(/:/)[0] + '\\n' + element.label.split(/:/)[1],
-                    size   : '14',
-                    color  : self.rgb(255,255,255),
-                    bgcolor: self.rgb(50,50,50)
+                    style    : 'text',
+                    text     : `PVW\\n\$(studio:input_${element.id + 1}_name)`,  //'PVW ' + element.label.split(/:/)[0] + '\\n' + element.label.split(/:/)[1],
+                    size     : '14',
+                    alignment: 'center:top',
+                    color    : self.rgb(255,255,255),
+                    bgcolor  : self.rgb(50,50,50)
                 },
                 actions: [{
                     action : 'setPreviewSrc',
@@ -53,7 +54,7 @@ exports.initPresets = function () {
                 label   : 'setProgramSource' + element.id,
                 bank    : {
                     style  : 'text',
-                    text   : 'PGM ' + element.label.split(/:/)[0] + '\\n' + element.label.split(/:/)[1],
+                    text   : `PGM\\n\$(studio:input_${element.id + 1}_name)`, //'PGM ' + element.label.split(/:/)[0] + '\\n' + element.label.split(/:/)[1],
                     size   : '14',
                     color  : self.rgb(255,255,255)
                 },
@@ -81,7 +82,7 @@ exports.initPresets = function () {
                 label   : `audioMute${element.id}`,
                 bank    : {
                     style    : 'text',
-                    text     : element.label,
+                    text     : `\$(studio:input_${element.id + 1}_name)`,
                     size     : '14',
                     alignment: 'center:bottom',
                     png64    : self.ICON_SPEAKER_ON,
@@ -121,7 +122,7 @@ exports.initPresets = function () {
                 label   : `audioHeadphones${element.id}`,
                 bank    : {
                     style    : 'text',
-                    text     : element.label,
+                    text     : `\$(studio:input_${element.id + 1}_name)`,
                     size     : '14',
                     alignment: 'center:bottom',
                     png64    : self.ICON_HEADPHONES_OFF,
@@ -154,10 +155,140 @@ exports.initPresets = function () {
                     }
                 }]
             });
-        }
-    }
-   
 
+            // Audio: Audio to Program
+            presets.push({
+                category: 'Audio',
+                label   : `audioToPgm${element.id}`,
+                bank    : {
+                    style    : 'text',
+                    text     : `AUDIO\\n\$(studio:input_${element.id + 1}_name)`,
+                    size     : '14',
+                    color    : self.rgb(255,255,255)
+                },
+                actions: [{
+                    action : 'inputAudioOnPgm',
+                    options: {
+                        input           : [element.id],
+                        audioOnPgmAction: 'always'
+                    }
+                }],
+                feedbacks: [{
+                    type   : 'inputAudioToPgm',
+                    options: {
+                        input          : [element.id],
+                        audioToPgmState: 0
+                    },
+                    style : {
+                        bgcolor: self.rgb(60,60,60)
+                    }
+                },
+                {
+                    type   : 'inputAudioToPgm',
+                    options: {
+                        input          : [element.id],
+                        audioToPgmState: 1
+                    },
+                    style : {
+                        bgcolor: self.rgb(200,0,0)
+                    }
+                },
+                {
+                    type   : 'inputAudioToPgm',
+                    options: {
+                        input          : [element.id],
+                        audioToPgmState: 2
+                    },
+                    style : {
+                        bgcolor: self.rgb(200,200,0),
+                        color  : self.rgb(40,40,40)
+                    }
+                }]
+            });
+
+        }
+    }  //end of for loop
+   
+    // Master Audio: Mute Toggle
+    // presets.push({
+    //     category: 'Master Audio',
+    //     label   : `audioMute${element.id}`,
+    //     bank    : {
+    //         style    : 'text',
+    //         text     : `\$(studio:input_${element.id + 1}_name)`,
+    //         size     : '14',
+    //         alignment: 'center:bottom',
+    //         png64    : self.ICON_SPEAKER_ON,
+    //         color    : self.rgb(255,255,255),
+    //         bgcolor  : self.rgb(0,0,0),
+    //         latch    : true
+    //     },
+    //     actions: [{
+    //         action : 'inputAudioMute',
+    //         options: {
+    //             input     : [element.id],
+    //             muteAction: 'on'
+    //         }
+    //     }],
+    //     release_actions: [{
+    //         action : 'inputAudioMute',
+    //         options: {
+    //             input     : [element.id],
+    //             muteAction: 'off'
+    //         }
+    //     }],
+    //     feedbacks: [{
+    //         type   : 'inputAudioMute',
+    //         options: {
+    //             input: [element.id]
+    //         },
+    //         style : {
+    //             bgcolor: self.rgb(150,0,0),
+    //             png64  : self.ICON_SPEAKER_OFF
+    //         }
+    //     }]
+    // });
+    
+/*     // Master Audio: Headphones Toggle
+    presets.push({
+        category: 'Master Audio',
+        label   : `audioHeadphones${element.id}`,
+        bank    : {
+            style    : 'text',
+            text     : `\$(studio:input_${element.id + 1}_name)`,
+            size     : '14',
+            alignment: 'center:bottom',
+            png64    : self.ICON_HEADPHONES_OFF,
+            color    : self.rgb(255,255,255),
+            bgcolor  : self.rgb(0,0,50),
+            latch    : true
+        },
+        actions: [{
+            action : 'inputAudioHeadphones',
+            options: {
+                input     : [element.id],
+                audioHeadphoneAction: 'on'
+            }
+        }],
+        release_actions: [{
+            action : 'inputAudioHeadphones',
+            options: {
+                input     : [element.id],
+                audioHeadphoneAction: 'off'
+            }
+        }],
+        feedbacks: [{
+            type   : 'inputAudioHeadphones',
+            options: {
+                input: [element.id]
+            },
+            style : {
+                bgcolor: self.rgb(0,0,150),
+                png64  : self.ICON_HEADPHONES_ON
+            }
+        }]
+    });
+*/
     // Generate GFX presets
     for (let i = 0; i <= 2; i++) {
         presets.push({
@@ -200,7 +331,8 @@ exports.initPresets = function () {
             }
         ]
         });
-    }
+    } // end for loop GFX
+    
 
     // Cut Transition
     presets.push({
