@@ -1,11 +1,10 @@
 // feedback.js
 // Companion module for Livestream Studio 6
 
-const { Braket } = require("aws-sdk");
 
-// ##########################
-// #### Define Feedbacks ####
-// ##########################
+// #########################
+// #### Setup Feedbacks ####
+// #########################
 
 exports.initFeedbacks = function() {
     var self = this;
@@ -97,7 +96,9 @@ exports.initFeedbacks = function() {
     }
 
 
-    // Feedbacks 
+// ##########################
+// #### Define Feedbacks ####
+// ##########################
 
     feedbacks['previewSource'] = {
         type       : 'boolean',

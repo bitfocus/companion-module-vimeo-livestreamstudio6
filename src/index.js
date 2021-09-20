@@ -43,10 +43,10 @@ function instance(system, id, config) {
         
         ],
         streamMaster: {
-            level: 0, mute: false, headphones: false
+            level: 0, mute: 0, headphones: 0
         },
         recordMaster: {
-             level: 0, mute: false, headphones: false
+             level: 0, mute: 0, headphones: 0
         },
         status: {
             fadeToBlack: false,
@@ -276,7 +276,7 @@ instance.prototype.sendCommand = function (cmd) {
     var self = this;
 
     if (cmd !== undefined && cmd != '') {
-        if (self.socket !== undefined){ //} && self.socket.connected) {
+        if (self.socket !== undefined) { 
             if (self.config.verbose) { self.log('debug', '[Livestream Studio] Sending Command: ' + cmd) }
             try {
                 self.socket.send(cmd);
@@ -543,7 +543,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 self.checkFeedbacks('gfxActive')
                 break;
 
-            // GFX In Preview GMPvS:%!:%2
+            // GFX In Preview GMPvS:%1:%2
             case 'GMPvS':
                 self.data.gfx[parseInt(apiDataArr[1])].preview = true
                 self.setVariable(`GFX_${parseInt(apiDataArr[1]) + 1}_preview`, true)

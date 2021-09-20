@@ -577,7 +577,7 @@ exports.executeAction = function (action) {
                 if (options.master === 'str') {
                     cmd = 'SH:' + parseInt(options.audioHeadphoneAction);
                 } else if (options.master === 'rec') {
-                    cmd = 'RH:' + pasrseInt(options.audioHeadphoneAction);
+                    cmd = 'RH:' + parseInt(options.audioHeadphoneAction);
                 }
                 break;
 

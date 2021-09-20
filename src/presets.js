@@ -208,87 +208,96 @@ exports.initPresets = function () {
 
         }
     }  //end of for loop
-   
-    // Master Audio: Mute Toggle
-    // presets.push({
-    //     category: 'Master Audio',
-    //     label   : `audioMute${element.id}`,
-    //     bank    : {
-    //         style    : 'text',
-    //         text     : `\$(studio:input_${element.id + 1}_name)`,
-    //         size     : '14',
-    //         alignment: 'center:bottom',
-    //         png64    : self.ICON_SPEAKER_ON,
-    //         color    : self.rgb(255,255,255),
-    //         bgcolor  : self.rgb(0,0,0),
-    //         latch    : true
-    //     },
-    //     actions: [{
-    //         action : 'inputAudioMute',
-    //         options: {
-    //             input     : [element.id],
-    //             muteAction: 'on'
-    //         }
-    //     }],
-    //     release_actions: [{
-    //         action : 'inputAudioMute',
-    //         options: {
-    //             input     : [element.id],
-    //             muteAction: 'off'
-    //         }
-    //     }],
-    //     feedbacks: [{
-    //         type   : 'inputAudioMute',
-    //         options: {
-    //             input: [element.id]
-    //         },
-    //         style : {
-    //             bgcolor: self.rgb(150,0,0),
-    //             png64  : self.ICON_SPEAKER_OFF
-    //         }
-    //     }]
-    // });
-    
-/*     // Master Audio: Headphones Toggle
-    presets.push({
-        category: 'Master Audio',
-        label   : `audioHeadphones${element.id}`,
-        bank    : {
-            style    : 'text',
-            text     : `\$(studio:input_${element.id + 1}_name)`,
-            size     : '14',
-            alignment: 'center:bottom',
-            png64    : self.ICON_HEADPHONES_OFF,
-            color    : self.rgb(255,255,255),
-            bgcolor  : self.rgb(0,0,50),
-            latch    : true
-        },
-        actions: [{
-            action : 'inputAudioHeadphones',
-            options: {
-                input     : [element.id],
-                audioHeadphoneAction: 'on'
-            }
-        }],
-        release_actions: [{
-            action : 'inputAudioHeadphones',
-            options: {
-                input     : [element.id],
-                audioHeadphoneAction: 'off'
-            }
-        }],
-        feedbacks: [{
-            type   : 'inputAudioHeadphones',
-            options: {
-                input: [element.id]
-            },
-            style : {
-                bgcolor: self.rgb(0,0,150),
-                png64  : self.ICON_HEADPHONES_ON
-            }
-        }]
-    });
-*/
+
+
+    for (const master in self.masterAudioChoices) {
+        if (Object.hasOwnProperty.call(self.masterAudioChoices, master)) {
+            const element = self.masterAudioChoices[master];
+
+            // Master Audio: Mute Toggle
+            presets.push({
+                category: 'Master Audio',
+                label   : `masterMute${element.id}`,
+                bank    : {
+                    style    : 'text',
+                    text     : `${element.label}\\nMUTE`,
+                    size     : '14',
+                    alignment: 'center:bottom',
+                    png64    : self.ICON_SPEAKER_ON,
+                    color    : self.rgb(255,255,255),
+                    bgcolor  : self.rgb(0,0,0),
+                    latch    : true
+                },
+                actions: [{
+                    action : 'masterAudioMute',
+                    options: {
+                        master    : [element.id],
+                        muteAction: 1
+                    }
+                }],
+                release_actions: [{
+                    action : 'masterAudioMute',
+                    options: {
+                        master    : [element.id],
+                        muteAction: 0
+                    }
+                }],
+                feedbacks: [{
+                    type   : 'masterAudioMute',
+                    options: {
+                        master: [element.id]
+                    },
+                    style : {
+                        bgcolor: self.rgb(150,0,0),
+                        png64  : self.ICON_SPEAKER_OFF
+                    }
+                }]
+            });
+            
+            // Master Audio: Headphones Toggle
+            presets.push({
+                category: 'Master Audio',
+                label   : `masterHeadphones${element.id}`,
+                bank    : {
+                    style    : 'text',
+                    text     : `${element.label}`,
+                    size     : '14',
+                    alignment: 'center:bottom',
+                    png64    : self.ICON_HEADPHONES_OFF,
+                    color    : self.rgb(255,255,255),
+                    bgcolor  : self.rgb(0,0,50),
+                    latch    : true
+                },
+                actions: [{
+                    action : 'masterAudioHeadphones',
+                    options: {
+                        master              : [element.id],
+                        audioHeadphoneAction: 1
+                    }
+                }],
+                release_actions: [{
+                    action : 'masterAudioHeadphones',
+                    options: {
+                        master              : [element.id],
+                        audioHeadphoneAction: 0
+                    }
+                }],
+                feedbacks: [{
+                    type   : 'masterAudioHeadphones',
+                    options: {
+                        master: [element.id]
+                    },
+                    style : {
+                        bgcolor: self.rgb(0,0,150),
+                        png64  : self.ICON_HEADPHONES_ON
+                    }
+                }]
+            });
+
+        }
+    }
+
+
     // Generate GFX presets
     for (let i = 0; i <= 2; i++) {
         presets.push({
@@ -332,7 +341,7 @@ exports.initPresets = function () {
         ]
         });
     } // end for loop GFX
-    
+
 
     // Cut Transition
     presets.push({
@@ -372,7 +381,6 @@ exports.initPresets = function () {
 
    
 
-return presets;
-  //this.setPresetDefinitions(presets)
+    return presets;
 
 }
