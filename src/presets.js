@@ -231,21 +231,21 @@ exports.initPresets = function () {
                 actions: [{
                     action : 'masterAudioMute',
                     options: {
-                        master    : [element.id],
+                        master    : element.id,
                         muteAction: 1
                     }
                 }],
                 release_actions: [{
                     action : 'masterAudioMute',
                     options: {
-                        master    : [element.id],
+                        master    : element.id,
                         muteAction: 0
                     }
                 }],
                 feedbacks: [{
                     type   : 'masterAudioMute',
                     options: {
-                        master: [element.id]
+                        master: element.id
                     },
                     style : {
                         bgcolor: self.rgb(150,0,0),
@@ -271,21 +271,21 @@ exports.initPresets = function () {
                 actions: [{
                     action : 'masterAudioHeadphones',
                     options: {
-                        master              : [element.id],
+                        master              : element.id,
                         audioHeadphoneAction: 1
                     }
                 }],
                 release_actions: [{
                     action : 'masterAudioHeadphones',
                     options: {
-                        master              : [element.id],
+                        master              : element.id,
                         audioHeadphoneAction: 0
                     }
                 }],
                 feedbacks: [{
                     type   : 'masterAudioHeadphones',
                     options: {
-                        master: [element.id]
+                        master: element.id
                     },
                     style : {
                         bgcolor: self.rgb(0,0,150),
