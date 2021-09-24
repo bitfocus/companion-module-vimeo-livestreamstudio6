@@ -185,7 +185,6 @@ exports.initActions = function () {
         ]
     }
 
-
     actions['setAudioGain'] = {
         label      : 'Audio Input: Set Gain',
         description: 'Set the Gain value on an input channel',

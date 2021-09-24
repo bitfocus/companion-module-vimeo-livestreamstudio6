@@ -379,8 +379,134 @@ exports.initPresets = function () {
         }]
     });
 
-   
+     // Fade to Black
+     presets.push({
+        category: 'Transitions',
+        label   : 'executeFTB',
+        bank    : {
+            style  : 'text',
+            text   : 'Fade to Black',
+            size   : '14',
+            color  : self.rgb(0,0,0),
+            bgcolor: self.rgb(100,100,100),
+            latch  : true
+        },
+        actions: [{
+            action : 'fadeToBlack',
+            options: {
+                action: 'fadeIn'
+            }
+        }],
+        release_actions: [{
+            action : 'fadeToBlack',
+            options: {
+                action: 'fadeOut'
+            }
+        }],
+        feedbacks: [{
+            type   : 'fadeToBlack',
+            options: {},
+            style  : {
+                bgcolor: self.rgb(200,0,0)
+            }
+        }]
+    });
 
+   
+     // Streaming Toggle
+     presets.push({
+        category: 'Misc',
+        label   : 'toggleStreaming',
+        bank    : {
+            style  : 'text',
+            text   : 'Stream',
+            size   : '18',
+            color  : self.rgb(255,255,255),
+            bgcolor: self.rgb(0,150,0),
+            latch  : true
+        },
+        actions: [{
+            action : 'controlStream',
+            options: {
+                streamAction: 'startStream'
+            }
+        }],
+        release_actions: [{
+            action : 'controlStream',
+            options: {
+                streamAction: 'stopStream'
+            }
+        }],
+        feedbacks: [{
+            type   : 'streamState',
+            options: {
+                stateStream: 'transitioning'
+            },
+            style  : {
+                text   : 'Transitioning',
+                bgcolor: self.rgb(200,200,0)
+            }
+        },
+        {
+            type   : 'streamState',
+            options: {
+                stateStream: 'started'
+            },
+            style  : {
+                text   : 'Stream Started',
+                bgcolor: self.rgb(200,0,0)
+            }
+        }]
+    });
+
+     // Record Toggle
+     presets.push({
+        category: 'Misc',
+        label   : 'toggleRecording',
+        bank    : {
+            style  : 'text',
+            text   : 'Record',
+            size   : '18',
+            color  : self.rgb(255,255,255),
+            bgcolor: self.rgb(0,150,0),
+            latch  : true
+        },
+        actions: [{
+            action : 'controlRecord',
+            options: {
+                recordAction: 'startRecord'
+            }
+        }],
+        release_actions: [{
+            action : 'controlRecord',
+            options: {
+                recordAction: 'stopRecord'
+            }
+        }],
+        feedbacks: [{
+            type   : 'recordState',
+            options: {
+                stateRecord: 'transitioning'
+            },
+            style  : {
+                text   : 'Transitioning',
+                bgcolor: self.rgb(200,200,0)
+            }
+        },
+        {
+            type   : 'recordState',
+            options: {
+                stateRecord: 'started'
+            },
+            style  : {
+                text   : 'Recording',
+                bgcolor: self.rgb(200,0,0)
+            }
+        }]
+    });
+
+
+    
     return presets;
 
 }

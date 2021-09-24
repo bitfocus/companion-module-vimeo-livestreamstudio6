@@ -620,6 +620,23 @@ exports.initFeedbacks = function() {
         }
     }
 
+    feedbacks['fadeToBlack'] = {
+        type       : 'boolean',
+        label      : 'Fade to Black State',
+        description: 'Change style based on Fade to Black state',
+        style      : {
+                olor    : self.rgb(255,255,255),
+                bgcolor : self.rgb(200,0,0)
+        },
+        options    : [{
+            type   : 'text',
+            label  : 'No options for this feedback'
+        }],
+        callback: function (feedback) {
+            return (self.data.status.fadeToBlack) ? false : true;
+        }
+    }
+
     return feedbacks;
    
 }

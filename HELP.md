@@ -99,20 +99,20 @@ Variable                     | Description
 
 Presets have been created for many commond commands so that creating buttons is easy. 
 
-Preset               | Description                                
--------------------- | --------------------------------------------------
-**PRV `x` `name`**   | Sets a given source `x` to the Preview bus, includes input `name` 
-**PGM `x` `name`**   | Sets a given source `x` to the Program Bus, includes input `name`
-**CUT**              | Execute a CUT transition
-**AUTO**             | Execute an AUTO transition
-**Fade to Black**    | Fade to Black Toggle
-**GFX-`x` Push/Pull**| GFX Push/Pull Toggle [`GFX-1, GFX-2, GFX-3`]
-**GFX-`x` Preview**  | GFX Preview Toggle [`GFX-1, GFX-2, GFX-3`]
-**Media-`x` Play/Pse**| Media-`x` Play/Pause Toggle
-**Input 1 Vol +10%** | Increase Input 1 Volume 10%
-**Input 1 Vol -10%** | Decrease Input 1 Volume 10%
-**Stream**           | Toggle streaming on/off
-**Record**           | Toggle recording on/off
+Type       | Preset               | Description                                
+----------|--------------------- | --------------------------------------------------
+PRV/PGM    |**PRV `x` `name`**   | Sets a given source `x` to the Preview bus, includes input `name` 
+PRV/PGM    |**PGM `x` `name`**   | Sets a given source `x` to the Program Bus, includes input `name`
+Transition |**CUT**              | Execute a CUT transition
+Transition |**AUTO**             | Execute an AUTO transition
+Transition |**Fade to Black**    | Fade to Black Toggle
+GFX        |**GFX-`x` Push/Pull**| GFX Push/Pull Toggle [`GFX-1, GFX-2, GFX-3`]
+GFX        |**GFX-`x` Preview**  | GFX Preview Toggle [`GFX-1, GFX-2, GFX-3`]
+Media      |**Media-`x` Play/Pse**| Media-`x` Play/Pause Toggle
+Audio      |**Input 1 Vol +10%** | Increase Input 1 Volume 10%
+Audio      |**Input 1 Vol -10%** | Decrease Input 1 Volume 10%
+Misc       |**Stream**           | Toggle streaming on/off
+Misc       |**Record**           | Toggle recording on/off
 
 
 ---

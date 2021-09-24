@@ -437,13 +437,13 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             // Transitions ---------------------------------------------------
             // Fade to Black not engaged  FIn
             case 'FIn':
-                self.data.status.fadeToBlack = false
+                self.data.status.fadeToBlack = true
                 self.checkFeedbacks('fadeToBlack')
                 break;
 
             // Fade to Black engaged  FOut
             case 'FOut':
-                self.data.status.fadeToBlack = true
+                self.data.status.fadeToBlack = false
                 self.checkFeedbacks('fadeToBlack')
                 break;
 
