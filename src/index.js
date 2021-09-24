@@ -9,7 +9,6 @@ const { getConfigFields }                   = require('./config')
 const { executeAdvFeedback, initFeedbacks } = require('./feedback')
 const { initVariables }                     = require('./variables')
 const { initPresets }                       = require('./presets')
-//const  _ = require('underscore');
 
 var debug = debug;
 var log = log;

@@ -21,7 +21,5 @@
     "url": "https://github.com/bitfocus/companion-module-vimeo-livestreamstudio6.git"
   },
   "license": "MIT",
-  "dependencies": {
-    "underscore": "^1.13.1"
-  }
+  "dependencies": {}
 }

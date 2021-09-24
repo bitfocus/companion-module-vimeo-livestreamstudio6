@@ -94,14 +94,14 @@ exports.initPresets = function () {
                     action : 'inputAudioMute',
                     options: {
                         input     : [element.id],
-                        muteAction: 'on'
+                        muteAction: 1
                     }
                 }],
                 release_actions: [{
                     action : 'inputAudioMute',
                     options: {
                         input     : [element.id],
-                        muteAction: 'off'
+                        muteAction: 0
                     }
                 }],
                 feedbacks: [{
@@ -134,14 +134,14 @@ exports.initPresets = function () {
                     action : 'inputAudioHeadphones',
                     options: {
                         input     : [element.id],
-                        audioHeadphoneAction: 'on'
+                        audioHeadphoneAction: 1
                     }
                 }],
                 release_actions: [{
                     action : 'inputAudioHeadphones',
                     options: {
                         input     : [element.id],
-                        audioHeadphoneAction: 'off'
+                        audioHeadphoneAction: 2
                     }
                 }],
                 feedbacks: [{
