@@ -97,7 +97,11 @@ Variable                     | Description
 ---
 ## Presets
 
-Presets have been created for many commond commands so that creating buttons is easy. 
+Presets have been created for many commond commands so that creating buttons is easy. Presets are listed by type. 
+
+The list of preset buttons you see in the module is dynamic, it is crated based on your active inputs at that moment. The buttons that are created use varibles in their name so that they will update when your Livesteam Studio configuration changes. 
+
+Some Presets inlude PNG artwork that is the same as the button/icon in the Livestream Studio software. This is done so that there is easy recognition of commands in Companion. 
 
 Type       | Preset               | Description                                
 ----------|--------------------- | --------------------------------------------------
@@ -111,8 +115,8 @@ GFX        |**GFX-`x` Preview**  | GFX Preview Toggle [`GFX-1, GFX-2, GFX-3`]
 Media      |**Media-`x` Play/Pse**| Media-`x` Play/Pause Toggle
 Audio      |**Input 1 Vol +10%** | Increase Input 1 Volume 10%
 Audio      |**Input 1 Vol -10%** | Decrease Input 1 Volume 10%
-Misc       |**Stream**           | Toggle streaming on/off
-Misc       |**Record**           | Toggle recording on/off
+System     |**Stream**           | Toggle streaming on/off
+System     |**Record**           | Toggle recording on/off
 
 
 ---

@@ -474,7 +474,7 @@ exports.executeAction = function (action) {
             case 'controlMedia':
                 if (options.mediaAction === 'playFull') {
                     cmd = `RMFP:${options.media}`;
-                } else if (optoins.mediaAction === 'playInOut') {
+                } else if (options.mediaAction === 'playInOut') {
                     cmd = `RMIOP:${options.media}`;
                 } else if (options.mediaAction === 'pause') {
                     cmd = `RMPause:${options.media}`;

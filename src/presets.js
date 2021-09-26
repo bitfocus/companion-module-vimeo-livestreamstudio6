@@ -47,16 +47,16 @@ exports.initPresets = function () {
                 }]
             });
             
-            
              // Program Bus
              presets.push({
                 category: 'Pgm/Pvw Bus',
                 label   : 'setProgramSource' + element.id,
                 bank    : {
-                    style  : 'text',
-                    text   : `PGM\\n\$(studio:input_${element.id + 1}_name)`, //'PGM ' + element.label.split(/:/)[0] + '\\n' + element.label.split(/:/)[1],
-                    size   : '14',
-                    color  : self.rgb(255,255,255)
+                    style    : 'text',
+                    text     : `PGM\\n\$(studio:input_${element.id + 1}_name)`,   //'PGM ' + element.label.split(/:/)[0] + '\\n' + element.label.split(/:/)[1],
+                    size     : '14',
+                    alignment: 'center:top',
+                    color    : self.rgb(255,255,255)
                 },
                 actions: [{
                     action : 'setProgramSrc',
@@ -209,7 +209,7 @@ exports.initPresets = function () {
         }
     }  //end of for loop
 
-
+    /// Master audio channels
     for (const master in self.masterAudioChoices) {
         if (Object.hasOwnProperty.call(self.masterAudioChoices, master)) {
             const element = self.masterAudioChoices[master];
@@ -342,6 +342,96 @@ exports.initPresets = function () {
         });
     } // end for loop GFX
 
+    // Media Inputs
+    if (self.data.media[0] !== undefined) {
+        for (const media in self.data.media) {
+            if (Object.hasOwnProperty.call(self.data.media, media)) {
+                const element = self.data.media[media];
+                
+                // Media Play Full Clip
+                presets.push({
+                    category: 'Media',
+                    label   : `mediaPlayFull${element.id}`,
+                    bank    : {
+                        style    : 'text',
+                        text     : `${element.label}\\nPlay Full`,
+                        size     : '14',
+                        color    : self.rgb(255,255,255),
+                        bgcolor  : self.rgb(0,0,50)
+                    },
+                    actions: [{
+                        action : 'controlMedia',
+                        options: {
+                            media      : element.id,
+                            mediaAction: 'playFull'
+                        }
+                    }],
+                    feedbacks: [{
+                        type   : 'mediaState',
+                        options: {
+                            media      : element.id,
+                            mediaAction: 'playFull'
+                        },
+                        style : {
+                            bgcolor: self.rgb(0,0,204),
+                        }
+                    },
+                    {
+                        type   : 'mediaState',
+                        options: {
+                            media      : element.id,
+                            mediaAction: 'pause'
+                        },
+                        style : {
+                            bgcolor: self.rgb(0,0,104),
+                        }
+                    }]
+                });
+
+
+                // Media Play In to Out
+                presets.push({
+                    category: 'Media',
+                    label   : `mediaPlayInOut${element.id}`,
+                    bank    : {
+                        style    : 'text',
+                        text     : `${element.label}\\nPlay InOut`,
+                        size     : '14',
+                        color    : self.rgb(255,255,255),
+                        bgcolor  : self.rgb(0,0,50)
+                    },
+                    actions: [{
+                        action : 'controlMedia',
+                        options: {
+                            media      : element.id,
+                            mediaAction: 'playInOut'
+                        }
+                    }],
+                    feedbacks: [{
+                        type   : 'mediaState',
+                        options: {
+                            media      : element.id,
+                            mediaAction: 'playInOut'
+                        },
+                        style : {
+                            bgcolor: self.rgb(100,0,204),
+                        }
+                    },
+                    {
+                        type   : 'mediaState',
+                        options: {
+                            media      : element.id,
+                            mediaAction: 'pause'
+                        },
+                        style : {
+                            bgcolor: self.rgb(50,0,104),
+                        }
+                    }]
+                });
+    
+            }
+        }
+    }
 
     // Cut Transition
     presets.push({
@@ -411,11 +501,10 @@ exports.initPresets = function () {
             }
         }]
     });
-
    
      // Streaming Toggle
      presets.push({
-        category: 'Misc',
+        category: 'System',
         label   : 'toggleStreaming',
         bank    : {
             style  : 'text',
@@ -461,7 +550,7 @@ exports.initPresets = function () {
 
      // Record Toggle
      presets.push({
-        category: 'Misc',
+        category: 'System',
         label   : 'toggleRecording',
         bank    : {
             style  : 'text',

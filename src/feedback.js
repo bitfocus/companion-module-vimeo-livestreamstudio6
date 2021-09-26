@@ -289,10 +289,10 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['mediaPlayingInOut'] = {
+    feedbacks['mediaState'] = {
         type       : 'boolean',
-        label      : 'Media Playing In/Out',
-        description: 'Change colors if a Media source is playing from in to out points',
+        label      : 'Media state',
+        description: 'Change style based on Media input state',
         style      : {
             bgcolor: self.rgb(0,122,204)
         },
@@ -303,39 +303,50 @@ exports.initFeedbacks = function() {
                 tooltip     : 'Select the Media source this feedback monitors',
                 default     : 0,
                 choices     : self.data.media
+        },
+        {
+                type        : 'dropdown',
+                label       : 'Media State',
+                id          : 'mediaAction',
+                tooltip     : 'Select which state to include in this feedback',
+                choices     : [
+                    { id: 'playFull', label: 'Play Full Clip' },
+                    { id: 'playInOut', label: 'Play In to Out Point'},
+                    { id: 'pause', label: 'Pause' }
+                ]
         }],
         callback: function (feedback) {
             let mediaElement =  self.data.media.find(m => m.id === parseInt(feedback.options.media))
-            if (mediaElement.media === 'playingInOut') {
+            if (mediaElement.media == feedback.options.mediaAction) {
                 return true
             }
             return false
         }
     }
 
-    feedbacks['mediaPlayingFull'] = {
-        type       : 'boolean',
-        label      : 'Media Playing Full Clip',
-        description: 'Change style if a Media source is playing full clip',
-        style      : {
-            bgcolor: self.rgb(0,0,204)
-        },
-        options    : [{
-                type        : 'dropdown',
-                label       : 'Select Media Source',
-                id          : 'media',
-                tooltip     : 'Select the Media source this feedback monitors',
-                default     : 0,
-                choices     : self.data.media
-        }],
-        callback: function (feedback) {
-            let mediaElement =  self.data.media.find(m => m.id === parseInt(feedback.options.media))
-            if (mediaElement.media === 'playingFull') {
-                return true
-            }
-            return false
-        }
-    }
+    // feedbacks['mediaPlayingFull'] = {
+    //     type       : 'boolean',
+    //     label      : 'Media Playing Full Clip',
+    //     description: 'Change style if a Media source is playing full clip',
+    //     style      : {
+    //         bgcolor: self.rgb(0,0,204)
+    //     },
+    //     options    : [{
+    //             type        : 'dropdown',
+    //             label       : 'Select Media Source',
+    //             id          : 'media',
+    //             tooltip     : 'Select the Media source this feedback monitors',
+    //             default     : 0,
+    //             choices     : self.data.media
+    //     }],
+    //     callback: function (feedback) {
+    //         let mediaElement =  self.data.media.find(m => m.id === parseInt(feedback.options.media))
+    //         if (mediaElement.media === 'playingFull') {
+    //             return true
+    //         }
+    //         return false
+    //     }
+    // }
 
     feedbacks['mediaPaused'] = {
         type       : 'boolean',

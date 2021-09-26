@@ -588,27 +588,25 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             // Media Player Playing In to Out   MIOP:%1
             case 'MIOP':
                 mediaElement =  self.data.media.find(m => m.id === parseInt(apiDataArr[1]))
-                mediaElement.media = 'playingInOut'
+                mediaElement.media = 'playInOut'
                 self.setVariable(`media_${apiDataArr[1]}_state`, mediaElement.media)
-                self.checkFeedbacks('mediaPlayingInOut')
-                self.checkFeedbacks('mediaPaused')
+                self.checkFeedbacks('mediaState')
                 break;           
             
             // Media Player Playing Full Clip    MFP:%1
             case 'MFP':
                 mediaElement =  self.data.media.find(m => m.id === parseInt(apiDataArr[1]))
-                mediaElement.media = 'playingFull'
+                mediaElement.media = 'playFull'
                 self.setVariable(`media_${apiDataArr[1]}_state`, mediaElement.media)
-                self.checkFeedbacks('mediaPlayingFull')
-                self.checkFeedbacks('mediaPaused')
+                self.checkFeedbacks('mediaState')
                 break;
 
             // Media Player Pause   MPause:%1
             case 'MPause':
                 mediaElement =  self.data.media.find(m => m.id === parseInt(apiDataArr[1]))
-                mediaElement.media = 'paused'
+                mediaElement.media = 'pause'
                 self.setVariable(`media_${apiDataArr[1]}_state`, mediaElement.media)
-                self.checkFeedbacks('mediaPaused')
+                self.checkFeedbacks('mediaState')
                 break;
 
             // Audio Faders -----------------------------------------------------
