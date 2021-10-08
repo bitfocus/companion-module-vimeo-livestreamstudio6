@@ -9,7 +9,7 @@ This module was developed against **Livestream Studo ver 6.8.20**
 This module is for Vimeo Livestream Studio 6 production swithcer software. To configure: 
 - In the module settings add the **IP address** of the machine where Livestream Studio 6 is running. If it is running on the same machine as Companion then use the default of `127.0.0.1`. You may have to create an exception in the firewall on either machine for the TCP port listed in the config.
 
-- **Important:** You must complete the following steps in order to allow Livestream Studio to accept connections over the network.
+- **Important:** You must complete the following steps in order to allow Livestream Studio to accept connections over the network. This setting in Livestream Studio is saved per show file. Imporing or creating a new show will clear this setting and you will need to follow the procedure below again. 
   - In Livestream Studio settings go to the **Hardware Crontrol** tab and enable **Allow Incoming Connections**.
 
   - Now back in Companion add or enable this module so that it initiates a connnection to Livestream Studio. 
@@ -97,26 +97,36 @@ Variable                     | Description
 ---
 ## Presets
 
-Presets have been created for many commond commands so that creating buttons is easy. Presets are listed by type. 
+Presets have been created for many common commands so that creating buttons is easy. Presets are listed by type. 
 
 The list of preset buttons you see in the module is dynamic, it is crated based on your active inputs at that moment. The buttons that are created use varibles in their name so that they will update when your Livesteam Studio configuration changes. 
 
-Some Presets inlude PNG artwork that is the same as the button/icon in the Livestream Studio software. This is done so that there is easy recognition of commands in Companion. 
+Some Presets inlude PNG artwork that is the same as the button/icon in the Livestream Studio software. This is done so that there is easy recognition of commands in Companion.
 
-Type       | Preset               | Description                                
-----------|--------------------- | --------------------------------------------------
-PRV/PGM    |**PRV `x` `name`**   | Sets a given source `x` to the Preview bus, includes input `name` 
-PRV/PGM    |**PGM `x` `name`**   | Sets a given source `x` to the Program Bus, includes input `name`
-Transition |**CUT**              | Execute a CUT transition
-Transition |**AUTO**             | Execute an AUTO transition
-Transition |**Fade to Black**    | Fade to Black Toggle
-GFX        |**GFX-`x` Push/Pull**| GFX Push/Pull Toggle [`GFX-1, GFX-2, GFX-3`]
-GFX        |**GFX-`x` Preview**  | GFX Preview Toggle [`GFX-1, GFX-2, GFX-3`]
-Media      |**Media-`x` Play/Pse**| Media-`x` Play/Pause Toggle
-Audio      |**Input 1 Vol +10%** | Increase Input 1 Volume 10%
-Audio      |**Input 1 Vol -10%** | Decrease Input 1 Volume 10%
-System     |**Stream**           | Toggle streaming on/off
-System     |**Record**           | Toggle recording on/off
+All presets were created with multiple feedback layers included, so the resulting button has live status information from Livestream Studio. 
+
+Type        | Preset               | Description                                
+------------|--------------------- | --------------------------------------------------
+PRV/PGM     |**PRV `x` `name`**    | Sets a given source `x` to the Preview bus, includes input `name` 
+PRV/PGM     |**PGM `x` `name`**    | Sets a given source `x` to the Program Bus, includes input `name`
+Transition  |**CUT**               | Execute a CUT transition
+Transition  |**AUTO**              | Execute an AUTO transition
+Transition  |**Fade to Black**     | Fade to Black Toggle
+GFX         |**GFX-`x` Push/Pull** | GFX Push/Pull Toggle [`GFX-1, GFX-2, GFX-3`]
+GFX         |**GFX-`x` Preview**   | GFX Preview Toggle [`GFX-1, GFX-2, GFX-3`]
+Media       |**Media-`x` Play Full**| Media-`x` Play Full Clip
+Media       |**Media-`x` Play In/Out**| Media-`x` Play In to Out Points
+Audio       |**Input 1 Vol +10%**  | Increase Input 1 Volume 10%
+Audio       |**Input 1 Vol -10%**  | Decrease Input 1 Volume 10%
+Audio       |**Mute `x`**          | Toggles Audio Mute on given input `x`
+Audio       |**Headphones `x`**    | Toggles Headphones on given input `x`
+Audio       |**Audio `x`**         | Sets audio always to program (RED) on given input `x`, with feedback showing AUDIO button state (Red, Yellow, Grey) 
+Master Audio|**Mute Stream**       | Toggles Mute state on Stream Master Channel
+Master Audio|**Headphones Stream** | Toggles Headphone state on Stream Master Channel
+Master Audio|**Mute Record**       | Toggles Mute state on Record Master Channel
+Master Audio|**Headphones Record** | Toggles Headphones state on Record Master Channel
+System      |**Stream**            | Toggle streaming on/off
+System      |**Record**            | Toggle recording on/off
 
 
 ---
