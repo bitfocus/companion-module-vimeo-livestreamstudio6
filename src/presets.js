@@ -300,6 +300,8 @@ exports.initPresets = function () {
 
     // Generate GFX presets
     for (let i = 0; i <= 2; i++) {
+
+        // GFX Push
         presets.push({
             category: 'GFX',
             label   : `pushGFX${i}`,
@@ -340,6 +342,97 @@ exports.initPresets = function () {
             }
         ]
         });
+
+        // GFX Pull
+        presets.push({
+            category: 'GFX',
+            label   : `pullGFX${i}`,
+            bank    : {
+                style    : 'text',
+                text     : `GFX-${i + 1}`,
+                size     : '14',
+                alignment: 'center:bottom',
+                png64    : self.ICON_PULL,
+                color    : self.rgb(255,255,255)
+            },
+            actions: [{
+                action : 'controlGFX',
+                options: {
+                    gfx      : [i],
+                    gfxAction: 'pull'
+                }
+            }],
+            feedbacks: [{
+                type   : 'gfxPushed',
+                options: {
+                    gfx: [i]
+                },
+                style : {
+                    png64: self.ICON_PULL_COLOR,
+                    bgcolor: self.rgb(100,0,0)
+                }
+            },
+            {
+                type: 'gfxPulled',
+                options: {
+                    gfx: [i],
+                },
+                style: {
+                    png64 : self.ICON_PULL
+                } 
+            }
+        ]
+        });
+        
+        // GFX Preview
+        presets.push({
+            category: 'GFX',
+            label   : `previewGFX${i}`,
+            bank    : {
+                style    : 'text',
+                text     : `GFX-${i + 1}`,
+                size     : '14',
+                alignment: 'center:bottom',
+                png64    : self.ICON_PREVIEW,
+                color    : self.rgb(255,255,255),
+                latch    : true
+            },
+            actions: [{
+                action : 'controlGFX',
+                options: {
+                    gfx      : [i],
+                    gfxAction: 'previewShow'
+                }
+            }],
+            release_actions: [{
+                action : 'controlGFX',
+                options: {
+                    gfx      : [i],
+                    gfxAction: 'previewHide'
+                }
+            }],
+            feedbacks: [{
+                type   : 'gfxPreview',
+                options: {
+                    gfx: [i]
+                },
+                style : {
+                    png64: self.ICON_PREVIEW_COLOR,
+                    bgcolor: self.rgb(0,100,0)
+                }
+            },
+            {
+                type: 'gfxPulled',
+                options: {
+                    gfx: [i],
+                },
+                style: {
+                    png64 : self.ICON_PREVIEW
+                } 
+            }
+        ]
+        });
+
     } // end for loop GFX
 
     // Media Inputs

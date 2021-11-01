@@ -43,7 +43,7 @@ Action                           | Description                        | Options
 **Audio Master: Set Mute**       | Set mute on a Master Channel       | **Master**: `Record`, `Stream`, **Mute**: `On`, `Off`
 **Audio Master: Set Headphones** | Set Master channel audio to headphones | **Master**: `Record`, `Stream`, **Headphones**: `On`, `Off`
 **Record**                       | Control Recording                  | **Action**: `Start Recording`, `Stop Recording`
-**Stream**                       | Control Streaming                   | **Action**: `Start Streaming`, `Stop Streaming`
+**Stream**                       | Control Streaming                  | **Action**: `Start Streaming`, `Stop Streaming`
 
 ---
 ## Available Feedback
@@ -58,12 +58,12 @@ Feedback                      | Description
 **GFX Push Enabled**          | GFX stack `x` can be pushed (same as blinking `Push` button in the software)
 **GFX State**                 | GFX stack `x` state (`Pushed, Pulled`)
 **GFX-`x` Preview**           | GFX stack `x` in Preview
-**Media Player State**        | Indicate the state of a Media player (`Playing full clip, playing in to out, paused`)
+**Media Player State**        | Indicate the state of a Media player (`Playing full clip, Playing In to Out, Paused`)
 **Fade to Black State**       | Indicate if Fade to Black is acitve
 **Audio Input: Level**        | Returns the value of an inputs level
 **Audio Input: Gain**         | Returns the value of an input gain 
 **Audio Input: Mute**         | Indicate the Mute state on an input 
-**Audio Input: Audio On Pgm** | Indicate the Audio on Program state for an input
+**Audio Input: Audio On Pgm** | Indicate the Audio on Program state for an input (`Off`, `Always On`, `When Source in Program`)
 **Audio Input: Headphones**   | Indicate the audio to headphones state of an input
 **Audio Master: Level**       | Returns the volume level of the selected Master channel (Master: `Record`, `Stream`)
 **Audio Master: Mute**        | Indicate the Mute state on the selected Master channel (Master: `Record`, `Stream`)
@@ -112,7 +112,8 @@ PRV/PGM     |**PGM `x` `name`**    | Sets a given source `x` to the Program Bus,
 Transition  |**CUT**               | Execute a CUT transition
 Transition  |**AUTO**              | Execute an AUTO transition
 Transition  |**Fade to Black**     | Fade to Black Toggle
-GFX         |**GFX-`x` Push/Pull** | GFX Push/Pull Toggle [`GFX-1, GFX-2, GFX-3`]
+GFX         |**GFX-`x` Pull**      | GFX Pull  [`GFX-1, GFX-2, GFX-3`]
+GFX         |**GFX-`x` Push**      | GFX Push  [`GFX-1, GFX-2, GFX-3`]
 GFX         |**GFX-`x` Preview**   | GFX Preview Toggle [`GFX-1, GFX-2, GFX-3`]
 Media       |**Media-`x` Play Full**| Media-`x` Play Full Clip
 Media       |**Media-`x` Play In/Out**| Media-`x` Play In to Out Points
