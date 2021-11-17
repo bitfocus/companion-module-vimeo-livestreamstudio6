@@ -100,7 +100,7 @@ exports.initFeedbacks = function() {
 // #### Define Feedbacks ####
 // ##########################
 
-    feedbacks['previewSource'] = {
+    feedbacks.previewSource = {
         type       : 'boolean',
         label      : 'Preview Source',
         description: 'Change colors if source is in Preview Bus',
@@ -124,7 +124,7 @@ exports.initFeedbacks = function() {
         }
     }
     
-    feedbacks['programSource'] = {
+    feedbacks.programSource = {
         type       : 'boolean',
         label      : 'Program Source',
         description: 'Change colors if source is in Program Bus',
@@ -148,7 +148,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['gfxActive'] = {
+    feedbacks.gfxActive = {
         type       : 'boolean',
         label      : 'GFX Not Active',
         description: 'Change colors if a GFX stack is Not Active (Off)',
@@ -171,7 +171,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['gfxCanPush'] = {
+    feedbacks.gfxCanPush = {
         type       : 'boolean',
         label      : 'GFX Push Enabled',
         description: 'Change colors if a GFX stack is able to be pushed',
@@ -217,7 +217,7 @@ exports.initFeedbacks = function() {
         
     }
     
-    feedbacks['gfxPushed'] = {
+    feedbacks.gfxPushed = {
         type       : 'boolean',
         label      : 'GFX Pushed',
         description: 'Change colors if a GFX stack is Pushed',
@@ -241,7 +241,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['gfxPulled'] = {
+    feedbacks.gfxPulled = {
         type       : 'boolean',
         label      : 'GFX Pulled',
         description: 'Change colors if a GFX stack is Pulled',
@@ -265,7 +265,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['gfxPreview'] = {
+    feedbacks.gfxPreview = {
         type       : 'boolean',
         label      : 'GFX In Preview',
         description: 'Change colors if a GFX stack is in Preview',
@@ -289,7 +289,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['mediaState'] = {
+    feedbacks.mediaState = {
         type       : 'boolean',
         label      : 'Media state',
         description: 'Change style based on Media input state',
@@ -324,31 +324,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    // feedbacks['mediaPlayingFull'] = {
-    //     type       : 'boolean',
-    //     label      : 'Media Playing Full Clip',
-    //     description: 'Change style if a Media source is playing full clip',
-    //     style      : {
-    //         bgcolor: self.rgb(0,0,204)
-    //     },
-    //     options    : [{
-    //             type        : 'dropdown',
-    //             label       : 'Select Media Source',
-    //             id          : 'media',
-    //             tooltip     : 'Select the Media source this feedback monitors',
-    //             default     : 0,
-    //             choices     : self.data.media
-    //     }],
-    //     callback: function (feedback) {
-    //         let mediaElement =  self.data.media.find(m => m.id === parseInt(feedback.options.media))
-    //         if (mediaElement.media === 'playingFull') {
-    //             return true
-    //         }
-    //         return false
-    //     }
-    // }
-
-    feedbacks['mediaPaused'] = {
+    feedbacks.mediaPaused = {
         type       : 'boolean',
         label      : 'Media Paused',
         description: 'Change style if a Media source is paused',
@@ -372,7 +348,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['fadeToBlack'] = {
+    feedbacks.fadeToBlack = {
         type       : 'boolean',
         label      : 'Fade to Black State',
         description: 'Change style if Fade to Black is active',
@@ -585,7 +561,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['streamState'] = {
+    feedbacks.streamState = {
         type       : 'boolean',
         label      : 'Streaming State',
         description: 'Change style based on streaming state',
@@ -608,7 +584,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['recordState'] = {
+    feedbacks.recordState = {
         type       : 'boolean',
         label      : 'Recording State',
         description: 'Change style based on recording state',
@@ -631,7 +607,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['fadeToBlack'] = {
+    feedbacks.fadeToBlack = {
         type       : 'boolean',
         label      : 'Fade to Black State',
         description: 'Change style based on Fade to Black state',
@@ -704,20 +680,12 @@ exports.executeAdvFeedback = function (feedback, bank) {
         let colorbg = ''
 
         if (feedback.options.value == true) {
-            if (bank.text != '') {
-                txt = bank.text + `\\n ${dBLevel} dB`
-            } else {
-                txt = bank.text + `${dBLevel} dB`
-            }
+            txt = bank.text != '' ? `${bank.text}\\n ${dBLevel} dB` : `${bank.text}${dBLevel} dB`;
         } else {
             txt = bank.text
         }
 
-        if (feedback.options.colortxt == true) {
-            colorfg = color()
-        } else {
-            colorfg = feedback.options.colorbase
-        }
+        colorfg = feedback.options.colortxt == true ? color() : feedback.options.colorbase;
 
         if (feedback.options.colorbg == true) {
             colorbg = color()

@@ -18,7 +18,7 @@ var log = log;
 // ########################
 
 function instance(system, id, config) {
-    var self = this;
+    let self = this;
 
     // super-constructor
     instance_skel.apply(this, arguments);
@@ -83,14 +83,14 @@ function instance(system, id, config) {
 
 // Return config fields for web config
 instance.prototype.config_fields = function () {
-    var self = this;
+    const self = this;
     return getConfigFields.bind(self)();
 }
 
 
 // Initalize module
 instance.prototype.init = function () {
-    var self = this;
+    const self = this;
 
     debug = self.debug;
     log = self.log;
@@ -135,11 +135,11 @@ instance.prototype.initTCP = function () {
     if (self.config.host) {
         self.socket = new tcp(self.config.host, self.config.port);
       
-        self.socket.on('status_change', function (status, message) {
+        self.socket.on('status_change', (status, message) => {
             self.status(status, message);
         });
 
-        self.socket.on('error', function (err) {
+        self.socket.on('error', (err) => {
             self.debug('Network error', err);
             self.setVariable('status', 'Error');
             self.data.connected = false;
@@ -149,22 +149,22 @@ instance.prototype.initTCP = function () {
 				delete self.blinker;
 			}
 
-            self.log('error', '[Livestream Studio] TCP Socket error: ' + err.message);
+            self.log('error', `[Livestream Studio] TCP Socket error: ${err.message}`);
         });
 
-        self.socket.on('connect', function () {
+        self.socket.on('connect', () => {
             self.debug('Connected');
             self.setVariable('status', 'Connected');
             self.data.connected = true;
-            self.log('info', '[Livestream Studio] Connected to Livestream Studio at IP ' + self.config.host + ' on port ' + self.config.port);
-            self.blinker = setInterval( function() { self.blink(); }, 1000);
+            self.log('info', `[Livestream Studio] Connected to Livestream Studio at IP ${self.config.host} on port ${self.config.port}`);
+            self.blinker = setInterval( () => { self.blink(); }, 1000);
         });
         
         // separate buffered stream into lines with responses
-		self.socket.on('data', function (chunk) {
-			var i = 0,
-		        line = '',
-				offset = 0
+		self.socket.on('data', (chunk) => {
+			let i      = 0;
+			let line   = '';
+			let offset = 0;
 			receiveBuffer += chunk
 
 			while ((i = receiveBuffer.indexOf('\n', offset)) !== -1) {
@@ -176,7 +176,7 @@ instance.prototype.initTCP = function () {
 			receiveBuffer = receiveBuffer.substr(offset)
 		});
         
-		self.socket.on('receiveline', function (line) {
+		self.socket.on('receiveline', (line) => {
 			if (line !== undefined || line !== '') {
 			    
                 // If verbose send received string to the log, except in the case of TrMSp & AVC
@@ -185,7 +185,7 @@ instance.prototype.initTCP = function () {
                     !line.startsWith('TrMSp') &&
                     !line.startsWith('TrASp') &&
                     !line.startsWith('AVC') 
-                    ) { self.log('debug', '[Livestream Studio] Data received: ' + line) }
+                    ) { self.log('debug', `[Livestream Studio] Data received: ${line}`) }
 
                self.parseIncomingAPI(line);
 
@@ -276,12 +276,12 @@ instance.prototype.sendCommand = function (cmd) {
 
     if (cmd !== undefined && cmd != '') {
         if (self.socket !== undefined) { 
-            if (self.config.verbose) { self.log('debug', '[Livestream Studio] Sending Command: ' + cmd) }
+            if (self.config.verbose) { self.log('debug', `[Livestream Studio] Sending Command: ${cmd}`) }
             try {
                 self.socket.send(cmd);
             }
             catch (err) {
-                self.log('error', '[Livestream Studio] Error sending command: ' + err.message)
+                self.log('error', `[Livestream Studio] Error sending command: ${err.message}`)
             }
         } else {
             self.log('error', '[Livestream Studio] Empty or undefined command in sendCommand')
@@ -301,7 +301,7 @@ instance.prototype.refreshConfig = function () {
     self.setFeedbackDefinitions(initFeedbacks.bind(self)());
     self.setPresetDefinitions(initPresets.bind(self)());
 
-    self.data.media.forEach(function (m) {
+    self.data.media.forEach((m) => {
         self.setVariable(`media_${m.id.toString()}_state`, m.media)
     });
 
@@ -318,11 +318,11 @@ instance.prototype.setMediaInputs = function () {
     self.data.media = [];
 
     // Filter inputs by input type to find the media inputs
+    let mediaInputs = self.data.inputs.filter(input => input.type === 3, self);
+    
     // Then add those to the media index with a paused state since we don't 
     // get the state of the media players until it changes
-    let mediaInputs = self.data.inputs.filter(input => input.type === 3, self);
-
-     mediaInputs.forEach(function (m) {
+     mediaInputs.forEach((m) => {
          self.data.media.push({ id: m.id, label: m.label, media: 'paused'});
      });
 }
@@ -334,7 +334,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
     var mediaElement; 
     const apiDataArr = apiData.trim().split(/:/);
     
-    if (apiData !== undefined || apiData !== '') {
+    if ((apiData !== undefined || apiData !== '')) {
 
         switch (apiDataArr[0]) {
             
@@ -349,7 +349,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             case 'ILC':
                 self.data.inputs[apiDataArr[1]] = { 
                     id             : parseInt(apiDataArr[1]),
-                    label          : (parseInt(apiDataArr[1]) + 1).toString() + ': ' + apiDataArr[2].slice(1,-1), //.replace(/[^a-z0-9-_.]+/gi, ''),
+                    label          : `${(parseInt(apiDataArr[1]) + 1).toString()}: ${apiDataArr[2].slice(1,-1)}`, //.replace(/[^a-z0-9-_.]+/gi, ''),
                     audioVolume    : parseInt(apiDataArr[3]),
                     audioGain      : parseInt(apiDataArr[4]),
                     audioMute      : parseInt(apiDataArr[5]),
@@ -375,7 +375,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             // Input Name Change INC:%1:%2
             case 'INC':
                 self.data.inputs[parseInt(apiDataArr[1])].label =
-                    (parseInt(apiDataArr[1]) + 1).toString() + ': ' + apiDataArr[2].slice(1, -1)
+                    `${(parseInt(apiDataArr[1]) + 1).toString()}: ${apiDataArr[2].slice(1, -1)}`
                 self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_name`, apiDataArr[2].slice(1, -1))
                 self.checkFeedbacks()
                 break;
@@ -653,7 +653,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 break;
 
             default:
-                self.log('warn', '[Livestream Studio] API response undefined: ' + apiData)
+                self.log('warn', `[Livestream Studio] API response undefined: ${apiData}`)
 
         }
 

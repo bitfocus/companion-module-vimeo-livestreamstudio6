@@ -7,10 +7,10 @@
 // ########################
 
 exports.initPresets = function () {
-    var self = this;
+    const self = this;
     self.log('info', '[Livestream Studio] Setting preset definitions')
     
-    var presets = [];
+    const presets = [];
   
     // Iterate inputs to create program/preview buses
     for (const input in self.data.inputs) {
@@ -20,7 +20,7 @@ exports.initPresets = function () {
             // Preview Bus
             presets.push({
                 category: 'Pgm/Pvw Bus',
-                label   : 'setPreviewSource' + element.id,
+                label   : `setPreviewSource${element.id}`,
                 bank    : {
                     style    : 'text',
                     text     : `PVW\\n\$(studio:input_${element.id + 1}_name)`,  //'PVW ' + element.label.split(/:/)[0] + '\\n' + element.label.split(/:/)[1],
@@ -50,7 +50,7 @@ exports.initPresets = function () {
              // Program Bus
              presets.push({
                 category: 'Pgm/Pvw Bus',
-                label   : 'setProgramSource' + element.id,
+                label   : `setProgramSource${element.id}`,
                 bank    : {
                     style    : 'text',
                     text     : `PGM\\n\$(studio:input_${element.id + 1}_name)`,   //'PGM ' + element.label.split(/:/)[0] + '\\n' + element.label.split(/:/)[1],
@@ -522,6 +522,56 @@ exports.initPresets = function () {
                     }]
                 });
     
+                // Media Pause
+                presets.push({
+                    category: 'Media',
+                    label   : `mediaPause${element.id}`,
+                    bank    : {
+                        style    : 'text',
+                        text     : `${element.label}\\nPause`,
+                        size     : '14',
+                        color    : self.rgb(255,255,255),
+                        bgcolor  : self.rgb(0,0,50)
+                    },
+                    actions: [{
+                        action : 'controlMedia',
+                        options: {
+                            media      : element.id,
+                            mediaAction: 'pause'
+                        }
+                    }],
+                    feedbacks: [{
+                        type   : 'mediaState',
+                        options: {
+                            media      : element.id,
+                            mediaAction: 'playInOut'
+                        },
+                        style : {
+                            bgcolor: self.rgb(50,50,50),
+                        }
+                    },
+                    {
+                        type   : 'mediaState',
+                        options: {
+                            media      : element.id,
+                            mediaAction: 'playFull'
+                        },
+                        style : {
+                            bgcolor: self.rgb(50,50,54),
+                        }
+                    },
+                    {
+                        type   : 'mediaState',
+                        options: {
+                            media      : element.id,
+                            mediaAction: 'pause'
+                        },
+                        style : {
+                            bgcolor: self.rgb(200,200,40),
+                        }
+                    }]
+                });
+
             }
         }
     }
