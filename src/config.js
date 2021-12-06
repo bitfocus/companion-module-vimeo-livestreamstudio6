@@ -21,7 +21,9 @@ exports.getConfigFields = function () {
               <br><br>
               <b>Note</b>: The TCP port in Livesteam Studio 6 is locked to port 9923 can <b>CANNOT</b>
               be changed by the user. The ability to set a port exists in this module for those users
-              who wish to implement port proxying/remapping.</div> `
+              who wish to implement port proxying/remapping.
+              
+              ver 1.0.0</div> `
         },
         {
             type    : 'textinput',

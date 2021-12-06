@@ -82,6 +82,7 @@ Variable                     | Description
 **$studio:input_`x`_name)**  | Name of a given input `x`
 **$studio:input_`x`_volume)**| Volume level of a given input `x`
 **$studio:input_`x`_gain)**  | Gain level of a given input `x`
+**$studio:input_`x`_mute)**  | Mute status of a given input `x`
 **$(studio:pvwSource)**      | Which input number is on the Preview Bus
 **$(studio:pgmSource)**      | Which input number is on the Program Bus
 **$(studio:GFX_`x`_active)** | Indicates if a GFX is active (on)
@@ -117,8 +118,8 @@ GFX         |**GFX-`x` Push**      | GFX Push  [`GFX-1, GFX-2, GFX-3`]
 GFX         |**GFX-`x` Preview**   | GFX Preview Toggle [`GFX-1, GFX-2, GFX-3`]
 Media       |**Media-`x` Play Full**| Media-`x` Play Full Clip
 Media       |**Media-`x` Play In/Out**| Media-`x` Play In to Out Points
-Audio       |**Input 1 Vol +10%**  | Increase Input 1 Volume 10%
-Audio       |**Input 1 Vol -10%**  | Decrease Input 1 Volume 10%
+Audio       |**GAIN `x`**          | Set Audio Gain of input `x` to 0
+Audio       |**VOL `x`**           | Set Volume of input `x` to 0
 Audio       |**Mute `x`**          | Toggles Audio Mute on given input `x`
 Audio       |**Headphones `x`**    | Toggles Headphones on given input `x`
 Audio       |**Audio `x`**         | Sets audio always to program (RED) on given input `x`, with feedback showing AUDIO button state (Red, Yellow, Grey) 

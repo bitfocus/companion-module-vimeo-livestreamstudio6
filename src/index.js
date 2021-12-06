@@ -12,6 +12,7 @@ const { initPresets }                       = require('./presets')
 
 var debug = debug;
 var log = log;
+const moduleVersion = "1.0.0";
 
 // ########################
 // #### Instance setup ####
@@ -105,6 +106,7 @@ instance.prototype.init = function () {
         self.setFeedbackDefinitions(initFeedbacks.bind(self)());
         self.setActions(initActions.bind(self)());
         self.setPresetDefinitions(initPresets.bind(self)());
+        self.setVariable('version', moduleVersion);
         self.data.startup = false;
     }
 }
@@ -360,6 +362,7 @@ instance.prototype.parseIncomingAPI = function (apiData) {
                 self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_name`, apiDataArr[2].slice(1,-1))
                 self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_volume`, parseInt(apiDataArr[3]))
                 self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_gain`, parseInt(apiDataArr[4]))
+                self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_mute`, parseInt(apiDataArr[5]))
 
                 // When the API has finished dumping all of the input details, refresh 
                 // the config variables, feedbacks, and actions so they are aware of new inputs
@@ -619,6 +622,11 @@ instance.prototype.parseIncomingAPI = function (apiData) {
             // Audio Mute  0=Off, 1=On AMC:%1:%2  
             case 'AMC':
                 self.data.inputs[parseInt(apiDataArr[1])].audioMute = parseInt(apiDataArr[2])
+                if (parseInt(apiDataArr[2]) === 1) { 
+                    self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_mute`, true)
+                } else {
+                    self.setVariable(`input_${parseInt(apiDataArr[1]) + 1}_mute`, false)
+                }
                 self.checkFeedbacks('inputAudioMute')
                 break;
 

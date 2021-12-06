@@ -11,7 +11,7 @@ exports.initActions = function () {
     var actions = {};
     //self.log('info', '[Livestream Studio] Setting action definitions')
 
-    actions.setPreviewSrc = {
+    actions['setPreviewSrc'] = {
         label      : 'Set Preview Bus Source',
         description: 'Set the source input on the Preview bus',
         options    : [
@@ -26,7 +26,7 @@ exports.initActions = function () {
         ]
     }
 
-    actions.setProgramSrc = {
+    actions['setProgramSrc'] = {
         label      : 'Set Program Bus Source',
         description: 'Set the source input on the Program bus',
         options    : [
@@ -41,7 +41,7 @@ exports.initActions = function () {
         ]
     }
 
-    actions.controlGFX = {
+    actions['controlGFX'] = {
         label      : 'Control GFX Sources',
         description: 'Set and control various functions on the GFX stacks (Push, Pull, etc)',
         options    : [
@@ -68,7 +68,7 @@ exports.initActions = function () {
         ]
     }
 
-    actions.controlMedia = {
+    actions['controlMedia'] = {
         label      : 'Control Media Sources',
         description: 'Control Play/Pause state on Media Inputs. When playing you can play the full clip or just the In to Out points',
         options    : [
@@ -93,7 +93,7 @@ exports.initActions = function () {
         ]
     }
 
-    actions.transitionCut = {
+    actions['transitionCut'] = {
         label      : 'Transition: Cut',
         description: 'Execute a CUT transition',
         options    : [
@@ -105,7 +105,7 @@ exports.initActions = function () {
         ]
     }
 
-    actions.transitionAuto = {
+    actions['transitionAuto'] = {
         label      : 'Transition Auto',
         description: 'Execute an AUTO transition',
         options    : [

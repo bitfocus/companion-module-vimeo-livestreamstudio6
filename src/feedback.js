@@ -191,13 +191,13 @@ exports.initFeedbacks = function() {
                 label       : 'Blink?',
                 id          : 'blink',
                 tooltip     : 'Enable flashing between this feedback state and the previous state',
-                default     : 1
+                default     : 0
         }],
         callback: function (feedback, bank) {
             var opt = feedback.options;
 
             if (self.data.gfx[parseInt(opt.gfx)].canPush) {
-                let fbkNameId = feedback.type + ':' + feedback.id
+                let fbkNameId = `${feedback.type}:${feedback.id}`
                 if (opt.blink) {		// wants blink
                     if (self.blinkingFB[fbkNameId]) {
                         self.blinkingFB[fbkNameId] = false;
@@ -367,14 +367,10 @@ exports.initFeedbacks = function() {
         }
     }
 
-    // TO DO
-    feedbacks['inputAudioGain'] = {
-        type       : 'boolean',
+    feedbacks.inputAudioGain = {
+        type       : 'advanced',
         label      : 'Audio Input: Gain',
-        description: 'Change colors based on input audio gain',
-        style      : {
-            bgcolor: self.rgb(50,50,50)
-        },
+        description: 'Indicate the input audio gain in button text',
         options    : [{
                 type        : 'dropdown',
                 label       : 'Select Input',
@@ -383,22 +379,16 @@ exports.initFeedbacks = function() {
                 default     : 0,
                 choices     : self.data.inputs
         }],
-        callback: function (feedback) {
-            if (true) {
-                return true
-            }
-            return false
-        }
     }
 
-    feedbacks['inputAudioVolume'] = {
+    feedbacks.inputAudioVolume = {
         type       : 'advanced',
         label      : 'Audio Input: Volume',
         description: 'Change colors based on input audio volume',
         options    : inputVolOptions
     }
 
-    feedbacks['inputAudioMute'] = {
+    feedbacks.inputAudioMute = {
         type       : 'boolean',
         label      : 'Audio Input: Mute',
         description: 'Change style based on input audio mute',
@@ -422,7 +412,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['inputAudioHeadphones'] = {
+    feedbacks.inputAudioHeadphones = {
         type       : 'boolean',
         label      : 'Audio Input: Headphones',
         description: 'Change style based on input audio to headphones state',
@@ -446,7 +436,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['inputAudioToPgm'] = {
+    feedbacks.inputAudioToPgm = {
         type       : 'boolean',
         label      : 'Audio Input: Audio to Program',
         description: 'Change style based on an input\'s Audio to Program state',
@@ -490,14 +480,14 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['masterAudioVolume'] = {
+    feedbacks.masterAudioVolume = {
         type       : 'advanced',
         label      : 'Audio Master: Volume',
         description: 'Change colors based on master stream audio volume',
         options    : masterVolOptions
     }
 
-    feedbacks['masterAudioMute'] = {
+    feedbacks.masterAudioMute = {
         type       : 'boolean',
         label      : 'Audio Master: Mute',
         description: 'Change style based on master audio mute state',
@@ -529,7 +519,7 @@ exports.initFeedbacks = function() {
         }
     }
 
-    feedbacks['masterAudioHeadphones'] = {
+    feedbacks.masterAudioHeadphones = {
         type       : 'boolean',
         label      : 'Audio Master: Headphones',
         description: 'Change style based on master audio to headphones state',
@@ -648,17 +638,23 @@ exports.executeAdvFeedback = function (feedback, bank) {
                 level = parseFloat(self.data.recordMaster.level);
             }
             break;    
+
+        case 'inputAudioGain':
+            level = parseFloat(self.data.inputs[feedback.options.input].audioGain);
+            let txt = bank.text != '' ? `${bank.text}\\n ${level}` : `${bank.text}${level}`;
+            return { text: txt };
+            break;
     }
     
     if (level !== '') {
 
-        var rawLevel = parseFloat(level) + 60000
+        let rawLevel = parseFloat(level) + 60000
 
-        var volLinear = (rawLevel * 100) / 70000
+        let volLinear = (rawLevel * 100) / 70000
            
         //var dBLevel = Math.round(Math.pow(volLinear / 100, 0.25) * 100)
 
-        var dBLevel = (10 * Math.log(volLinear)) / Math.LN10
+        let dBLevel = (10 * Math.log(volLinear)) / Math.LN10
         
         dBLevel = (+dBLevel - 38.7).toFixed(1)
 

@@ -206,6 +206,56 @@ exports.initPresets = function () {
                 }]
             });
 
+            // Audio: Volume Level
+            presets.push({
+                category: 'Audio',
+                label   : `audioVolume${element.id}`,
+                bank    : {
+                    style    : 'text',
+                    text     : `VOL\\n\$(studio:input_${element.id + 1}_name)`,
+                    size     : '14',
+                    color    : self.rgb(255,255,255)
+                },
+                actions: [{
+                    action : 'setAudioVolume',
+                    options: {
+                        input  : [element.id],
+                        volume : 0
+                    }
+                }],
+                feedbacks: [{
+                    type   : 'inputAudioVolume',
+                    options: {
+                        input : [element.id],
+                        value : true
+                    }
+                }]
+            });
+
+            // Audio: Gain Level
+            presets.push({
+                category: 'Audio',
+                label   : `audioGain${element.id}`,
+                bank    : {
+                    style    : 'text',
+                    text     : `GAIN\\n\$(studio:input_${element.id + 1}_name)`,
+                    size     : '14',
+                    color    : self.rgb(255,255,255)
+                },
+                actions: [{
+                    action : 'setAudioGain',
+                    options: {
+                        input  : [element.id],
+                        gain   : 0
+                    }
+                }],
+                feedbacks: [{
+                    type   : 'inputAudioGain',
+                    options: {
+                        input : [element.id]
+                    }
+                }]
+            });
         }
     }  //end of for loop
 
