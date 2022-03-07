@@ -116,8 +116,9 @@ Transition  |**Fade to Black**     | Fade to Black Toggle
 GFX         |**GFX-`x` Pull**      | GFX Pull  [`GFX-1, GFX-2, GFX-3`]
 GFX         |**GFX-`x` Push**      | GFX Push  [`GFX-1, GFX-2, GFX-3`]
 GFX         |**GFX-`x` Preview**   | GFX Preview Toggle [`GFX-1, GFX-2, GFX-3`]
-Media       |**Media-`x` Play Full**| Media-`x` Play Full Clip
-Media       |**Media-`x` Play In/Out**| Media-`x` Play In to Out Points
+Media       |**Media-`x` Play Full**| Media-`x` Play Full Clip*
+Media       |**Media-`x` Play In/Out**| Media-`x` Play In to Out Points*
+Media       |**Media-`x` Pause**   | Media-`x` Pause*
 Audio       |**GAIN `x`**          | Set Audio Gain of input `x` to 0
 Audio       |**VOL `x`**           | Set Volume of input `x` to 0
 Audio       |**Mute `x`**          | Toggles Audio Mute on given input `x`
@@ -130,6 +131,7 @@ Master Audio|**Headphones Record** | Toggles Headphones state on Record Master C
 System      |**Stream**            | Toggle streaming on/off
 System      |**Record**            | Toggle recording on/off
 
+*Media presets are only visible when a media input has been added to your inputs in Livestream Studio. 
 
 ---
 ### Notes

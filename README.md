@@ -68,10 +68,10 @@ Please see the [HELP](/HELP.md) document for the following:
 ----
 ## Changelog
 
-**v1.0.0** 
+**v1.0.0** **(Current)**
 
 - Initial release
 
-**v0.5.0** **(Current)**
+**v0.5.0** 
 
 - Initial commit / development build
